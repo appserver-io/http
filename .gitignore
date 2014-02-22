@@ -1,6 +1,7 @@
 .idea
 /target
 /instance-src
+/vendor
 /.buildpath
 /.project
 /.settings
