@@ -4,6 +4,7 @@ namespace TechDivision\Http;
 
 use TechDivision\Socket\SocketInterface;
 use TechDivision\Http\RequestInterface;
+use TechDivision\Http\ParserInterface;
 use TechDivision\Http\ConnectionException;
 
 class HttpConnection implements ConnectionInterface
@@ -14,17 +15,20 @@ class HttpConnection implements ConnectionInterface
      *
      * @var \TechDivision\Socket\SocketInterface
      */
-    public $socket;
+    protected $socket;
 
     /**
      * The connection needs a socket implementation to handle the connection.
      *
-     * @param \TechDivision\Socket\SocketInterface $socket The socket implementation to use for
-     *                                                          connection handling.
+     * @param \TechDivision\Socket\SocketInterface $socket  The socket implementation to use for
+     *                                                      connection handling.
+     * @param \TechDivision\Http\RequestInterface  $request The request implementation to prepare while negotiating
+     * @param \TechDivision\Http\ParserInterface   $parser  The parser to use for
      */
-    public function __construct(SocketInterface $socket)
+    public function __construct(SocketInterface $socket, ParserInterface $parser)
     {
         $this->socket = $socket;
+        $this->parser = $parser;
     }
 
     /**
@@ -38,6 +42,22 @@ class HttpConnection implements ConnectionInterface
     }
 
     /**
+     * @return \TechDivision\Http\ParserInterface
+     */
+    public function getParser()
+    {
+        return $this->parser;
+    }
+
+    /**
+     * @return \TechDivision\Http\RequestInterface
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
      * Negotiates the connection with the connected client in a proper way the given
      * protocol type and version expects. The result will be a request instance if all data was valid.
      *
@@ -47,8 +67,12 @@ class HttpConnection implements ConnectionInterface
     public function negotiate()
     {
         try {
+            // get instances for short calls
+            $parser = $this->getParser();
+            $socket = $this->getSocket();
+
             // read first line from connection socket
-            $line = $this->getSocket()->readLine();
+            $line = $socket->readLine();
 
             /**
              * In the interest of robustness, servers SHOULD ignore any empty
@@ -56,66 +80,42 @@ class HttpConnection implements ConnectionInterface
              * the server is reading the protocol stream at the beginning of a
              * message and receives a CRLF first, it should ignore the CRLF.
              *
-             * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.1
+             * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.1
              */
             if ($line === "\r\n") {
                 // ignore the first CRLF and go on reading the expected start-line.
-                $line = $this->getSocket()->readLine();
-            }
-            // check if timeout occured
-            if (strlen($line) === 0) {
-                throw new ConnectionException('Timeout reached on read.');
+                $line = $socket->readLine();
             }
             // validate and parse read line
-            if (!preg_match(
-                    "/(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT)\s(.*)\s(HTTP\/1\.0|HTTP\/1\.1)/",
-                    $line,
-                    $matches
-                )
-            ) {
-                throw new ConnectionException('Bad request.');
-            }
-            // grab http version and request method from first request line.
-            list($requestLine, $requestMethod, $requestUri, $protocolVersion) = $matches;
+            $parser->parseStartLine($line);
 
             /**
              * Parse headers in a proper way
              *
-             * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+             * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
              */
             $lineCounter = 0;
             while($line != "\r\n") {
                 // read next line
-                $line = $this->getSocket()->readLine();
-                // check if read timeout occured
-                if (strlen($line) === 0) {
-                    throw new ConnectionException('Timeout reached on read.');
-                }
+                $line = $socket->readLine();
                 // check if first line is a CRLF
                 if (($lineCounter === 0) && ($line === "\r\n")) {
-                    throw new ConnectionException('Missing headers.');
+                    throw new HttpException('Missing headers.');
                 }
-                // extract header info
-                $extractedHeaderInfo = explode(':', trim(strtolower($line)));
-                if (!$extractedHeaderInfo) {
-                    throw new ConnectionException('Wrong header format.');
-                }
-                list($headerName, $headerValue) = $extractedHeaderInfo;
-                // collect headers
-                $headers[$headerName] = $headerValue;
+                // parse validate header
+                $parser->parseHeaderLine($line);
                 // pre inc counter
                 ++$lineCounter;
             }
 
             // check if message body will be transmitted
-            if (array_key_exists('transfer-encoding', $headers) || array_key_exists('content', $headers)) {
-
+            if ($parser->getRequest()->getHeader('content')) {
+                // readin body stream
             }
 
-
-        } catch (ConnectionException $e) {
-            $this->getSocket()->write($e->getMessage() . PHP_EOL);
-            $this->getSocket()->close();
+        } catch (\Exception $e) {
+            $socket->write($e->getMessage() . PHP_EOL);
+            $socket->close();
         }
     }
 }

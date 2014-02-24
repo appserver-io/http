@@ -7,6 +7,11 @@ $streamSocket = new \TechDivision\Socket\StreamSocket();
 $streamSocketServer = $streamSocket->getServerInstance('0.0.0.0:8081');
 
 while($streamConnection = $streamSocketServer->accept()) {
-    $httpConnection = new \TechDivision\Http\HttpConnection($streamConnection);
+    $httpConnection = new \TechDivision\Http\HttpConnection(
+        $streamConnection,
+        new \TechDivision\Http\HttpParser(
+            new \TechDivision\Http\HttpRequest()
+        )
+    );
     $httpConnection->negotiate();
 }

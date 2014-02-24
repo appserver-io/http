@@ -2,9 +2,7 @@
 
 namespace TechDivision\Http;
 
-interface ServerInterface
+class HttpException extends \Exception
 {
-
-
 
 }
