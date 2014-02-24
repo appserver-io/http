@@ -1,8 +1,8 @@
 .idea
+build.properties
 /target
 /instance-src
 /vendor
 /.buildpath
 /.project
 /.settings
-/.build.properties

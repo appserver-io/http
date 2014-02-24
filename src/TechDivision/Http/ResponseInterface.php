@@ -21,5 +21,25 @@ interface ResponseInterface
 
     public function setHeaders(array $headers);
 
+    public function getHeaderString();
+
+    /**
+     * Reset's the stream resource pointing to body content
+     *
+     * @param resource $bodyStream The body content stream resource
+     */
+    public function setBodyStream($bodyStream);
+
+    /**
+     * Return's the stream resource pointing to body content
+     *
+     * @return resource The body content stream resource
+     */
+    public function getBodyStream();
+
+    public function getMimeType();
+
+    public function setMimeType($mimeType);
+
 }
 

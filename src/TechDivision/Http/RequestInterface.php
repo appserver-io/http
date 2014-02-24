@@ -15,6 +15,15 @@ interface RequestInterface
      */
     public function addHeader($name, $value);
 
+    /**
+     * Check's if header exists by given name
+     *
+     * @param string $name The header name to check
+     *
+     * @return boolean
+     */
+    public function hasHeader($name);
+
     public function getHeader($name);
 
     public function getHeaders();
@@ -28,6 +37,8 @@ interface RequestInterface
     public function setQueryString($queryString);
 
     public function setBodyStream($bodyStream);
+
+    public function getBodyStream();
 
     public function setVersion($version);
 }

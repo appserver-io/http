@@ -53,7 +53,6 @@ class HttpConnection implements ConnectionInterface
      * protocol type and version expects. The result will be a request instance if all data was valid.
      *
      * @return \TechDivision\Http\RequestInterface The request instance
-     * @throws \TechDivision\Http\ConnectionException
      */
     public function negotiate()
     {
@@ -77,7 +76,7 @@ class HttpConnection implements ConnectionInterface
                 // ignore the first CRLF and go on reading the expected start-line.
                 $line = $socket->readLine();
             }
-            // validate and parse read line
+            // parse read line
             $parser->parseStartLine($line);
 
             /**
@@ -85,46 +84,38 @@ class HttpConnection implements ConnectionInterface
              *
              * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
              */
-            $lineCounter = 0;
+            $messageHeaders = '';
             while($line != "\r\n") {
                 // read next line
                 $line = $socket->readLine();
-                // check if first line is a CRLF
-                if (($lineCounter === 0) && ($line === "\r\n")) {
-                    throw new HttpException('Missing headers.');
-                }
-                // parse validate header
-                $parser->parseHeaderLine($line);
-                // pre inc counter
-                ++$lineCounter;
+                // enhance headers
+                $messageHeaders .= $line;
             }
 
+            // parse headers
+            $parser->parseHeaders($messageHeaders);
+
             // check if message body will be transmitted
-            if ($parser->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
-                // readin body stream
-                $bodyStream = fopen('php://memory', 'w+');
+            if ($parser->getRequest()->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
                 // get content-length header
                 $contentLength = (int)$parser->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH);
                 // read content until given content-length
-                while(ftell($bodyStream) < $contentLength) {
+                while(ftell($parser->getRequest()->getBodyStream()) < $contentLength) {
                     // read next line
                     $line = $socket->readLine();
-                    // check if timeout occured and there is nothing to read
-                    if (strlen($line) === 0) {
-                        // break while
-                        break;
-                    }
                     // enhance body with new line
-                    fwrite($bodyStream, $line, strlen($line));
+                    fwrite($parser->getRequest()->getBodyStream(), $line, strlen($line));
                 }
-
-                // check if body was fully read without getting a timeout
-                if (ftell($bodyStream) < $contentLength) {
-                    // throw exception
-                    throw new \Exception('content not valid');
-                }
-
+                // set pointer offset to zero
+                fseek($parser->getRequest()->getBodyStream(), 0);
             }
+
+            // write response headers
+            $socket->write($parser->getResponse()->getHeaderString());
+            // stream response body to connection
+            $socket->copyStream($parser->getResponse()->getBodyStream());
+
+            $socket->close();
 
         } catch (\Exception $e) {
             $socket->write($e->getMessage() . PHP_EOL);

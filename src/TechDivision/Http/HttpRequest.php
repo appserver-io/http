@@ -8,7 +8,7 @@ class HttpRequest implements RequestInterface
     /**
      * Hold's all headers got from http connection
      *
-     * @var array
+     * @var
      */
     protected $headers;
 
@@ -40,6 +40,11 @@ class HttpRequest implements RequestInterface
      */
     protected $bodyStream;
 
+    public function __construct()
+    {
+        $this->bodyStream = fopen('php://memory', 'w+');
+    }
+
     /**
      * Add's a header information got from connection
      *
@@ -49,6 +54,18 @@ class HttpRequest implements RequestInterface
     public function addHeader($name, $value)
     {
         $this->headers[$name] = $value;
+    }
+
+    /**
+     * Check's if header exists by given name
+     *
+     * @param string $name The header name to check
+     *
+     * @return boolean
+     */
+    public function hasHeader($name)
+    {
+        return array_key_exists($name, $this->headers);
     }
 
     /**
@@ -62,7 +79,7 @@ class HttpRequest implements RequestInterface
     public function getHeader($name)
     {
         if (!array_key_exists($name, $this->headers)) {
-            throw new HttpException("Header not found '$name'");
+            throw new HttpException("Request header not found '$name'");
         }
         return $this->headers[$name];
     }
@@ -126,13 +143,23 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Set's the stream resource pointing to body content
+     * Reset's the stream resource pointing to body content
      *
      * @param resource $bodyStream The body content stream resource
      */
     public function setBodyStream($bodyStream)
     {
         $this->bodyStream = $bodyStream;
+    }
+
+    /**
+     * Return's the stream resource pointing to body content
+     *
+     * @return resource The body content stream resource
+     */
+    public function getBodyStream()
+    {
+        return $this->bodyStream;
     }
 
     /**

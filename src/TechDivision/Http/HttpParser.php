@@ -13,13 +13,21 @@ class HttpParser implements ParserInterface
     protected $request;
 
     /**
+     * Hold's the response instance
+     *
+     * @var \TechDivision\Http\ResponseInterface
+     */
+    protected $response;
+
+    /**
      * Set's the given request implementation
      *
      * @param \TechDivision\Http\RequestInterface $request
      */
-    public function __construct(RequestInterface $request)
+    public function __construct(RequestInterface $request, ResponseInterface $response)
     {
         $this->request = $request;
+        $this->response = $response;
     }
 
     /**
@@ -33,11 +41,21 @@ class HttpParser implements ParserInterface
     }
 
     /**
+     * Return's the response instance
+     *
+     * @return \TechDivision\Http\ResponseInterface
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
      * Parses the start line
      *
      * @param string $line The start line
      * @return void
-     * @throws
+     * @throws \TechDivision\Http\HttpException
      *
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.1
      */
@@ -59,6 +77,34 @@ class HttpParser implements ParserInterface
         $this->getRequest()->setVersion($reqVersion);
     }
 
+
+    /**
+     * Parse headers in a proper way
+     *
+     * @param string $messageHeaders The message headers
+     *
+     * @return void
+     * @throws \TechDivision\Http\HttpException
+     *
+     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+     */
+    public function parseHeaders($messageHeaders)
+    {
+        // remove ending CRLF's before parsing
+        $messageHeaders = trim($messageHeaders);
+        // check if headers are empty
+        if (strlen($messageHeaders) === 0) {
+            throw new HttpException('Missing headers');
+        }
+        // delimit headers by CRLF
+        $headerLines = explode("\r\n", $messageHeaders);
+        // iterate all headers
+        foreach ($headerLines as $headerLine) {
+            // parse header line
+            $this->parseHeaderLine($headerLine);
+        }
+    }
+
     /**
      * Parses a http header line
      *
@@ -72,7 +118,7 @@ class HttpParser implements ParserInterface
         // extract header info
         $extractedHeaderInfo = explode(':', trim(strtolower($line)));
         if (!$extractedHeaderInfo) {
-            throw new HttpException('Wrong header format.');
+            throw new HttpException('Wrong header format');
         }
         list($headerName, $headerValue) = $extractedHeaderInfo;
         // add request header
