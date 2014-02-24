@@ -6,6 +6,7 @@ use TechDivision\Socket\SocketInterface;
 use TechDivision\Http\RequestInterface;
 use TechDivision\Http\ParserInterface;
 use TechDivision\Http\ConnectionException;
+use TechDivision\Http\HttpProtocol;
 
 class HttpConnection implements ConnectionInterface
 {
@@ -20,9 +21,7 @@ class HttpConnection implements ConnectionInterface
     /**
      * The connection needs a socket implementation to handle the connection.
      *
-     * @param \TechDivision\Socket\SocketInterface $socket  The socket implementation to use for
-     *                                                      connection handling.
-     * @param \TechDivision\Http\RequestInterface  $request The request implementation to prepare while negotiating
+     * @param \TechDivision\Socket\SocketInterface $socket  The socket implementation to use for connection handling.
      * @param \TechDivision\Http\ParserInterface   $parser  The parser to use for
      */
     public function __construct(SocketInterface $socket, ParserInterface $parser)
@@ -47,14 +46,6 @@ class HttpConnection implements ConnectionInterface
     public function getParser()
     {
         return $this->parser;
-    }
-
-    /**
-     * @return \TechDivision\Http\RequestInterface
-     */
-    public function getRequest()
-    {
-        return $this->request;
     }
 
     /**
@@ -109,8 +100,30 @@ class HttpConnection implements ConnectionInterface
             }
 
             // check if message body will be transmitted
-            if ($parser->getRequest()->getHeader('content')) {
+            if ($parser->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
                 // readin body stream
+                $bodyStream = fopen('php://memory', 'w+');
+                // get content-length header
+                $contentLength = (int)$parser->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH);
+                // read content until given content-length
+                while(ftell($bodyStream) < $contentLength) {
+                    // read next line
+                    $line = $socket->readLine();
+                    // check if timeout occured and there is nothing to read
+                    if (strlen($line) === 0) {
+                        // break while
+                        break;
+                    }
+                    // enhance body with new line
+                    fwrite($bodyStream, $line, strlen($line));
+                }
+
+                // check if body was fully read without getting a timeout
+                if (ftell($bodyStream) < $contentLength) {
+                    // throw exception
+                    throw new \Exception('content not valid');
+                }
+
             }
 
         } catch (\Exception $e) {

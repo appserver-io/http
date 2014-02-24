@@ -1,8 +1,8 @@
 {
     "name": "techdivision/http",
-    "description": "HTTP implementation that handles HTTP requests in server context",
-    "homepage": "https://github.com/techdivision/TechDivision_HTTP",
-    "keywords": ["php", "http", "http-server"],
+    "description": "HTTP protocol implementation for usage in server context",
+    "homepage": "https://github.com/techdivision/TechDivision_Http",
+    "keywords": ["php", "http", "server", "protocol"],
     "license": ["OSL-3.0"],
     "require": {
         "php": ">=5.4.0"
