@@ -35,7 +35,7 @@ interface ConnectionInterface
     /**
      * Return's the socket implementation
      *
-     * @return \TechDivision\Socket\SocketInterface
+     * @return \TechDivision\WebServer\Sockets\SocketInterface
      */
     public function getSocket();
 }

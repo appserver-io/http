@@ -13,8 +13,8 @@
 
 namespace TechDivision\Http;
 
-use TechDivision\Http\ResponseInterface;
-use TechDivision\Http\RequestInterface;
+use TechDivision\Http\HttpResponseInterface;
+use TechDivision\Http\HttpRequestInterface;
 
 /**
  * Class HttpParser
@@ -31,24 +31,24 @@ class HttpParser implements ParserInterface
     /**
      * Holds the request instance to prepare
      *
-     * @var \TechDivision\Http\RequestInterface
+     * @var \TechDivision\Http\HttpRequestInterface
      */
     protected $request;
 
     /**
      * Holds the response instance to prepare
      *
-     * @var \TechDivision\Http\ResponseInterface
+     * @var \TechDivision\Http\HttpResponseInterface
      */
     protected $response;
 
     /**
      * Set's the given request and response class names
      *
-     * @param \TechDivision\Http\RequestInterface $request   The request instance
-     * @param \TechDivision\Http\ResponseInterface $response The response instance
+     * @param \TechDivision\Http\HttpRequestInterface  $request  The request instance
+     * @param \TechDivision\Http\HttpResponseInterface $response The response instance
      */
-    public function __construct($request, $response)
+    public function __construct(HttpRequestInterface $request, HttpResponseInterface $response)
     {
         $this->request = $request;
         $this->response = $response;
@@ -57,7 +57,7 @@ class HttpParser implements ParserInterface
     /**
      * Return's the request instance to pass parsed content to
      *
-     * @return \TechDivision\Http\RequestInterface
+     * @return \TechDivision\Http\HttpRequestInterface
      */
     public function getRequest()
     {
@@ -67,7 +67,7 @@ class HttpParser implements ParserInterface
     /**
      * Return's the response instance
      *
-     * @return \TechDivision\Http\ResponseInterface
+     * @return \TechDivision\Http\HttpResponseInterface
      */
     public function getResponse()
     {

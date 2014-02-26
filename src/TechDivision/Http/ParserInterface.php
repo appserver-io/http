@@ -57,13 +57,13 @@ interface ParserInterface
     /**
      * Return's the request instance to pass parsed content to
      *
-     * @return \TechDivision\Http\RequestInterface
+     * @return \TechDivision\Http\HttpRequestInterface
      */
     public function getRequest();
     /**
      * Return's the response instance
      *
-     * @return \TechDivision\Http\ResponseInterface
+     * @return \TechDivision\Http\HttpResponseInterface
      */
     public function getResponse();
 

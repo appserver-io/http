@@ -13,12 +13,12 @@
 
 namespace TechDivision\Http;
 
-use TechDivision\Socket\SocketInterface;
-use TechDivision\Http\RequestInterface;
+use TechDivision\WebServer\Sockets\SocketInterface;
+use TechDivision\Http\HttpRequestInterface;
 use TechDivision\Http\ParserInterface;
 use TechDivision\Http\ConnectionException;
 use TechDivision\Http\HttpProtocol;
-use TechDivision\WebServer\Dictionary\MimeTypes;
+use TechDivision\WebServer\Dictionaries\MimeTypes;
 use TechDivision\WebServer\Modules\DirectoryModule;
 
 /**
@@ -36,7 +36,7 @@ class HttpConnection implements ConnectionInterface
     /**
      * Holds the socket implementation to use for connection handling.
      *
-     * @var \TechDivision\Socket\SocketInterface
+     * @var \TechDivision\WebServer\Sockets\SocketInterface
      */
     protected $socket;
 
@@ -45,7 +45,7 @@ class HttpConnection implements ConnectionInterface
     /**
      * The connection needs a socket implementation to handle the connection.
      *
-     * @param \TechDivision\Socket\SocketInterface $socket  The socket implementation to use for connection handling.
+     * @param \TechDivision\WebServer\Sockets\SocketInterface $socket  The socket implementation to use for connection handling.
      * @param \TechDivision\Http\ParserInterface   $parser  The parser to use for
      */
     public function __construct(SocketInterface $socket, ParserInterface $parser)
@@ -57,7 +57,7 @@ class HttpConnection implements ConnectionInterface
     /**
      * Return's the socket implementation
      *
-     * @return \TechDivision\Socket\SocketInterface
+     * @return \TechDivision\WebServer\Sockets\SocketInterface
      */
     public function getSocket()
     {
@@ -73,7 +73,7 @@ class HttpConnection implements ConnectionInterface
     }
 
     /**
-     * @param \TechDivision\Socket\SocketInterface $socket
+     * @param \TechDivision\WebServer\Sockets\SocketInterface $socket
      */
     public function setSocket($socket)
     {
@@ -92,7 +92,7 @@ class HttpConnection implements ConnectionInterface
      * Negotiates the connection with the connected client in a proper way the given
      * protocol type and version expects. The result will be a request instance if all data was valid.
      *
-     * @return \TechDivision\Http\RequestInterface The request instance
+     * @return \TechDivision\Http\HttpRequestInterface The request instance
      */
     public function negotiate()
     {

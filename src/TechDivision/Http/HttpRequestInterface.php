@@ -1,6 +1,6 @@
 <?php
 /**
- * \TechDivision\Http\RequestInterface
+ * \TechDivision\Http\HttpRequestInterface
  *
  * PHP version 5
  *
@@ -14,7 +14,7 @@
 namespace TechDivision\Http;
 
 /**
- * Interface ResponseInterface
+ * Interface HttpRequestInterface
  *
  * @category  Library
  * @package   TechDivision_Http
@@ -22,11 +22,11 @@ namespace TechDivision\Http;
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-interface ResponseInterface
+interface HttpRequestInterface
 {
 
     /**
-     * Add's a header information
+     * Add's a header information got from connection
      *
      * @param string $name  The header name
      * @param string $value The headers value
@@ -35,53 +35,51 @@ interface ResponseInterface
      */
     public function addHeader($name, $value);
 
+    /**
+     * Check's if header exists by given name
+     *
+     * @param string $name The header name to check
+     *
+     * @return boolean
+     */
+    public function hasHeader($name);
+
     public function getHeader($name);
 
     public function getHeaders();
 
     public function setHeaders(array $headers);
 
-    public function getHeaderString();
+    public function getRealPath();
 
-    /**
-     * Reset's the stream resource pointing to body content
-     *
-     * @param resource $bodyStream The body content stream resource
-     */
-    public function setBodyStream($bodyStream);
-
-    /**
-     * Return's the stream resource pointing to body content
-     *
-     * @return resource The body content stream resource
-     */
-    public function getBodyStream();
-
-    public function getMimeType();
-
-    public function setMimeType($mimeType);
-
-    public function setStatusCode($code);
-
-    public function getStatusCode();
-
-    public function getStatusReasonPhrase();
-
-    public function getStatus();
-
-    public function getVersion();
-
-    public function setVersion($version);
+    public function getDocumentRoot();
 
     public function init();
 
     /**
-     * Returns http response status line
+     * Set's requested uri
      *
-     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html
+     * @param string $uri The requested uri to set
+     *
+     * @return void
+     */
+    public function setUri($uri);
+
+    /**
+     * Return's requested uri
+     *
      * @return string
      */
-    public function getStatusLine();
+    public function getUri();
 
+    public function setMethod($method);
+
+    public function setQueryString($queryString);
+
+    public function setBodyStream($bodyStream);
+
+    public function getBodyStream();
+
+    public function setVersion($version);
 }
 
