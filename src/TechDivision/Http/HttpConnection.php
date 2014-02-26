@@ -13,6 +13,7 @@
 
 namespace TechDivision\Http;
 
+use TechDivision\WebServer\Modules\CoreModule;
 use TechDivision\WebServer\Sockets\SocketInterface;
 use TechDivision\Http\HttpRequestInterface;
 use TechDivision\Http\HttpParserInterface;
@@ -158,27 +159,12 @@ class HttpConnection implements ConnectionInterface
 
 
 
-
-
-
             $modules[] = new DirectoryModule();
+            $modules[] = new CoreModule();
             foreach ($modules as $module) {
                 $module->init();
                 $module->process($parser->getRequest(), $parser->getResponse());
             }
-
-            $requestedFilename = $parser->getRequest()->getRealPath();
-            if (file_exists($requestedFilename)) {
-                $parser->getResponse()->setBodyStream(fopen($requestedFilename, 'r'));
-
-                //stream_filter_prepend($fileStream, "zlib.deflate", STREAM_FILTER_READ);
-
-                $parser->getResponse()->setMimeType(
-                    MimeTypes::getMimeTypeByFilename($requestedFilename)
-                );
-            }
-
-
 
 
 
