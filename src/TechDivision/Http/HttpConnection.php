@@ -15,7 +15,7 @@ namespace TechDivision\Http;
 
 use TechDivision\WebServer\Sockets\SocketInterface;
 use TechDivision\Http\HttpRequestInterface;
-use TechDivision\Http\ParserInterface;
+use TechDivision\Http\HttpParserInterface;
 use TechDivision\Http\ConnectionException;
 use TechDivision\Http\HttpProtocol;
 use TechDivision\WebServer\Dictionaries\MimeTypes;
@@ -45,10 +45,10 @@ class HttpConnection implements ConnectionInterface
     /**
      * The connection needs a socket implementation to handle the connection.
      *
-     * @param \TechDivision\WebServer\Sockets\SocketInterface $socket  The socket implementation to use for connection handling.
-     * @param \TechDivision\Http\ParserInterface   $parser  The parser to use for
+     * @param \TechDivision\WebServer\Sockets\SocketInterface $socket The socket implementation to use for connection handling.
+     * @param \TechDivision\Http\HttpParserInterface          $parser The parser to use for
      */
-    public function __construct(SocketInterface $socket, ParserInterface $parser)
+    public function __construct(SocketInterface $socket, HttpParserInterface $parser)
     {
         $this->socket = $socket;
         $this->parser = $parser;
@@ -75,7 +75,7 @@ class HttpConnection implements ConnectionInterface
     /**
      * @param \TechDivision\WebServer\Sockets\SocketInterface $socket
      */
-    public function setSocket($socket)
+    public function setSocket(SocketInterface $socket)
     {
         $this->socket = $socket;
     }
@@ -83,7 +83,7 @@ class HttpConnection implements ConnectionInterface
     /**
      * @param mixed $parser
      */
-    public function setParser($parser)
+    public function setParser(HttpParserInterface $parser)
     {
         $this->parser = $parser;
     }
@@ -96,12 +96,8 @@ class HttpConnection implements ConnectionInterface
      */
     public function negotiate()
     {
+
         try {
-            if (!ConnectionContext::isHttp())  {
-                return;
-            }
-
-
 
             // get instances for short calls
             $parser = $this->getParser();
@@ -165,9 +161,10 @@ class HttpConnection implements ConnectionInterface
 
 
 
-            $modules[] = new DirectoryModule($parser->getRequest(), $parser->getResponse());
+            $modules[] = new DirectoryModule();
             foreach ($modules as $module) {
-                $module->process();
+                $module->init();
+                $module->process($parser->getRequest(), $parser->getResponse());
             }
 
             $requestedFilename = $parser->getRequest()->getRealPath();

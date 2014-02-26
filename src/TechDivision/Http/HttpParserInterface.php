@@ -1,6 +1,6 @@
 <?php
 /**
- * \TechDivision\Http\ParserInterface
+ * \TechDivision\Http\HttpParserInterface
  *
  * PHP version 5
  *
@@ -14,7 +14,7 @@
 namespace TechDivision\Http;
 
 /**
- * Interface ParserInterface
+ * Interface HttpParserInterface
  *
  * @category  Library
  * @package   TechDivision_Http
@@ -22,7 +22,7 @@ namespace TechDivision\Http;
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-interface ParserInterface
+interface HttpParserInterface
 {
     /**
      * Parses the start line
