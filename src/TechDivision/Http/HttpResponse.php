@@ -1,32 +1,110 @@
 <?php
+/**
+ * \TechDivision\Http\HttpResponse
+ *
+ * PHP version 5
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 
 namespace TechDivision\Http;
 
+/**
+ * Class HttpResponse
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 class HttpResponse implements ResponseInterface
 {
 
-    protected $mimeType;
+    /**
+     * Defines response http version
+     *
+     * @var string
+     */
+    protected $version;
+
+    /**
+     * Defines the response status code
+     *
+     * @var int
+     */
+    protected $statusCode;
+
+    /**
+     * Defines the response reason phrase
+     *
+     * @var string
+     */
+    protected $statusReasonPhrase;
+
+    /**
+     * Defines the response mime type
+     *
+     * @var string
+     */
+    protected $mimeType = "text/plain";
+
+    /**
+     * Defines the response body stream
+     *
+     * @var resource
+     */
     protected $bodyStream;
 
-    public function __construct($welcomeFilename)
+    /**
+     * Hold's all headers
+     *
+     * @var
+     */
+    protected $headers;
+
+    public function __construct()
     {
+        $this->init();
+    }
+
+    public function init()
+    {
+        // init default response properties
+        $this->statusCode = 200;
+        $this->version = 'HTTP/1.1';;
+        $this->statusReasonPhrase = "OK";
+        $this->mimeType = "text/plain";
         $this->bodyStream = fopen('php://memory', 'w+');
-
-        $welcomenFileStream = fopen($welcomeFilename, 'r');
-        stream_filter_prepend($welcomenFileStream, "zlib.deflate", STREAM_FILTER_READ);
-        stream_copy_to_stream($welcomenFileStream, $this->bodyStream);
-
-        $this->mimeType = 'text/html';
+        // init default headers
+        $this->addHeader(HttpProtocol::HEADER_CONNECTION, "close");
+        $this->addHeader(HttpProtocol::HEADER_SERVER, "phpWebserver/0.1.0");
     }
 
     public function getHeaderString()
     {
-        return "HTTP/1.1 200 OK" . PHP_EOL .
-            "Content-Type: " . $this->getMimeType() . PHP_EOL .
-            "Content-Length: " . ftell($this->getBodyStream()) . PHP_EOL .
-            "Content-Encoding: deflate" . PHP_EOL .
-            "Connection: close" . PHP_EOL .
-            PHP_EOL;
+        // check if content length must be set
+        fseek($this->getBodyStream(), 0, SEEK_END);
+        $contentLength = ftell($this->getBodyStream());
+
+        if ($contentLength > 0) {
+            $this->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, $this->getMimeType());
+            $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $contentLength);
+        }
+
+        $headerString = '';
+
+        // enhance headers
+        foreach ($this->getHeaders() as $headerName => $headerValue) {
+            $headerString .= $headerName . ': ' . $headerValue . "\r\n";
+        }
+
+        // return with ending CRLF
+        return $headerString . "\r\n";
     }
 
     /**
@@ -119,4 +197,50 @@ class HttpResponse implements ResponseInterface
     {
         $this->headers = $headers;
     }
+
+    public function setStatusCode($code)
+    {
+        // set status code
+        $this->statusCode = $code;
+        // lookup reason phrase by code
+        $this->statusReasonPhrase = HttpProtocol::getStatusReasonPhraseByCode($code);
+    }
+
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    public function getStatusReasonPhrase()
+    {
+        return $this->statusReasonPhrase;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * Returns http response status line
+     *
+     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html
+     * @return string
+     */
+    public function getStatusLine()
+    {
+        // Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+        return $this->getVersion() . ' ' . $this->getStatusCode() . ' ' . $this->getStatusReasonPhrase() . "\r\n";
+    }
 }
+

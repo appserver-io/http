@@ -1,30 +1,54 @@
 <?php
+/**
+ * \TechDivision\Http\HttpParser
+ *
+ * PHP version 5
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 
 namespace TechDivision\Http;
 
+use TechDivision\Http\ResponseInterface;
+use TechDivision\Http\RequestInterface;
+
+/**
+ * Class HttpParser
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 class HttpParser implements ParserInterface
 {
 
     /**
-     * Hold's the request instance to fill up.
+     * Holds the request instance to prepare
      *
      * @var \TechDivision\Http\RequestInterface
      */
     protected $request;
 
     /**
-     * Hold's the response instance
+     * Holds the response instance to prepare
      *
      * @var \TechDivision\Http\ResponseInterface
      */
     protected $response;
 
     /**
-     * Set's the given request implementation
+     * Set's the given request and response class names
      *
-     * @param \TechDivision\Http\RequestInterface $request
+     * @param \TechDivision\Http\RequestInterface $request   The request instance
+     * @param \TechDivision\Http\ResponseInterface $response The response instance
      */
-    public function __construct(RequestInterface $request, ResponseInterface $response)
+    public function __construct($request, $response)
     {
         $this->request = $request;
         $this->response = $response;
@@ -70,7 +94,7 @@ class HttpParser implements ParserInterface
             throw new HttpException('Bad request.');
         }
         // grab http version and request method from first request line.
-        list($reqMethod, $reqUri, $reqVersion) = $matches;
+        list($reqStartLine, $reqMethod, $reqUri, $reqVersion) = $matches;
         // fill up request object
         $this->getRequest()->setMethod($reqMethod);
         $this->getRequest()->setUri($reqUri);

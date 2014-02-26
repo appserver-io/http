@@ -1,7 +1,27 @@
 <?php
+/**
+ * \TechDivision\Http\RequestInterface
+ *
+ * PHP version 5
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 
 namespace TechDivision\Http;
 
+/**
+ * Interface RequestInterface
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 interface RequestInterface
 {
 
@@ -30,7 +50,27 @@ interface RequestInterface
 
     public function setHeaders(array $headers);
 
+    public function getRealPath();
+
+    public function getDocumentRoot();
+
+    public function init();
+
+    /**
+     * Set's requested uri
+     *
+     * @param string $uri The requested uri to set
+     *
+     * @return void
+     */
     public function setUri($uri);
+
+    /**
+     * Return's requested uri
+     *
+     * @return string
+     */
+    public function getUri();
 
     public function setMethod($method);
 

@@ -1,4 +1,15 @@
 <?php
+/**
+ * \TechDivision\Http\HttpConnection
+ *
+ * PHP version 5
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 
 namespace TechDivision\Http;
 
@@ -7,7 +18,18 @@ use TechDivision\Http\RequestInterface;
 use TechDivision\Http\ParserInterface;
 use TechDivision\Http\ConnectionException;
 use TechDivision\Http\HttpProtocol;
+use TechDivision\WebServer\Dictionary\MimeTypes;
+use TechDivision\WebServer\Modules\DirectoryModule;
 
+/**
+ * Class HttpConnection
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 class HttpConnection implements ConnectionInterface
 {
 
@@ -17,6 +39,8 @@ class HttpConnection implements ConnectionInterface
      * @var \TechDivision\Socket\SocketInterface
      */
     protected $socket;
+
+    protected $parser;
 
     /**
      * The connection needs a socket implementation to handle the connection.
@@ -49,6 +73,22 @@ class HttpConnection implements ConnectionInterface
     }
 
     /**
+     * @param \TechDivision\Socket\SocketInterface $socket
+     */
+    public function setSocket($socket)
+    {
+        $this->socket = $socket;
+    }
+
+    /**
+     * @param mixed $parser
+     */
+    public function setParser($parser)
+    {
+        $this->parser = $parser;
+    }
+
+    /**
      * Negotiates the connection with the connected client in a proper way the given
      * protocol type and version expects. The result will be a request instance if all data was valid.
      *
@@ -57,9 +97,19 @@ class HttpConnection implements ConnectionInterface
     public function negotiate()
     {
         try {
+            if (!ConnectionContext::isHttp())  {
+                return;
+            }
+
+
+
             // get instances for short calls
             $parser = $this->getParser();
             $socket = $this->getSocket();
+
+            // reset request and response
+            $parser->getRequest()->init();
+            $parser->getResponse()->init();
 
             // read first line from connection socket
             $line = $socket->readLine();
@@ -110,6 +160,33 @@ class HttpConnection implements ConnectionInterface
                 fseek($parser->getRequest()->getBodyStream(), 0);
             }
 
+
+
+
+
+
+            $modules[] = new DirectoryModule($parser->getRequest(), $parser->getResponse());
+            foreach ($modules as $module) {
+                $module->process();
+            }
+
+            $requestedFilename = $parser->getRequest()->getRealPath();
+            if (file_exists($requestedFilename)) {
+                $parser->getResponse()->setBodyStream(fopen($requestedFilename, 'r'));
+
+                //stream_filter_prepend($fileStream, "zlib.deflate", STREAM_FILTER_READ);
+
+                $parser->getResponse()->setMimeType(
+                    MimeTypes::getMimeTypeByFilename($requestedFilename)
+                );
+            }
+
+
+
+
+
+            // write response status-line
+            $socket->write($parser->getResponse()->getStatusLine());
             // write response headers
             $socket->write($parser->getResponse()->getHeaderString());
             // stream response body to connection

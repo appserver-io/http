@@ -1,16 +1,35 @@
 <?php
+/**
+ * \TechDivision\Http\HttpRequest
+ *
+ * PHP version 5
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 
 namespace TechDivision\Http;
 
+/**
+ * Class HttpRequest
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 class HttpRequest implements RequestInterface
 {
-
     /**
      * Hold's all headers got from http connection
      *
      * @var
      */
-    protected $headers;
+    protected $headers = array();
 
     /**
      * Hold's the http request method
@@ -40,9 +59,28 @@ class HttpRequest implements RequestInterface
      */
     protected $bodyStream;
 
+    /**
+     * Hold's the document root directory
+     *
+     * @var string
+     */
+    protected $documentRoot;
+
+
     public function __construct()
     {
+        $this->init();
+    }
+
+    public function init()
+    {
         $this->bodyStream = fopen('php://memory', 'w+');
+        $this->headers = array();
+        $this->uri = null;
+        $this->method = null;
+        $this->version = null;
+        $this->documentRoot = '/home/zelgerj/Repositories/TechDivision_WebServer/src/var/www';
+        $this->queryString = null;
     }
 
     /**
@@ -131,6 +169,36 @@ class HttpRequest implements RequestInterface
     }
 
     /**
+     * Return's requested uri
+     *
+     * @return string
+     */
+    public function getUri()
+    {
+        return $this->uri;
+    }
+
+    /**
+     * Return's the real path to file system
+     *
+     * @return string
+     */
+    public function getRealPath()
+    {
+        return $this->getDocumentRoot() . $this->getUri();
+    }
+
+    /**
+     * Return's the document root
+     *
+     * @return string
+     */
+    public function getDocumentRoot()
+    {
+        return $this->documentRoot;
+    }
+
+    /**
      * Set's query string
      *
      * @param string $queryString The requests query string
@@ -173,5 +241,6 @@ class HttpRequest implements RequestInterface
     {
         $this->version = $version;
     }
+
 }
 

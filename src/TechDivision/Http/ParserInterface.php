@@ -1,7 +1,27 @@
 <?php
+/**
+ * \TechDivision\Http\ParserInterface
+ *
+ * PHP version 5
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 
 namespace TechDivision\Http;
 
+/**
+ * Interface ParserInterface
+ *
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 interface ParserInterface
 {
     /**
@@ -40,12 +60,12 @@ interface ParserInterface
      * @return \TechDivision\Http\RequestInterface
      */
     public function getRequest();
-
     /**
      * Return's the response instance
      *
      * @return \TechDivision\Http\ResponseInterface
      */
     public function getResponse();
+
 }
 
