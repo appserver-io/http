@@ -33,6 +33,13 @@ class HttpResponse implements HttpResponseInterface
     protected $version;
 
     /**
+     * Hold's the servers signature
+     *
+     * @var string
+     */
+    protected $serverSignature;
+
+    /**
      * Defines the response status code
      *
      * @var int
@@ -67,22 +74,31 @@ class HttpResponse implements HttpResponseInterface
      */
     protected $headers;
 
-    public function __construct()
-    {
-        $this->init();
-    }
-
+    /**
+     * Initialises the response object to default properties
+     *
+     * @return void
+     */
     public function init()
     {
+        // if body stream exists close it
+        if (is_resource($this->bodyStream)) {
+            fclose($this->bodyStream);
+        }
+        // init body stream
+        $this->bodyStream = fopen('php://memory', 'w+');
+
         // init default response properties
         $this->statusCode = 200;
         $this->version = 'HTTP/1.1';;
         $this->statusReasonPhrase = "OK";
         $this->mimeType = "text/plain";
-        $this->bodyStream = fopen('php://memory', 'w+');
-        // init default headers
-        $this->addHeader(HttpProtocol::HEADER_CONNECTION, "close");
-        $this->addHeader(HttpProtocol::HEADER_SERVER, "phpWebserver/0.1.0");
+
+        // reset to default headers
+        $this->setHeaders(array(
+            HttpProtocol::HEADER_CONNECTION => "close",
+            HttpProtocol::HEADER_SERVER => $this->getServerSignature()
+        ));
     }
 
     public function getHeaderString()
@@ -229,6 +245,22 @@ class HttpResponse implements HttpResponseInterface
     public function setVersion($version)
     {
         $this->version = $version;
+    }
+
+    /**
+     * @param string $serverSignature
+     */
+    public function setServerSignature($serverSignature)
+    {
+        $this->serverSignature = $serverSignature;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServerSignature()
+    {
+        return $this->serverSignature;
     }
 
     /**

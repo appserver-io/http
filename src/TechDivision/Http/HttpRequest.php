@@ -66,20 +66,25 @@ class HttpRequest implements HttpRequestInterface
      */
     protected $documentRoot;
 
-
-    public function __construct()
-    {
-        $this->init();
-    }
-
+    /**
+     * Initialises the request object to default properties
+     *
+     * @return void
+     */
     public function init()
     {
+        // if body stream exists close it
+        if (is_resource($this->bodyStream)) {
+            fclose($this->bodyStream);
+        }
+        // init body stream
         $this->bodyStream = fopen('php://memory', 'w+');
+
+        // init default response properties
         $this->headers = array();
         $this->uri = null;
         $this->method = null;
         $this->version = null;
-        $this->documentRoot = '/home/zelgerj/Repositories/TechDivision_WebServer/src/var/www';
         $this->queryString = null;
     }
 
@@ -186,6 +191,11 @@ class HttpRequest implements HttpRequestInterface
     public function getRealPath()
     {
         return $this->getDocumentRoot() . $this->getUri();
+    }
+
+    public function setDocumentRoot($documentRoot)
+    {
+        $this->documentRoot = $documentRoot;
     }
 
     /**

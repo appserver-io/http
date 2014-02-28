@@ -52,8 +52,15 @@ interface HttpRequestInterface
 
     public function getRealPath();
 
+    public function setDocumentRoot($documentRoot);
+
     public function getDocumentRoot();
 
+    /**
+     * Initialises the request object to default properties
+     *
+     * @return void
+     */
     public function init();
 
     /**
@@ -81,5 +88,6 @@ interface HttpRequestInterface
     public function getBodyStream();
 
     public function setVersion($version);
+
 }
 

@@ -73,6 +73,11 @@ interface HttpResponseInterface
 
     public function setVersion($version);
 
+    /**
+     * Initialises the response object to default properties
+     *
+     * @return void
+     */
     public function init();
 
     /**
