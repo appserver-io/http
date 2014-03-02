@@ -34,6 +34,8 @@ class HttpProtocol
     const HEADER_LOCATION = 'location';
     const HEADER_CONNECTION = 'connection';
     const HEADER_SERVER = 'server';
+    const HEADER_ACCEPT_ENCODING = 'accept-encoding';
+    const HEADER_CONTENT_ENCODING = 'content-encoding';
 
     /**
      * Defines status const's

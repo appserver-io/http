@@ -137,7 +137,7 @@ class HttpParser implements HttpParserInterface
     public function parseHeaderLine($line)
     {
         // extract header info
-        $extractedHeaderInfo = explode(':', trim(strtolower($line)));
+        $extractedHeaderInfo = explode(': ', trim(strtolower($line)));
         if (!$extractedHeaderInfo) {
             throw new HttpException('Wrong header format');
         }
