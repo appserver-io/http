@@ -9,6 +9,7 @@
  * @author    Johann Zelger <jz@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 
 namespace TechDivision\Http;
@@ -21,6 +22,7 @@ namespace TechDivision\Http;
  * @author    Johann Zelger <jz@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 class HttpResponse implements HttpResponseInterface
 {
@@ -90,7 +92,7 @@ class HttpResponse implements HttpResponseInterface
 
         // init default response properties
         $this->statusCode = 200;
-        $this->version = 'HTTP/1.1';;
+        $this->version = 'HTTP/1.1';
         $this->statusReasonPhrase = "OK";
         $this->mimeType = "text/plain";
 
@@ -101,6 +103,11 @@ class HttpResponse implements HttpResponseInterface
         ));
     }
 
+    /**
+     * Return's all headers as string
+     *
+     * @return string
+     */
     public function getHeaderString()
     {
         // check if content length must be set
@@ -127,6 +134,8 @@ class HttpResponse implements HttpResponseInterface
      * Reset's the stream resource pointing to body content
      *
      * @param resource $bodyStream The body content stream resource
+     *
+     * @return void
      */
     public function setBodyStream($bodyStream)
     {
@@ -143,11 +152,23 @@ class HttpResponse implements HttpResponseInterface
         return $this->bodyStream;
     }
 
+    /**
+     * Return's the mime type of response data
+     *
+     * @return string
+     */
     public function getMimeType()
     {
         return $this->mimeType;
     }
 
+    /**
+     * Set's the specific mime type
+     *
+     * @param string $mimeType The mime type to set
+     *
+     * @return void
+     */
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
@@ -156,8 +177,10 @@ class HttpResponse implements HttpResponseInterface
     /**
      * Add's a header information got from connection
      *
-     * @param string $name
-     * @param string $value
+     * @param string $name  The header name
+     * @param string $value The headers value
+     *
+     * @return void
      */
     public function addHeader($name, $value)
     {
@@ -214,6 +237,13 @@ class HttpResponse implements HttpResponseInterface
         $this->headers = $headers;
     }
 
+    /**
+     * Set's the http response status code
+     *
+     * @param int $code The status code to set
+     *
+     * @return void
+     */
     public function setStatusCode($code)
     {
         // set status code
@@ -222,33 +252,55 @@ class HttpResponse implements HttpResponseInterface
         $this->statusReasonPhrase = HttpProtocol::getStatusReasonPhraseByCode($code);
     }
 
+    /**
+     * Return's the response status code
+     *
+     * @return int
+     */
     public function getStatusCode()
     {
         return $this->statusCode;
     }
 
+    /**
+     * Return's the status phrase based on the status code
+     *
+     * @return string
+     */
     public function getStatusReasonPhrase()
     {
         return $this->statusReasonPhrase;
     }
 
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
+    /**
+     * Return's the http version of the response
+     *
+     * @return string
+     */
     public function getVersion()
     {
         return $this->version;
     }
 
+    /**
+     * Set's the http response version
+     *
+     * @param string $version The version to set (e.g. HTTP/1.1)
+     *
+     * @return void
+     */
     public function setVersion($version)
     {
         $this->version = $version;
     }
 
     /**
-     * @param string $serverSignature
+     * Set's the default server signature (e.g. phpWebServer/0.1.0)
+     * This will be sent via "Server: phpWebServer/0.1.0" headers
+     *
+     * @param string $serverSignature The server signature
+     *
+     * @return void
      */
     public function setServerSignature($serverSignature)
     {
@@ -256,6 +308,8 @@ class HttpResponse implements HttpResponseInterface
     }
 
     /**
+     * Return's the server signature
+     *
      * @return string
      */
     public function getServerSignature()
@@ -275,4 +329,3 @@ class HttpResponse implements HttpResponseInterface
         return $this->getVersion() . ' ' . $this->getStatusCode() . ' ' . $this->getStatusReasonPhrase() . "\r\n";
     }
 }
-

@@ -9,6 +9,7 @@
  * @author    Johann Zelger <jz@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 
 namespace TechDivision\Http;
@@ -35,6 +36,7 @@ use TechDivision\Http\HttpResponse;
  * @author    Johann Zelger <jz@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 class HttpConnectionHandler implements ConnectionHandlerInterface
 {
@@ -153,7 +155,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
              * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
              */
             $messageHeaders = '';
-            while($line != "\r\n") {
+            while ($line != "\r\n") {
                 // read next line
                 $line = $connection->readLine();
                 // enhance headers
@@ -168,7 +170,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                 // get content-length header
                 $contentLength = (int)$parser->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH);
                 // read content until given content-length
-                while(ftell($parser->getRequest()->getBodyStream()) < $contentLength) {
+                while (ftell($parser->getRequest()->getBodyStream()) < $contentLength) {
                     // read next line
                     $line = $connection->readLine();
                     // enhance body with new line

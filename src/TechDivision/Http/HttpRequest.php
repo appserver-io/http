@@ -9,6 +9,7 @@
  * @author    Johann Zelger <jz@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 
 namespace TechDivision\Http;
@@ -21,6 +22,7 @@ namespace TechDivision\Http;
  * @author    Johann Zelger <jz@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 class HttpRequest implements HttpRequestInterface
 {
@@ -91,8 +93,10 @@ class HttpRequest implements HttpRequestInterface
     /**
      * Add's a header information got from connection
      *
-     * @param string $name
-     * @param string $value
+     * @param string $name  The header name
+     * @param string $value The headers value
+     *
+     * @return void
      */
     public function addHeader($name, $value)
     {
@@ -193,6 +197,13 @@ class HttpRequest implements HttpRequestInterface
         return $this->getDocumentRoot() . $this->getUri();
     }
 
+    /**
+     * Set's document root
+     *
+     * @param string $documentRoot The document root
+     *
+     * @return void
+     */
     public function setDocumentRoot($documentRoot)
     {
         $this->documentRoot = $documentRoot;
@@ -224,6 +235,8 @@ class HttpRequest implements HttpRequestInterface
      * Reset's the stream resource pointing to body content
      *
      * @param resource $bodyStream The body content stream resource
+     *
+     * @return void
      */
     public function setBodyStream($bodyStream)
     {
@@ -251,6 +264,4 @@ class HttpRequest implements HttpRequestInterface
     {
         $this->version = $version;
     }
-
 }
-

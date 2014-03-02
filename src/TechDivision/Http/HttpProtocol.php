@@ -9,6 +9,7 @@
  * @author    Johann Zelger <jz@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 
 namespace TechDivision\Http;
@@ -21,6 +22,7 @@ namespace TechDivision\Http;
  * @author    Johann Zelger <jz@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 class HttpProtocol
 {
@@ -34,6 +36,8 @@ class HttpProtocol
     const HEADER_LOCATION = 'location';
     const HEADER_CONNECTION = 'connection';
     const HEADER_SERVER = 'server';
+    const HEADER_ACCEPT_ENCODING = 'accept-encoding';
+    const HEADER_CONTENT_ENCODING = 'content-encoding';
 
     /**
      * Defines status const's
@@ -117,10 +121,9 @@ class HttpProtocol
      */
     public static function getStatusReasonPhraseByCode($statusCode)
     {
-        if (array_key_exists($statusCode, self::$reasonPhrases))  {
+        if (array_key_exists($statusCode, self::$reasonPhrases)) {
             return self::$reasonPhrases[$statusCode];
         }
         return self::STATUS_REASONPHRASE_UNASSIGNED;
     }
 }
-

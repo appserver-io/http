@@ -9,6 +9,7 @@
  * @author    Johann Zelger <jz@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 
 namespace TechDivision\Http;
@@ -21,6 +22,7 @@ namespace TechDivision\Http;
  * @author    Johann Zelger <jz@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 class HttpParser implements HttpParserInterface
 {
@@ -75,6 +77,7 @@ class HttpParser implements HttpParserInterface
      * Parses the start line
      *
      * @param string $line The start line
+     *
      * @return void
      * @throws \TechDivision\Http\HttpException
      *
@@ -137,7 +140,7 @@ class HttpParser implements HttpParserInterface
     public function parseHeaderLine($line)
     {
         // extract header info
-        $extractedHeaderInfo = explode(':', trim(strtolower($line)));
+        $extractedHeaderInfo = explode(': ', trim(strtolower($line)));
         if (!$extractedHeaderInfo) {
             throw new HttpException('Wrong header format');
         }
@@ -145,5 +148,4 @@ class HttpParser implements HttpParserInterface
         // add request header
         $this->getRequest()->addHeader($headerName, $headerValue);
     }
-
 }
