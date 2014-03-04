@@ -1,4 +1,5 @@
 <?php
+
 /**
  * \TechDivision\Http\HttpProtocol
  *
@@ -23,22 +24,193 @@ namespace TechDivision\Http;
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
  */
 class HttpProtocol
 {
+
     /**
-     * Defines header const's
+     * Status header name.
+     *
+     * @var string
+     */
+    const HEADER_STATUS = 'status';
+    
+    /**
+     * Date header name.
+     *
+     * @var string
+     */
+    const HEADER_DATE = 'date';
+    
+    /**
+     * Connection header name.
+     *
+     * @var string
+     */
+    const HEADER_CONNECTION = 'connection';
+    
+    /**
+     * Content-Type header name.
      *
      * @var string
      */
     const HEADER_CONTENT_TYPE = 'content-type';
+    
+    /**
+     * Content-Length header name.
+     *
+     * @var string
+     */
     const HEADER_CONTENT_LENGTH = 'content-length';
-    const HEADER_LOCATION = 'location';
-    const HEADER_CONNECTION = 'connection';
-    const HEADER_SERVER = 'server';
-    const HEADER_ACCEPT_ENCODING = 'accept-encoding';
+    
+    /**
+     * Content-Encoding header name.
+     *
+     * @var string
+     */
     const HEADER_CONTENT_ENCODING = 'content-encoding';
-
+    
+    /**
+     * Cache-Control header name.
+     *
+     * @var string
+     */
+    const HEADER_CACHE_CONTROL = 'cache-control';
+    
+    /**
+     * Pragma header name.
+     *
+     * @var string
+     */
+    const HEADER_PRAGMA = 'pragma';
+    
+    /**
+     * Status header name.
+     *
+     * @var string
+     */
+    const HEADER_LAST_MODIFIED = 'last-modified';
+    
+    /**
+     * Expires header name.
+     *
+     * @var string
+     */
+    const HEADER_EXPIRES = 'expires';
+    
+    /**
+     * If-Modified-Since header name.
+     *
+     * @var string
+     */
+    const HEADER_IF_MODIFIED_SINCE = 'if-modified-since';
+    
+    /**
+     * Location header name.
+     *
+     * @var string
+     */
+    const HEADER_LOCATION = 'location';
+    
+    /**
+     * X-Powered-By header name.
+     *
+     * @var string
+     */
+    const HEADER_X_POWERED_BY = 'x-powered-by';
+    
+    /**
+     * X-Request-With header name.
+     *
+     * @var string
+     */
+    const HEADER_X_REQUESTED_WITH = 'x-requested-with';
+    
+    /**
+     * Cookie header name.
+     *
+     * @var string
+     */
+    const HEADER_COOKIE = 'cookie';
+    
+    /**
+     * Set-Cookie header name.
+     *
+     * @var string
+     */
+    const HEADER_SET_COOKIE = 'cet-cookie';
+    
+    /**
+     * Host header name.
+     *
+     * @var string
+     */
+    const HEADER_HOST = 'host';
+    
+    /**
+     * Accept header name.
+     *
+     * @var string
+     */
+    const HEADER_ACCEPT = 'accept';
+    
+    /**
+     * Accept-Language header name.
+     *
+     * @var string
+     */
+    const HEADER_ACCEPT_LANGUAGE = 'accept-language';
+    
+    /**
+     * Accept-Encoding header name.
+     *
+     * @var string
+     */
+    const HEADER_ACCEPT_ENCODING = 'accept-encoding';
+    
+    /**
+     * User-Agent header name.
+     *
+     * @var string
+     */
+    const HEADER_USER_AGENT = 'user-agent';
+    
+    /**
+     * Referer header name.
+     *
+     * @var string
+     */
+    const HEADER_REFERER = 'referer';
+    
+    /**
+     * Keep-Alive header name.
+     *
+     * @var string
+     */
+    const HEADER_KEEP_ALIVE = 'keep-alive';
+    
+    /**
+     * Server header name.
+     *
+     * @var string
+     */
+    const HEADER_SERVER = 'server';
+    
+    /**
+     * WWW-Authenticate header name.
+     *
+     * @var string
+     */
+    const HEADER_WWW_AUTHENTICATE = 'www-authenticate';
+    
+    /**
+     * Authorization header name.
+     *
+     * @var string
+     */
+    const HEADER_AUTHORIZATION = 'authorization';
+    
     /**
      * Defines status const's
      *
