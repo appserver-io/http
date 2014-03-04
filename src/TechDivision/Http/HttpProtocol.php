@@ -210,6 +210,62 @@ class HttpProtocol
      * @var string
      */
     const HEADER_AUTHORIZATION = 'authorization';
+
+    /**
+     * POST request method string.
+     *
+     * @var string
+     */
+    const METHOD_POST = 'POST';
+    
+    /**
+     * GET request method string.
+     *
+     * @var string
+     */
+    const METHOD_GET = 'GET';
+    
+    /**
+     * HEAD request method string.
+     *
+     * @var string
+     */
+    const METHOD_HEAD = 'HEAD';
+    
+    /**
+     * PUT request method string.
+     *
+     * @var string
+     */
+    const METHOD_PUT = 'PUT';
+    
+    /**
+     * DELETE request method string.
+     *
+     * @var string
+     */
+    const METHOD_DELETE = 'DELETE';
+    
+    /**
+     * OPTIONS request method string.
+     *
+     * @var string
+     */
+    const METHOD_OPTIONS = 'OPTIONS';
+    
+    /**
+     * TRACE request method string.
+     *
+     * @var string
+     */
+    const METHOD_TRACE = 'TRACE';
+    
+    /**
+     * CONNECT request method string.
+     *
+     * @var string
+     */
+    const METHOD_CONNECT = 'CONNECT';
     
     /**
      * Defines status const's
