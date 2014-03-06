@@ -121,7 +121,6 @@ class HttpResponse implements HttpResponseInterface
         $contentLength = ftell($this->getBodyStream());
 
         if ($contentLength > 0) {
-            $this->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, $this->getMimeType());
             $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $contentLength);
         }
 
@@ -156,6 +155,18 @@ class HttpResponse implements HttpResponseInterface
     public function getBodyStream()
     {
         return $this->bodyStream;
+    }
+
+    /**
+     * Append's body stream with content
+     *
+     * @param string $content The content to append
+     *
+     * @return int
+     */
+    public function appendBodyStream($content)
+    {
+        return fwrite($this->getBodyStream(), $content);
     }
 
     /**
@@ -244,6 +255,22 @@ class HttpResponse implements HttpResponseInterface
     }
 
     /**
+     * Splits status message into status code and reason phrase and sets it.
+     *
+     * @param string $status The status code + reason phrase in one string
+     *
+     * @return void
+     */
+    public function setStatus($status)
+    {
+        // check if correct status line format is given
+        if (preg_match('/(\d+)\s+(.*)/', $status, $matches) > 0) {
+            $this->setStatusCode(trim($matches[1]));
+            $this->setStatusReasonPhrase($matches[2]);
+        }
+    }
+
+    /**
      * Set's the http response status code
      *
      * @param int $code The status code to set
@@ -254,8 +281,20 @@ class HttpResponse implements HttpResponseInterface
     {
         // set status code
         $this->statusCode = $code;
-        // lookup reason phrase by code
-        $this->statusReasonPhrase = HttpProtocol::getStatusReasonPhraseByCode($code);
+        // lookup reason phrase by code and set
+        $this->setStatusReasonPhrase(HttpProtocol::getStatusReasonPhraseByCode($code));
+    }
+
+    /**
+     * Set's the status reason phrase
+     *
+     * @param string $statusReasonPhrase The reason phrase
+     *
+     * @return void
+     */
+    public function setStatusReasonPhrase($statusReasonPhrase)
+    {
+        $this->statusReasonPhrase = $statusReasonPhrase;
     }
 
     /**

@@ -40,182 +40,204 @@ class HttpProtocol
      *
      * @var string
      */
-    const HEADER_STATUS = 'status';
+    const HEADER_STATUS = 'Status';
     
     /**
      * Date header name.
      *
      * @var string
      */
-    const HEADER_DATE = 'date';
+    const HEADER_DATE = 'Date';
     
     /**
      * Connection header name.
      *
      * @var string
      */
-    const HEADER_CONNECTION = 'connection';
+    const HEADER_CONNECTION = 'Connection';
     
     /**
      * Content-Type header name.
      *
      * @var string
      */
-    const HEADER_CONTENT_TYPE = 'content-type';
+    const HEADER_CONTENT_TYPE = 'Content-Type';
     
     /**
      * Content-Length header name.
      *
      * @var string
      */
-    const HEADER_CONTENT_LENGTH = 'content-length';
+    const HEADER_CONTENT_LENGTH = 'Content-Length';
     
     /**
      * Content-Encoding header name.
      *
      * @var string
      */
-    const HEADER_CONTENT_ENCODING = 'content-encoding';
+    const HEADER_CONTENT_ENCODING = 'Content-Encoding';
     
     /**
      * Cache-Control header name.
      *
      * @var string
      */
-    const HEADER_CACHE_CONTROL = 'cache-control';
+    const HEADER_CACHE_CONTROL = 'Cache-Control';
     
     /**
      * Pragma header name.
      *
      * @var string
      */
-    const HEADER_PRAGMA = 'pragma';
+    const HEADER_PRAGMA = 'Pragma';
+
+    /**
+     * Proxy-Connection header name
+     *
+     * @var string
+     */
+    const HEADER_PROXY_CONNECTION = 'Proxy-Connection';
+
+    /**
+     * X-Forward header name
+     *
+     * @var string
+     */
+    const HEADER_X_FORWARD = 'X-Forward';
     
     /**
      * Status header name.
      *
      * @var string
      */
-    const HEADER_LAST_MODIFIED = 'last-modified';
+    const HEADER_LAST_MODIFIED = 'Last-Modified';
     
     /**
      * Expires header name.
      *
      * @var string
      */
-    const HEADER_EXPIRES = 'expires';
+    const HEADER_EXPIRES = 'Expires';
     
     /**
      * If-Modified-Since header name.
      *
      * @var string
      */
-    const HEADER_IF_MODIFIED_SINCE = 'if-modified-since';
+    const HEADER_IF_MODIFIED_SINCE = 'If-Modified-Since';
     
     /**
      * Location header name.
      *
      * @var string
      */
-    const HEADER_LOCATION = 'location';
+    const HEADER_LOCATION = 'Location';
     
     /**
      * X-Powered-By header name.
      *
      * @var string
      */
-    const HEADER_X_POWERED_BY = 'x-powered-by';
-    
-    /**
-     * X-Request-With header name.
-     *
-     * @var string
-     */
-    const HEADER_X_REQUESTED_WITH = 'x-requested-with';
+    const HEADER_X_POWERED_BY = 'X-Powered-By';
     
     /**
      * Cookie header name.
      *
      * @var string
      */
-    const HEADER_COOKIE = 'cookie';
+    const HEADER_COOKIE = 'Cookie';
     
     /**
      * Set-Cookie header name.
      *
      * @var string
      */
-    const HEADER_SET_COOKIE = 'cet-cookie';
+    const HEADER_SET_COOKIE = 'Set-Cookie';
     
     /**
      * Host header name.
      *
      * @var string
      */
-    const HEADER_HOST = 'host';
+    const HEADER_HOST = 'Host';
     
     /**
      * Accept header name.
      *
      * @var string
      */
-    const HEADER_ACCEPT = 'accept';
-    
+    const HEADER_ACCEPT = 'Accept';
+
+    /**
+     * Accept-Charset header name
+     *
+     * @var string
+     */
+    const HEADER_ACCEPT_CHARSET = 'Accept-Charset';
+
     /**
      * Accept-Language header name.
      *
      * @var string
      */
-    const HEADER_ACCEPT_LANGUAGE = 'accept-language';
+    const HEADER_ACCEPT_LANGUAGE = 'Accept-Language';
     
     /**
      * Accept-Encoding header name.
      *
      * @var string
      */
-    const HEADER_ACCEPT_ENCODING = 'accept-encoding';
+    const HEADER_ACCEPT_ENCODING = 'Accept-Encoding';
     
     /**
      * User-Agent header name.
      *
      * @var string
      */
-    const HEADER_USER_AGENT = 'user-agent';
+    const HEADER_USER_AGENT = 'User-Agent';
     
     /**
      * Referer header name.
      *
      * @var string
      */
-    const HEADER_REFERER = 'referer';
+    const HEADER_REFERER = 'Referer';
     
     /**
      * Keep-Alive header name.
      *
      * @var string
      */
-    const HEADER_KEEP_ALIVE = 'keep-alive';
+    const HEADER_KEEP_ALIVE = 'Keep-Alive';
     
     /**
      * Server header name.
      *
      * @var string
      */
-    const HEADER_SERVER = 'server';
+    const HEADER_SERVER = 'Server';
     
     /**
      * WWW-Authenticate header name.
      *
      * @var string
      */
-    const HEADER_WWW_AUTHENTICATE = 'www-authenticate';
+    const HEADER_WWW_AUTHENTICATE = 'WWW-Authenticate';
     
     /**
      * Authorization header name.
      *
      * @var string
      */
-    const HEADER_AUTHORIZATION = 'authorization';
+    const HEADER_AUTHORIZATION = 'Authorization';
+
+    /**
+     * Mainly used to identify Ajax requests.
+     * Most JavaScript frameworks send this header with value of XMLHttpRequest
+     *
+     * @var string
+     */
+    const HEADER_X_REQUESTED_WITH = 'X-Requested-With';
 
     /**
      * POST request method string.
