@@ -302,6 +302,47 @@ class HttpRequest implements HttpRequestInterface
     }
 
     /**
+     * Return's the body content stored in body stream
+     *
+     * @return string
+     */
+    public function getBodyContent()
+    {
+        // set bodystream resource ref to var
+        $bodyStream = $this->getBodyStream();
+        // rewind pointer
+        rewind($bodyStream);
+        // returns whole body content
+        return fread($bodyStream, $this->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH));
+    }
+
+    /**
+     * Copies a source stream to body stream
+     *
+     * @param resource $sourceStream The file pointer to source stream
+     * @param int      $maxlength    The max length to read from source stream
+     * @param int      $offset       The offset from source stream to read
+     *
+     * @return int the total count of bytes copied.
+     */
+    public function copyBodyStream($sourceStream, $maxlength = null, $offset = null)
+    {
+        return stream_copy_to_stream($sourceStream, $this->getBodyStream(), $maxlength, $offset);
+    }
+
+    /**
+     * Append's body stream with content
+     *
+     * @param string $content The content to append
+     *
+     * @return int
+     */
+    public function appendBodyStream($content)
+    {
+        return fwrite($this->getBodyStream(), $content);
+    }
+
+    /**
      * Set's the http request version
      *
      * @param string $version The http request version
@@ -348,6 +389,18 @@ class HttpRequest implements HttpRequestInterface
     public function getParams()
     {
         return $this->params;
+    }
+
+    /**
+     * Set's the array of all params
+     *
+     * @param array $params The params array to set
+     *
+     * @return array
+     */
+    public function setParams($params)
+    {
+        $this->params = $params;
     }
 
     /**

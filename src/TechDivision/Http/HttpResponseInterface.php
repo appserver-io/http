@@ -110,6 +110,17 @@ interface HttpResponseInterface
     public function appendBodyStream($content);
 
     /**
+     * Copies a source stream to body stream
+     *
+     * @param resource $sourceStream The file pointer to source stream
+     * @param int      $maxlength    The max length to read from source stream
+     * @param int      $offset       The offset from source stream to read
+     *
+     * @return int the total count of bytes copied.
+     */
+    public function copyBodyStream($sourceStream, $maxlength = null, $offset = null);
+
+    /**
      * Return's the mime type of response data
      *
      * @return string

@@ -172,6 +172,33 @@ interface HttpRequestInterface
     public function getBodyStream();
 
     /**
+     * Return's the body content stored in body stream
+     *
+     * @return string
+     */
+    public function getBodyContent();
+
+    /**
+     * Append's body stream with content
+     *
+     * @param string $content The content to append
+     *
+     * @return int
+     */
+    public function appendBodyStream($content);
+
+    /**
+     * Copies a source stream to body stream
+     *
+     * @param resource $sourceStream The file pointer to source stream
+     * @param int      $maxlength    The max length to read from source stream
+     * @param int      $offset       The offset from source stream to read
+     *
+     * @return int the total count of bytes copied.
+     */
+    public function copyBodyStream($sourceStream, $maxlength = null, $offset = null);
+
+    /**
      * Set's specific http version
      *
      * @param string $version The version e.g. HTTP/1.1
@@ -205,6 +232,15 @@ interface HttpRequestInterface
      * @return array
      */
     public function getParams();
+
+    /**
+     * Set's the array of all params
+     *
+     * @param array $params The params array to set
+     *
+     * @return array
+     */
+    public function setParams($params);
 
     /**
      * Set's the path info

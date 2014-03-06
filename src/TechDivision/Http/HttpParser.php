@@ -126,32 +126,11 @@ class HttpParser implements HttpParserInterface
         $request->setMethod($reqMethod);
         $request->setUri($reqUri);
         $request->setVersion($reqVersion);
+
         // parse query string
         if ($queryString = parse_url($request->getUri(), PHP_URL_QUERY)) {
             $request->setQueryString($queryString);
             $this->getQueryParser()->parseStr($queryString);
-        }
-
-        // todo: read out config for all file handle extensions not just hardcore php
-        $fileHandlerExtension = '.php';
-        // check if fileHandler type are present in uri
-        if (strpos($request->getUri(), $fileHandlerExtension) !== false) {
-            // check where the script position ends
-            $scriptStrEndPos = strpos($request->getUri(), $fileHandlerExtension) + strlen($fileHandlerExtension);
-            // parse script name
-            $scriptName = substr($request->getUri(), 0, $scriptStrEndPos);
-            // set script name to request object
-            $request->setScriptName($scriptName);
-            // parse path info if exists in uri
-            if (($pathInfo = substr(str_replace('?' . $request->getQueryString(), '', $request->getUri()), $scriptStrEndPos)) !== false) {
-                // set path info to request object
-                $request->setPathInfo($pathInfo);
-            }
-            /**
-             * it's intended to not set ScriptFilename and PathTranslated here because the request doesn't
-             * care about document root stuff. so this is set by the connection handler!
-             */
-            // todo: check and implement ORIG_PATH_INFO server var
         }
     }
 
@@ -201,5 +180,66 @@ class HttpParser implements HttpParserInterface
         list($headerName, $headerValue) = $extractedHeaderInfo;
         // add request header with name lowercase for further compare functions
         $this->getRequest()->addHeader($headerName, $headerValue);
+    }
+
+    /**
+     * Parse multipart form data
+     *
+     * @param string $content The content to parse
+     *
+     * @return void
+     */
+    public function parseMultipartFormData($content)
+    {
+        // grab multipart boundary from content type header
+        preg_match('/boundary=(.*)$/', $this->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_TYPE), $matches);
+        // get boundary
+        $boundary = $matches[1];
+        // split content by boundary
+        $blocks = preg_split("/-+$boundary/", $content);
+        // get rid of last -- element
+        array_pop($blocks);
+        // loop data blocks
+        foreach ($blocks as $id => $block) {
+            // of block is empty continue with next one
+            if (empty($block)) {
+                continue;
+            }
+
+            // check if filename is given
+            /* todo: refactore file part generating
+            if (strpos($block, '; filename="') !== false) {
+                // init new part instance
+                $part = $this->getHttpPartInstance();
+                // seperate headers from body
+                $partHeaders = strstr($block, "\n\r\n", true);
+                $partBody = ltrim(strstr($block, "\n\r\n"));
+                // parse part headers
+                foreach (explode("\n", $partHeaders) as $i => $h) {
+                    $h = explode(':', $h, 2);
+                    if (isset($h[1])) {
+                        $part->addHeader($h[0], trim($h[1]));
+                    }
+                }
+                // match name and filename
+                preg_match("/name=\"([^\"]*)\"; filename=\"([^\"]*)\".*$/s", $partHeaders, $matches);
+                // set name
+                $part->setName($matches[1]);
+                // set given filename
+                $part->setFilename($matches[2]);
+                // put content to part
+                $part->putContent(preg_replace('/.' . PHP_EOL . '$/', '', $partBody));
+                // add the part instance to request
+                $this->addPart($part);
+                // parse all other fields as normal key value pairs
+            } else {
+            */
+                // match "name" and optional value in between newline sequences
+                preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
+                $this->getQueryParser()->parseKeyValue($matches[1], $matches[2]);
+            /*
+            }
+            */
+        }
     }
 }
