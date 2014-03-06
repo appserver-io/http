@@ -101,6 +101,15 @@ interface HttpResponseInterface
     public function getBodyStream();
 
     /**
+     * Append's body stream with content
+     *
+     * @param string $content The content to append
+     *
+     * @return int
+     */
+    public function appendBodyStream($content);
+
+    /**
      * Return's the mime type of response data
      *
      * @return string
@@ -131,6 +140,24 @@ interface HttpResponseInterface
      * @return int
      */
     public function getStatusCode();
+
+    /**
+     * Splits status message into status code and reason phrase and sets it.
+     *
+     * @param string $status The status code + reason phrase in one string
+     *
+     * @return void
+     */
+    public function setStatus($status);
+
+    /**
+     * Set's the status reason phrase
+     *
+     * @param string $statusReasonPhrase The reason phrase
+     *
+     * @return void
+     */
+    public function setStatusReasonPhrase($statusReasonPhrase);
 
     /**
      * Return's the status phrase based on the status code

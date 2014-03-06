@@ -75,6 +75,27 @@ class HttpRequest implements HttpRequestInterface
     protected $documentRoot;
 
     /**
+     * Hold's the request parameters
+     *
+     * @var array
+     */
+    protected $params;
+
+    /**
+     * Hold's the path info parsed from uri
+     *
+     * @var string
+     */
+    protected $pathInfo;
+
+    /**
+     * Hold's the script name
+     *
+     * @var string
+     */
+    protected $scriptName;
+
+    /**
      * Initialises the request object to default properties
      *
      * @return void
@@ -90,10 +111,13 @@ class HttpRequest implements HttpRequestInterface
 
         // init default response properties
         $this->headers = array();
+        $this->params = array();
         $this->uri = null;
         $this->method = null;
         $this->version = null;
         $this->queryString = null;
+        $this->scriptName = null;
+        $this->pathInfo = null;
     }
 
     /**
@@ -118,7 +142,7 @@ class HttpRequest implements HttpRequestInterface
      */
     public function hasHeader($name)
     {
-        return array_key_exists($name, $this->headers);
+        return isset($this->headers[$name]);
     }
 
     /**
@@ -126,15 +150,13 @@ class HttpRequest implements HttpRequestInterface
      *
      * @param string $name The header name to get
      *
-     * @return string
-     * @throws HttpException
+     * @return string|null
      */
     public function getHeader($name)
     {
-        if (!array_key_exists($name, $this->headers)) {
-            throw new HttpException("Request header not found '$name'");
+        if (isset($this->headers[$name])) {
+            return $this->headers[$name];
         }
-        return $this->headers[$name];
     }
 
     /**
@@ -181,6 +203,16 @@ class HttpRequest implements HttpRequestInterface
     public function setMethod($method)
     {
         $this->method = $method;
+    }
+
+    /**
+     * Get's request method
+     *
+     * @return string
+     */
+    public function getMethod()
+    {
+        return $this->method;
     }
 
     /**
@@ -238,6 +270,16 @@ class HttpRequest implements HttpRequestInterface
     }
 
     /**
+     * Return's query string
+     *
+     * @return string The query string
+     */
+    public function getQueryString()
+    {
+        return $this->queryString;
+    }
+
+    /**
      * Reset's the stream resource pointing to body content
      *
      * @param resource $bodyStream The body content stream resource
@@ -269,5 +311,86 @@ class HttpRequest implements HttpRequestInterface
     public function setVersion($version)
     {
         $this->version = $version;
+    }
+
+    /**
+     * Set's a parameter given in query string
+     *
+     * @param string $param The param key
+     * @param string $value The param value
+     *
+     * @return void
+     */
+    public function setParam($param, $value)
+    {
+        $this->params[$param] = $value;
+    }
+
+    /**
+     * Return's a param value by given key
+     *
+     * @param string $param The param key
+     *
+     * @return string|null The param value
+     */
+    public function getParam($param)
+    {
+        if (isset($this->params[$param])) {
+            return $this->params[$param];
+        }
+    }
+
+    /**
+     * Return's the array of all params
+     *
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * Set's the path info
+     *
+     * @param string $pathInfo the path info
+     *
+     * @return void
+     */
+    public function setPathInfo($pathInfo)
+    {
+        $this->pathInfo = $pathInfo;
+    }
+
+    /**
+     * Return's the path info
+     *
+     * @return string
+     */
+    public function getPathInfo()
+    {
+        return $this->pathInfo;
+    }
+
+    /**
+     * Set's the script name
+     *
+     * @param string $scriptName The script's name
+     *
+     * @return void
+     */
+    public function setScriptName($scriptName)
+    {
+        $this->scriptName = $scriptName;
+    }
+
+    /**
+     * Return's the script name
+     *
+     * @return string
+     */
+    public function getScriptName()
+    {
+        return $this->scriptName;
     }
 }

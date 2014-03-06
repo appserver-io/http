@@ -133,6 +133,13 @@ interface HttpRequestInterface
     public function setMethod($method);
 
     /**
+     * Get's request method
+     *
+     * @return string
+     */
+    public function getMethod();
+
+    /**
      * Set's parsed query string
      *
      * @param string $queryString The parsed query string
@@ -140,6 +147,13 @@ interface HttpRequestInterface
      * @return void
      */
     public function setQueryString($queryString);
+
+    /**
+     * Return's query string
+     *
+     * @return string The query string
+     */
+    public function getQueryString();
 
     /**
      * Set's body stream file descriptor resource
@@ -165,4 +179,62 @@ interface HttpRequestInterface
      * @return void
      */
     public function setVersion($version);
+
+    /**
+     * Set's a parameter given in query string
+     *
+     * @param string $param The param key
+     * @param string $value The param value
+     *
+     * @return void
+     */
+    public function setParam($param, $value);
+
+    /**
+     * Return's a param value by given key
+     *
+     * @param string $param The param key
+     *
+     * @return string The param value
+     */
+    public function getParam($param);
+
+    /**
+     * Return's the array of all params
+     *
+     * @return array
+     */
+    public function getParams();
+
+    /**
+     * Set's the path info
+     *
+     * @param string $pathInfo the path info
+     *
+     * @return void
+     */
+    public function setPathInfo($pathInfo);
+
+    /**
+     * Return's the path info
+     *
+     * @return string
+     */
+    public function getPathInfo();
+
+    /**
+     * Set's the script name
+     *
+     * @param string $scriptName The script's name
+     *
+     * @return void
+     */
+    public function setScriptName($scriptName);
+
+    /**
+     * Return's the script name
+     *
+     * @return string
+     */
+    public function getScriptName();
 }

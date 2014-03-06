@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\ServletContainer\Http\HttpQueryParser
+ * TechDivision\Http\HttpQueryParser
  *
  * NOTICE OF LICENSE
  *
@@ -11,31 +11,27 @@
  *
  * PHP version 5
  *
- * @category   Appserver
- * @package    TechDivision_ServletContainer
- * @subpackage Http
- * @author     Johann Zelger <jz@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 
-namespace TechDivision\ServletContainer\Http;
-
-use TechDivision\ServletContainer\Interfaces\QueryParser;
+namespace TechDivision\Http;
 
 /**
  * A http query parser to parse post and get params to array from query string
  *
- * @category   Appserver
- * @package    TechDivision_ServletContainer
- * @subpackage Http
- * @author     Johann Zelger <jz@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
-class HttpQueryParser implements QueryParser
+class HttpQueryParser implements HttpQueryParserInterface
 {
 
     /**

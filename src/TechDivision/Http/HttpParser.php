@@ -48,6 +48,13 @@ class HttpParser implements HttpParserInterface
     protected $response;
 
     /**
+     * Holds the query parser instance
+     *
+     * @var \TechDivision\Http\HttpQueryParser
+     */
+    protected $queryParser;
+
+    /**
      * Set's the given request and response class names
      *
      * @param \TechDivision\Http\HttpRequestInterface  $request  The request instance
@@ -55,8 +62,21 @@ class HttpParser implements HttpParserInterface
      */
     public function __construct(HttpRequestInterface $request, HttpResponseInterface $response)
     {
+        // instantiate query parser
+        $this->queryParser = new HttpQueryParser();
+        // add request and response
         $this->request = $request;
         $this->response = $response;
+    }
+
+    /**
+     * Return's the query parser instance
+     *
+     * @return \TechDivision\Http\HttpQueryParser
+     */
+    public function getQueryParser()
+    {
+        return $this->queryParser;
     }
 
     /**
@@ -91,6 +111,7 @@ class HttpParser implements HttpParserInterface
      */
     public function parseStartLine($line)
     {
+        $request = $this->getRequest();
         if (!preg_match(
             "/(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT)\s(.*)\s(HTTP\/1\.0|HTTP\/1\.1)/",
             $line,
@@ -102,9 +123,36 @@ class HttpParser implements HttpParserInterface
         // grab http version and request method from first request line.
         list($reqStartLine, $reqMethod, $reqUri, $reqVersion) = $matches;
         // fill up request object
-        $this->getRequest()->setMethod($reqMethod);
-        $this->getRequest()->setUri($reqUri);
-        $this->getRequest()->setVersion($reqVersion);
+        $request->setMethod($reqMethod);
+        $request->setUri($reqUri);
+        $request->setVersion($reqVersion);
+        // parse query string
+        if ($queryString = parse_url($request->getUri(), PHP_URL_QUERY)) {
+            $request->setQueryString($queryString);
+            $this->getQueryParser()->parseStr($queryString);
+        }
+
+        // todo: read out config for all file handle extensions not just hardcore php
+        $fileHandlerExtension = '.php';
+        // check if fileHandler type are present in uri
+        if (strpos($request->getUri(), $fileHandlerExtension) !== false) {
+            // check where the script position ends
+            $scriptStrEndPos = strpos($request->getUri(), $fileHandlerExtension) + strlen($fileHandlerExtension);
+            // parse script name
+            $scriptName = substr($request->getUri(), 0, $scriptStrEndPos);
+            // set script name to request object
+            $request->setScriptName($scriptName);
+            // parse path info if exists in uri
+            if (($pathInfo = substr(str_replace('?' . $request->getQueryString(), '', $request->getUri()), $scriptStrEndPos)) !== false) {
+                // set path info to request object
+                $request->setPathInfo($pathInfo);
+            }
+            /**
+             * it's intended to not set ScriptFilename and PathTranslated here because the request doesn't
+             * care about document root stuff. so this is set by the connection handler!
+             */
+            // todo: check and implement ORIG_PATH_INFO server var
+        }
     }
 
 
@@ -146,12 +194,12 @@ class HttpParser implements HttpParserInterface
     public function parseHeaderLine($line)
     {
         // extract header info
-        $extractedHeaderInfo = explode(': ', trim(strtolower($line)));
+        $extractedHeaderInfo = explode(': ', trim($line));
         if (!$extractedHeaderInfo) {
             throw new HttpException('Wrong header format');
         }
         list($headerName, $headerValue) = $extractedHeaderInfo;
-        // add request header
+        // add request header with name lowercase for further compare functions
         $this->getRequest()->addHeader($headerName, $headerValue);
     }
 }
