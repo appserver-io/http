@@ -21,6 +21,7 @@
 namespace TechDivision\Http;
 
 use TechDivision\WebServer\Dictionaries\ServerVars;
+use TechDivision\WebServer\Exceptions\ModuleException;
 use TechDivision\WebServer\Interfaces\ConnectionHandlerInterface;
 use TechDivision\WebServer\Interfaces\ServerConfigurationInterface;
 use TechDivision\WebServer\Interfaces\ServerContextInterface;
@@ -128,15 +129,17 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
      */
     public function handle(SocketInterface $connection)
     {
+        // get instances for short calls
+        $parser = $this->getParser();
+        $queryParser = $parser->getQueryParser();
+        $request = $parser->getRequest();
+        $response = $parser->getResponse();
+
         // try to handle request if its a http request
         try {
-            // get instances for short calls
-            $parser = $this->getParser();
-            //$connection = $this->getServerContext()->getConnectionPool()->get($connectionId);
-
             // reset request and response
-            $parser->getRequest()->init();
-            $parser->getResponse()->init();
+            $request->init();
+            $response->init();
 
             // set first line from connection
             $line = $connection->readLine();
@@ -173,44 +176,53 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             $parser->parseHeaders($messageHeaders);
 
             // check if message body will be transmitted
-            if ($parser->getRequest()->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
+            if ($request->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
                 // get content-length header
-                $contentLength = (int)$parser->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH);
-                // read content until given content-length
-                while (ftell($parser->getRequest()->getBodyStream()) < $contentLength) {
-                    // read next line
-                    $line = $connection->readLine();
-                    // enhance body with new line
-                    fwrite($parser->getRequest()->getBodyStream(), $line, strlen($line));
+                $contentLength = (int)$request->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH);
+                // copy connection stream to body stream by given content length
+                $request->copyBodyStream($connection->getConnectionResource(), $contentLength);
+                // get content out for oldschool query parsing todo: refactor query parsing
+                $content = $request->getBodyContent();
+
+                // check if request has to be parsed depending on Content-Type header
+                if ($queryParser->isParsingRelevant($request->getHeader(HttpProtocol::HEADER_CONTENT_TYPE))) {
+                    // checks if request has multipart formdata or not
+                    preg_match('/boundary=(.*)$/', $request->getHeader(HttpProtocol::HEADER_CONTENT_TYPE), $boundaryMatches);
+                    // check if boundaryMatches are found
+                    // todo: refactor content string var to be able to use bodyStream
+                    if (count($boundaryMatches) > 0) {
+                        $parser->parseMultipartFormData($content);
+                    } else {
+                        $queryParser->parseStr(urldecode($content));
+                    }
                 }
             }
 
-            // todo: do multi-part parsing here
+            // set parsed query and multipart form params to request
+            $request->setParams($queryParser->getResult());
 
             // init connection & protocol server vars
             $this->initServerVars();
 
             // process modules
             foreach ($this->getServerContext()->getModules() as $module) {
-                $module->process($parser->getRequest(), $parser->getResponse());
+                $module->process($request, $response);
             }
 
-            // write response status-line
-            $connection->write($parser->getResponse()->getStatusLine());
-            // write response headers
-            $connection->write($parser->getResponse()->getHeaderString());
-            // stream response body to connection
-            $connection->copyStream($parser->getResponse()->getBodyStream());
-
-            // close connection todo: implement keep-alive
-            $connection->close();
-
-            return true;
-
         } catch (\Exception $e) {
-            $connection->write($e->getMessage() . PHP_EOL);
-            $connection->close();
+            $response->setStatusCode(500);
+            $response->appendBodyStream($e->getMessage());
         }
+
+        // write response status-line
+        $connection->write($response->getStatusLine());
+        // write response headers
+        $connection->write($response->getHeaderString());
+        // stream response body to connection
+        $connection->copyStream($response->getBodyStream());
+
+        // close connection todo: implement keep-alive
+        $connection->close();
     }
 
     /**
@@ -294,15 +306,18 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             ServerVars::REQUEST_URI,
             $request->getUri()
         );
-        // set server vars for script
-        $serverContext->setServerVar(
-            ServerVars::SCRIPT_NAME,
-            $request->getScriptName()
-        );
-        $serverContext->setServerVar(
-            ServerVars::SCRIPT_FILENAME,
-            $documentRoot . $request->getScriptName()
-        );
+        // check if script name exists
+        if ($request->getScriptName()) {
+            // set server vars for script
+            $serverContext->setServerVar(
+                ServerVars::SCRIPT_NAME,
+                $request->getScriptName()
+            );
+            $serverContext->setServerVar(
+                ServerVars::SCRIPT_FILENAME,
+                $documentRoot . $request->getScriptName()
+            );
+        }
         // check if path info is given
         if ($request->getPathInfo()) {
             // set path info to server vars
