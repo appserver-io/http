@@ -20,6 +20,8 @@
 
 namespace TechDivision\Http;
 
+use TechDivision\Http\HttpProtocol;
+
 /**
  * Class HttpResponse
  *
@@ -151,6 +153,13 @@ class HttpResponse implements HttpResponseInterface
      */
     public function setBodyStream($bodyStream)
     {
+        // check if old body stream is still open
+        if (is_resource($this->bodyStream)) {
+            // close it before
+            fclose($this->bodyStream);
+            // free it
+            unset($this->bodyStream);
+        }
         $this->bodyStream = $bodyStream;
     }
 
@@ -188,28 +197,6 @@ class HttpResponse implements HttpResponseInterface
     public function copyBodyStream($sourceStream, $maxlength = null, $offset = null)
     {
         return stream_copy_to_stream($sourceStream, $this->getBodyStream(), $maxlength, $offset);
-    }
-
-    /**
-     * Return's the mime type of response data
-     *
-     * @return string
-     */
-    public function getMimeType()
-    {
-        return $this->mimeType;
-    }
-
-    /**
-     * Set's the specific mime type
-     *
-     * @param string $mimeType The mime type to set
-     *
-     * @return void
-     */
-    public function setMimeType($mimeType)
-    {
-        $this->mimeType = $mimeType;
     }
 
     /**
@@ -302,6 +289,7 @@ class HttpResponse implements HttpResponseInterface
     {
         // set status code
         $this->statusCode = $code;
+
         // lookup reason phrase by code and set
         $this->setStatusReasonPhrase(HttpProtocol::getStatusReasonPhraseByCode($code));
     }

@@ -140,6 +140,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // try to handle request if its a http request
         try {
+
             // reset request and response
             $request->init();
             $response->init();
@@ -217,8 +218,8 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             }
 
         } catch (\Exception $e) {
-            $response->setStatusCode(500);
-            $response->appendBodyStream($e->getMessage());
+            $response->setStatusCode($e->getCode());
+            $response->appendBodyStream($response->getStatusLine());
         }
 
         // write response status-line
@@ -243,9 +244,6 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         $serverContext = $this->getServerContext();
         // get request to local var reference
         $request = $this->getParser()->getRequest();
-
-        // get document root to local var to avoid calling function everytime needed
-        $documentRoot = $serverContext->getServerVar(ServerVars::DOCUMENT_ROOT);
 
         // set http protocol because this is the http connection class which implements http 1.1
         $serverContext->setServerVar(ServerVars::SERVER_PROTOCOL, 'HTTP/1.1');
@@ -311,31 +309,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             ServerVars::REQUEST_URI,
             $request->getUri()
         );
-        // check if script name exists
-        if ($request->getScriptName()) {
-            // set server vars for script
-            $serverContext->setServerVar(
-                ServerVars::SCRIPT_NAME,
-                $request->getScriptName()
-            );
-            $serverContext->setServerVar(
-                ServerVars::SCRIPT_FILENAME,
-                $documentRoot . $request->getScriptName()
-            );
-        }
-        // check if path info is given
-        if ($request->getPathInfo()) {
-            // set path info to server vars
-            $serverContext->setServerVar(
-                ServerVars::PATH_INFO,
-                $request->getPathInfo()
-            );
-            // set translated path to server vars
-            $serverContext->setServerVar(
-                ServerVars::PATH_TRANSLATED,
-                $documentRoot . $request->getPathInfo()
-            );
-        }
+
         /**
          * Due to we have noe infos about the client we're not able to set all remote server vars yet
          * Todo: map them as soon it's possible to get remote connection infos
