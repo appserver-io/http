@@ -82,20 +82,6 @@ class HttpRequest implements HttpRequestInterface
     protected $params;
 
     /**
-     * Hold's the path info parsed from uri
-     *
-     * @var string
-     */
-    protected $pathInfo;
-
-    /**
-     * Hold's the script name
-     *
-     * @var string
-     */
-    protected $scriptName;
-
-    /**
      * Initialises the request object to default properties
      *
      * @return void
@@ -118,6 +104,7 @@ class HttpRequest implements HttpRequestInterface
         $this->queryString = null;
         $this->scriptName = null;
         $this->pathInfo = null;
+        $this->realPath = null;
     }
 
     /**
@@ -226,21 +213,12 @@ class HttpRequest implements HttpRequestInterface
     }
 
     /**
-     * Return's the real path to file system
-     *
-     * @return string
-     */
-    public function getRealPath()
-    {
-        return $this->getDocumentRoot() . $this->getUri();
-    }
-
-    /**
      * Set's document root
      *
      * @param string $documentRoot The document root
      *
      * @return void
+     * @deprecated
      */
     public function setDocumentRoot($documentRoot)
     {
@@ -251,6 +229,7 @@ class HttpRequest implements HttpRequestInterface
      * Return's the document root
      *
      * @return string
+     * @deprecated
      */
     public function getDocumentRoot()
     {
@@ -262,7 +241,7 @@ class HttpRequest implements HttpRequestInterface
      *
      * @param string $queryString The requests query string
      *
-     * @return voids
+     * @return void
      */
     public function setQueryString($queryString)
     {
@@ -288,6 +267,13 @@ class HttpRequest implements HttpRequestInterface
      */
     public function setBodyStream($bodyStream)
     {
+        // check if old body stream is still open
+        if (is_resource($this->bodyStream)) {
+            // close it before
+            fclose($this->bodyStream);
+            // free it
+            unset($this->bodyStream);
+        }
         $this->bodyStream = $bodyStream;
     }
 
@@ -401,49 +387,5 @@ class HttpRequest implements HttpRequestInterface
     public function setParams($params)
     {
         $this->params = $params;
-    }
-
-    /**
-     * Set's the path info
-     *
-     * @param string $pathInfo the path info
-     *
-     * @return void
-     */
-    public function setPathInfo($pathInfo)
-    {
-        $this->pathInfo = $pathInfo;
-    }
-
-    /**
-     * Return's the path info
-     *
-     * @return string
-     */
-    public function getPathInfo()
-    {
-        return $this->pathInfo;
-    }
-
-    /**
-     * Set's the script name
-     *
-     * @param string $scriptName The script's name
-     *
-     * @return void
-     */
-    public function setScriptName($scriptName)
-    {
-        $this->scriptName = $scriptName;
-    }
-
-    /**
-     * Return's the script name
-     *
-     * @return string
-     */
-    public function getScriptName()
-    {
-        return $this->scriptName;
     }
 }

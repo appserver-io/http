@@ -121,22 +121,6 @@ interface HttpResponseInterface
     public function copyBodyStream($sourceStream, $maxlength = null, $offset = null);
 
     /**
-     * Return's the mime type of response data
-     *
-     * @return string
-     */
-    public function getMimeType();
-
-    /**
-     * Set's the specific mime type
-     *
-     * @param string $mimeType The mime type to set
-     *
-     * @return void
-     */
-    public function setMimeType($mimeType);
-
-    /**
      * Set's the http response status code
      *
      * @param int $code The status code to set

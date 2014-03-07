@@ -78,18 +78,12 @@ interface HttpRequestInterface
     public function setHeaders(array $headers);
 
     /**
-     * Return's the real path to requested uri
-     *
-     * @return string
-     */
-    public function getRealPath();
-
-    /**
      * Set's document root
      *
      * @param string $documentRoot The document root
      *
      * @return void
+     * @deprecated
      */
     public function setDocumentRoot($documentRoot);
 
@@ -97,6 +91,7 @@ interface HttpRequestInterface
      * Return's the document root
      *
      * @return string
+     * @deprecated
      */
     public function getDocumentRoot();
 
@@ -241,36 +236,4 @@ interface HttpRequestInterface
      * @return array
      */
     public function setParams($params);
-
-    /**
-     * Set's the path info
-     *
-     * @param string $pathInfo the path info
-     *
-     * @return void
-     */
-    public function setPathInfo($pathInfo);
-
-    /**
-     * Return's the path info
-     *
-     * @return string
-     */
-    public function getPathInfo();
-
-    /**
-     * Set's the script name
-     *
-     * @param string $scriptName The script's name
-     *
-     * @return void
-     */
-    public function setScriptName($scriptName);
-
-    /**
-     * Return's the script name
-     *
-     * @return string
-     */
-    public function getScriptName();
 }
