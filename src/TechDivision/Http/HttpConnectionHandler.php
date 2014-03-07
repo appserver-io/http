@@ -210,6 +210,10 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             // process modules
             foreach ($this->getServerContext()->getModules() as $module) {
                 $module->process($request, $response);
+                // check if response should be dispatched now and stop other modules to process
+                if ($response->hasState(HttpResponseStates::DISPATCH)) {
+                    break;
+                }
             }
 
         } catch (\Exception $e) {

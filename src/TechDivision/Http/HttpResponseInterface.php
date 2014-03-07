@@ -209,19 +209,27 @@ interface HttpResponseInterface
     public function getStatusLine();
 
     /**
-     * Set's the default server signature (e.g. phpWebServer/0.1.0)
-     * This will be sent via "Server: phpWebServer/0.1.0" headers
+     * Set's state of response
      *
-     * @param string $serverSignature The server signature
+     * @param int $state The state value
      *
      * @return void
      */
-    public function setServerSignature($serverSignature);
+    public function setState($state);
 
     /**
-     * Return's the server signature
+     * Return's the current state
      *
-     * @return string
+     * @return int
      */
-    public function getServerSignature();
+    public function getState();
+
+    /**
+     * Compares current state with given state
+     *
+     * @param int $state The state to compare with
+     *
+     * @return bool Wheater state is equal (true) or not (false)
+     */
+    public function hasState($state);
 }
