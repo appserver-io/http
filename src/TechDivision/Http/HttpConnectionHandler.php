@@ -82,8 +82,11 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // init http response object
         $httpResponse = new HttpResponse();
-        // set default server signature
-        $httpResponse->setServerSignature($this->getServerConfig()->getSignature());
+        // set server software per default
+        $httpResponse->addHeader(
+            HttpProtocol::HEADER_SERVER,
+            $serverContext->getServerVar(ServerVars::SERVER_SOFTWARE)
+        );
 
         // setup http parser
         $this->parser = new HttpParser($httpRequest, $httpResponse);
@@ -242,8 +245,6 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // set http protocol because this is the http connection class which implements http 1.1
         $serverContext->setServerVar(ServerVars::SERVER_PROTOCOL, 'HTTP/1.1');
-        // set gateway interface as php because we are a php server with php mod at same process
-        $serverContext->setServerVar(ServerVars::GATEWAY_INTERFACE, 'PHP/' . PHP_VERSION);
 
         // set server vars by request
         $serverContext->setServerVar(
