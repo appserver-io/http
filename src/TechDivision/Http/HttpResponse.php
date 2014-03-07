@@ -83,6 +83,13 @@ class HttpResponse implements HttpResponseInterface
     protected $headers;
 
     /**
+     * Represent's the state
+     *
+     * @var int
+     */
+    protected $state;
+
+    /**
      * Initialises the response object to default properties
      *
      * @return void
@@ -101,11 +108,11 @@ class HttpResponse implements HttpResponseInterface
         $this->version = 'HTTP/1.1';
         $this->statusReasonPhrase = "OK";
         $this->mimeType = "text/plain";
+        $this->state = HttpResponseStates::INITIAL;
 
         // reset to default headers
         $this->setHeaders(array(
-            HttpProtocol::HEADER_CONNECTION => "close",
-            HttpProtocol::HEADER_SERVER => $this->getServerSignature()
+            HttpProtocol::HEADER_CONNECTION => "close"
         ));
     }
 
@@ -322,6 +329,40 @@ class HttpResponse implements HttpResponseInterface
     }
 
     /**
+     * Set's state of response
+     *
+     * @param int $state The state value
+     *
+     * @return void
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+    /**
+     * Return's the current state
+     *
+     * @return int
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Compares current state with given state
+     *
+     * @param int $state The state to compare with
+     *
+     * @return bool Wheater state is equal (true) or not (false)
+     */
+    public function hasState($state)
+    {
+        return ($this->state === $state);
+    }
+
+    /**
      * Return's the status phrase based on the status code
      *
      * @return string
@@ -351,29 +392,6 @@ class HttpResponse implements HttpResponseInterface
     public function setVersion($version)
     {
         $this->version = $version;
-    }
-
-    /**
-     * Set's the default server signature (e.g. phpWebServer/0.1.0)
-     * This will be sent via "Server: phpWebServer/0.1.0" headers
-     *
-     * @param string $serverSignature The server signature
-     *
-     * @return void
-     */
-    public function setServerSignature($serverSignature)
-    {
-        $this->serverSignature = $serverSignature;
-    }
-
-    /**
-     * Return's the server signature
-     *
-     * @return string
-     */
-    public function getServerSignature()
-    {
-        return $this->serverSignature;
     }
 
     /**
