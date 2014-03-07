@@ -376,7 +376,7 @@ class HttpProtocol
     public static function getStatusReasonPhraseByCode($statusCode)
     {
         $reasonPhraseConstant = 'STATUS_REASONPHRASE_' . (string)$statusCode;
-        if (defined('\TechDivision\Http\HttpProtocol::' . $reasonPhraseConstant)){
+        if (defined('\TechDivision\Http\HttpProtocol::' . $reasonPhraseConstant)) {
             return constant('\TechDivision\Http\HttpProtocol::' . $reasonPhraseConstant);
         }
         return HttpProtocol::STATUS_REASONPHRASE_UNASSIGNED;
