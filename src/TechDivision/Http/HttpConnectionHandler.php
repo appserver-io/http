@@ -248,6 +248,14 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         // set http protocol because this is the http connection class which implements http 1.1
         $serverContext->setServerVar(ServerVars::SERVER_PROTOCOL, 'HTTP/1.1');
 
+        // get http host to set server name var
+        $serverName = $request->getHeader(HttpProtocol::HEADER_HOST);
+        if (strpos($serverName, ':') !== false) {
+            $serverName = strstr($serverName, ':', true);
+        }
+        // set server name var
+        $serverContext->setServerVar(ServerVars::SERVER_NAME, $serverName);
+
         // set server vars by request
         $serverContext->setServerVar(
             ServerVars::HTTP_USER_AGENT,
