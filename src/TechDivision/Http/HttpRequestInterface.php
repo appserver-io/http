@@ -78,24 +78,6 @@ interface HttpRequestInterface
     public function setHeaders(array $headers);
 
     /**
-     * Set's document root
-     *
-     * @param string $documentRoot The document root
-     *
-     * @return void
-     * @deprecated
-     */
-    public function setDocumentRoot($documentRoot);
-
-    /**
-     * Return's the document root
-     *
-     * @return string
-     * @deprecated
-     */
-    public function getDocumentRoot();
-
-    /**
      * Initialises the request object to default properties
      *
      * @return void
