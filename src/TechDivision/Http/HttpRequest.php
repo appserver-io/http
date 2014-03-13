@@ -68,13 +68,6 @@ class HttpRequest implements HttpRequestInterface
     protected $bodyStream;
 
     /**
-     * Hold's the document root directory
-     *
-     * @var string
-     */
-    protected $documentRoot;
-
-    /**
      * Hold's the request parameters
      *
      * @var array
@@ -102,9 +95,6 @@ class HttpRequest implements HttpRequestInterface
         $this->method = null;
         $this->version = null;
         $this->queryString = null;
-        $this->scriptName = null;
-        $this->pathInfo = null;
-        $this->realPath = null;
     }
 
     /**
@@ -210,30 +200,6 @@ class HttpRequest implements HttpRequestInterface
     public function getUri()
     {
         return $this->uri;
-    }
-
-    /**
-     * Set's document root
-     *
-     * @param string $documentRoot The document root
-     *
-     * @return void
-     * @deprecated
-     */
-    public function setDocumentRoot($documentRoot)
-    {
-        $this->documentRoot = $documentRoot;
-    }
-
-    /**
-     * Return's the document root
-     *
-     * @return string
-     * @deprecated
-     */
-    public function getDocumentRoot()
-    {
-        return $this->documentRoot;
     }
 
     /**

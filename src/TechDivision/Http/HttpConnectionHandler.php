@@ -64,6 +64,13 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     protected $serverContext;
 
     /**
+     * Hold's an array of modules to use for connection handler
+     *
+     * @var array
+     */
+    protected $modules;
+
+    /**
      * Inits the connection handler
      *
      * @param \TechDivision\WebServer\Interfaces\ServerContextInterface $serverContext The server's context
@@ -77,8 +84,6 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // init http request object
         $httpRequest = new HttpRequest();
-        // get initial documentRoot from server context
-        $httpRequest->setDocumentRoot($this->getServerConfig()->getDocumentRoot());
 
         // init http response object
         $httpResponse = new HttpResponse();
@@ -90,6 +95,26 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // setup http parser
         $this->parser = new HttpParser($httpRequest, $httpResponse);
+    }
+
+    /**
+     * Injects all needed modules for connection handler to process
+     *
+     * @param array $modules An array of Modules
+     */
+    public function injectModules($modules)
+    {
+        $this->modules = $modules;
+    }
+
+    /**
+     * Return's all needed modules as array for connection handler to process
+     *
+     * @return array An array of Modules
+     */
+    public function getModules()
+    {
+        return $this->modules;
     }
 
     /**
@@ -209,7 +234,8 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             $this->initServerVars();
 
             // process modules
-            foreach ($this->getServerContext()->getModules() as $module) {
+            $modules = $this->getModules();
+            foreach ($modules as $module) {
                 $module->process($request, $response);
                 // check if response should be dispatched now and stop other modules to process
                 if ($response->hasState(HttpResponseStates::DISPATCH)) {
