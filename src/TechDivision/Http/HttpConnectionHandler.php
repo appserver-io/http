@@ -101,6 +101,8 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
      * Injects all needed modules for connection handler to process
      *
      * @param array $modules An array of Modules
+     *
+     * @return void
      */
     public function injectModules($modules)
     {
