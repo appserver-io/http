@@ -55,6 +55,20 @@ class HttpProtocol
      * @var string
      */
     const HEADER_CONNECTION = 'Connection';
+
+    /**
+     * Connection header value for close
+     *
+     * @var string
+     */
+    const HEADER_CONNECTION_VALUE_CLOSE = 'close';
+
+    /**
+     * Connection header value for keep-alive
+     *
+     * @var string
+     */
+    const HEADER_CONNECTION_VALUE_KEEPALIVE = 'keep-alive';
     
     /**
      * Content-Type header name.

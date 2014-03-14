@@ -113,9 +113,42 @@ class HttpResponse implements HttpResponseInterface
         $this->state = HttpResponseStates::INITIAL;
 
         // reset to default headers
-        $this->setHeaders(array(
-            HttpProtocol::HEADER_CONNECTION => "close"
-        ));
+        $this->initHeaders();
+    }
+
+    /**
+     * Initiates headers array by default headers array
+     *
+     * @return void
+     */
+    protected function initHeaders()
+    {
+        // set default headers
+        $this->setHeaders($this->getDefaultHeaders());
+        // set date
+        $this->addHeader(HttpProtocol::HEADER_DATE, gmdate('D, d M Y H:i:s T'));
+    }
+
+    /**
+     * Set's the default response headers to response
+     *
+     * @param array $headers The default headers array
+     *
+     * @return void
+     */
+    public function setDefaultHeaders(array $headers)
+    {
+        $this->defaultHeaders = $headers;
+    }
+
+    /**
+     * Return's default headers array
+     *
+     * @return array
+     */
+    public function getDefaultHeaders()
+    {
+        return $this->defaultHeaders;
     }
 
     /**

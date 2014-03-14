@@ -25,6 +25,7 @@ use TechDivision\WebServer\Exceptions\ModuleException;
 use TechDivision\WebServer\Interfaces\ConnectionHandlerInterface;
 use TechDivision\WebServer\Interfaces\ServerConfigurationInterface;
 use TechDivision\WebServer\Interfaces\ServerContextInterface;
+use TechDivision\WebServer\Interfaces\WorkerInterface;
 use TechDivision\WebServer\Sockets\SocketInterface;
 
 use TechDivision\WebServer\Modules\CoreModule;
@@ -87,10 +88,12 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // init http response object
         $httpResponse = new HttpResponse();
-        // set server software per default
-        $httpResponse->addHeader(
-            HttpProtocol::HEADER_SERVER,
-            $serverContext->getServerVar(ServerVars::SERVER_SOFTWARE)
+        // set default response headers
+        $httpResponse->setDefaultHeaders(
+            array(
+                HttpProtocol::HEADER_SERVER =>  $serverContext->getServerVar(ServerVars::SERVER_SOFTWARE),
+                HttpProtocol::HEADER_CONNECTION => HttpProtocol::HEADER_CONNECTION_VALUE_CLOSE
+            )
         );
 
         // setup http parser
@@ -150,20 +153,38 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     }
 
     /**
+     * Return's the connection used to handle with
+     *
+     * @return \TechDivision\WebServer\Sockets\SocketInterface
+     */
+    protected function getConnection()
+    {
+        return $this->connection;
+    }
+
+    /**
      * Handles the connection with the connected client in a proper way the given
      * protocol type and version expects for example.
      *
-     * @param \TechDivision\WebServer\Sockets\SocketInterface $connection The connection to handle
+     * @param \TechDivision\WebServer\Sockets\SocketInterface    $connection The connection to handle
+     * @param \TechDivision\WebServer\Interfaces\WorkerInterface $worker     The worker how started this handle
      *
      * @return bool Weather it was responsible to handle the firstLine or not.
      */
-    public function handle(SocketInterface $connection)
+    public function handle(SocketInterface $connection, WorkerInterface $worker)
     {
+        // register shutdown handler with connection binding
+        register_shutdown_function(array(&$this, "shutdown"), $connection, $worker);
+
+        // add connection ref to self
+        $this->connection = $connection;
+
         // get instances for short calls
         $parser = $this->getParser();
         $queryParser = $parser->getQueryParser();
         $request = $parser->getRequest();
         $response = $parser->getResponse();
+
 
         // try to handle request if its a http request
         try {
@@ -247,8 +268,24 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         } catch (\Exception $e) {
             $response->setStatusCode($e->getCode());
-            $response->appendBodyStream($response->getStatusLine());
         }
+
+        $this->sendResponse();
+
+        // close connection todo: implement keep-alive
+        $connection->close();
+    }
+
+    /**
+     * Send's response to connected client
+     *
+     * @return void
+     */
+    public function sendResponse()
+    {
+        // get local var refs
+        $response = $this->getParser()->getResponse();
+        $connection = $this->getConnection();
 
         // write response status-line
         $connection->write($response->getStatusLine());
@@ -256,9 +293,6 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         $connection->write($response->getHeaderString());
         // stream response body to connection
         $connection->copyStream($response->getBodyStream());
-
-        // close connection todo: implement keep-alive
-        $connection->close();
     }
 
     /**
@@ -372,5 +406,28 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
          * TIME_WDAY
          * TIME
          */
+    }
+
+    /**
+     * Does shutdown logic for worker if something breaks in process
+     *
+     * @param \TechDivision\WebServer\Sockets\SocketInterface    $connection The connection to handle
+     * @param \TechDivision\WebServer\Interfaces\WorkerInterface $worker     The worker reference how called this
+     *
+     * @return void
+     */
+    public function shutdown(SocketInterface $connection, WorkerInterface $worker)
+    {
+        // set response code to 500 Internal Server Error
+        $this->getParser()->getResponse()->setStatusCode(500);
+
+        // send response before shutdown
+        $this->sendResponse();
+
+        // close client connection
+        $connection->close();
+
+        // call shutdown process on worker to respawn
+        $worker->shutdown();
     }
 }
