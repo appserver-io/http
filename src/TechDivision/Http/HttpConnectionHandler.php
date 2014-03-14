@@ -412,7 +412,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
      * Does shutdown logic for worker if something breaks in process
      *
      * @param \TechDivision\WebServer\Sockets\SocketInterface    $connection The connection to handle
-     * @param \TechDivision\WebServer\Interfaces\WorkerInterface $worker The worker reference how called this
+     * @param \TechDivision\WebServer\Interfaces\WorkerInterface $worker     The worker reference how called this
      *
      * @return void
      */
@@ -430,5 +430,4 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         // call shutdown process on worker to respawn
         $worker->shutdown();
     }
-
 }
