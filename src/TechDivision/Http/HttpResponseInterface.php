@@ -34,6 +34,22 @@ interface HttpResponseInterface
 {
 
     /**
+     * Set's the default response headers to response
+     *
+     * @param array $headers The default headers array
+     *
+     * @return void
+     */
+    public function setDefaultHeaders(array $headers);
+
+    /**
+     * Return's default headers array
+     *
+     * @return array
+     */
+    public function getDefaultHeaders();
+
+    /**
      * Add's a header information got from connection
      *
      * @param string $name  The header name
