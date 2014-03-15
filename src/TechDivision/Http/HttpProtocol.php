@@ -272,7 +272,7 @@ class HttpProtocol
      *
      * @var string
      */
-    const HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS = 'Access-Control-Allow-Credentials'
+    const HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS = 'Access-Control-Allow-Credentials';
 
     /**
      * POST request method string.
