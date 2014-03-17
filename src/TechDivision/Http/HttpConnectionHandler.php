@@ -301,11 +301,12 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     /**
      * Renders error page by given exception
      *
-     * @param \Exception $e The exception to render
+     * @param string $errorMessage The error message string to render
      *
      * @return void
      */
-    public function renderErrorPage($errorMessage) {
+    public function renderErrorPage($errorMessage)
+    {
         // get response ref to local var for template rendering
         $response = $this->getParser()->getResponse();
         // check if template is given and exists
