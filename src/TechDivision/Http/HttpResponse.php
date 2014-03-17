@@ -267,7 +267,7 @@ class HttpResponse implements HttpResponseInterface
      */
     public function getHeader($name)
     {
-        if (isset($this->headers[$name] === false)) {
+        if (isset($this->headers[$name]) === false) {
             throw new HttpException("Response header not found '$name'");
         }
         return $this->headers[$name];
