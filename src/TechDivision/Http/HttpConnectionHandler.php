@@ -72,16 +72,27 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     protected $modules;
 
     /**
-     * Inits the connection handler
+     * Hold's errors page template
+     *
+     * @var string
+     */
+    protected $errorsPageTemplate;
+
+    /**
+     * Inits the connection handler by given context and params
      *
      * @param \TechDivision\WebServer\Interfaces\ServerContextInterface $serverContext The server's context
+     * @param array                                                     $params        The params for connection handler
      *
      * @return void
      */
-    public function init(ServerContextInterface $serverContext)
+    public function init(ServerContextInterface $serverContext, array $params = null)
     {
         // set server context
         $this->serverContext = $serverContext;
+
+        // set params
+        $this->errorsPageTemplate = $params["errorsPageTemplate"];
 
         // init http request object
         $httpRequest = new HttpRequest();
@@ -160,6 +171,16 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     protected function getConnection()
     {
         return $this->connection;
+    }
+
+    /**
+     * Return's the template for errors page to render
+     *
+     * @return string
+     */
+    public function getErrorsPageTemplate()
+    {
+        return $this->errorsPageTemplate;
     }
 
     /**
@@ -268,12 +289,40 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         } catch (\Exception $e) {
             $response->setStatusCode($e->getCode());
+            $this->renderErrorPage($e->__toString());
         }
 
         $this->sendResponse();
 
         // close connection todo: implement keep-alive
         $connection->close();
+    }
+
+    /**
+     * Renders error page by given exception
+     *
+     * @param \Exception $e The exception to render
+     *
+     * @return void
+     */
+    public function renderErrorPage($errorMessage) {
+        // get response ref to local var for template rendering
+        $response = $this->getParser()->getResponse();
+        // check if template is given and exists
+        if (($errorsPageTemplatePath = $this->getServerContext()->getServerVar(ServerVars::SERVER_ERRORS_PAGE_TEMPLATE_PATH))
+            && is_file($errorsPageTemplatePath)) {
+            // render errors page
+            ob_start();
+            require $errorsPageTemplatePath;
+            $errorsPage = ob_get_clean();
+        } else {
+            // build up error message manually without template
+            $errorsPage = $response->getStatusCode() . ' ' . $response->getStatusReasonPhrase() .
+                PHP_EOL . PHP_EOL . $errorMessage .
+                PHP_EOL . PHP_EOL . strip_tags($this->getServerContext()->getServerVar(ServerVars::SERVER_SIGNATURE));
+        }
+        // append errors page to response body
+        $response->appendBodyStream($errorsPage);
     }
 
     /**
@@ -291,6 +340,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         $connection->write($response->getStatusLine());
         // write response headers
         $connection->write($response->getHeaderString());
+
         // stream response body to connection
         $connection->copyStream($response->getBodyStream());
     }
@@ -315,6 +365,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         if (strpos($serverName, ':') !== false) {
             $serverName = strstr($serverName, ':', true);
         }
+
         // set server name var
         $serverContext->setServerVar(ServerVars::SERVER_NAME, $serverName);
 
@@ -420,6 +471,15 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     {
         // set response code to 500 Internal Server Error
         $this->getParser()->getResponse()->setStatusCode(500);
+
+        // check if it was a fatal error
+        $lastError = error_get_last();
+
+        if ($lastError['type'] == 1) {
+            $errorMessage = 'PHP Fatal error: ' . $lastError['message'] .
+                ' in ' . $lastError['file'] . ' on line ' . $lastError['line'];
+            $this->renderErrorPage($errorMessage);
+        }
 
         // send response before shutdown
         $this->sendResponse();
