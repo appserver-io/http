@@ -431,33 +431,6 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             ServerVars::REQUEST_URI,
             $request->getUri()
         );
-
-        /**
-         * Due to we have noe infos about the client we're not able to set all remote server vars yet
-         * Todo: map them as soon it's possible to get remote connection infos
-         *
-         * REMOTE_ADDR
-         * REMOTE_HOST
-         * REMOTE_PORT
-         * REMOTE_USER
-         * REMOTE_IDENT
-         * REDIRECT_REMOTE_USER
-         */
-
-        /**
-         * Todo: implement date infos in server vars
-         *
-         * REQUEST_TIME
-         * REQUEST_TIME_FLOAT
-         * TIME_YEAR
-         * TIME_MON
-         * TIME_DAY
-         * TIME_HOUR
-         * TIME_MIN
-         * TIME_SEC
-         * TIME_WDAY
-         * TIME
-         */
     }
 
     /**
@@ -476,7 +449,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         // check if it was a fatal error
         $lastError = error_get_last();
 
-        if ($lastError['type'] == 1) {
+        if ($lastError['type'] === 1) {
             $errorMessage = 'PHP Fatal error: ' . $lastError['message'] .
                 ' in ' . $lastError['file'] . ' on line ' . $lastError['line'];
             $this->renderErrorPage($errorMessage);
