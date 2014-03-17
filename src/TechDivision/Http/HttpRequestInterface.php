@@ -176,6 +176,13 @@ interface HttpRequestInterface
     public function copyBodyStream($sourceStream, $maxlength = null, $offset = null);
 
     /**
+     * Returns the http request version.
+     *
+     * @return string The http request version
+     */
+    public function getVersion();
+
+    /**
      * Set's specific http version
      *
      * @param string $version The version e.g. HTTP/1.1

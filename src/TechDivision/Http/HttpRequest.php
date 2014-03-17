@@ -295,6 +295,16 @@ class HttpRequest implements HttpRequestInterface
     }
 
     /**
+     * Returns the http request version.
+     *
+     * @return string The http request version
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
      * Set's the http request version
      *
      * @param string $version The http request version
