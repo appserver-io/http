@@ -78,6 +78,13 @@ class HttpProtocol
     const HEADER_CONTENT_TYPE = 'Content-Type';
     
     /**
+     * Content-Disposition header name.
+     *
+     * @var string
+     */
+    const HEADER_CONTENT_DISPOSITION = 'Content-Disposition';
+    
+    /**
      * Content-Length header name.
      *
      * @var string
@@ -252,6 +259,20 @@ class HttpProtocol
      * @var string
      */
     const HEADER_X_REQUESTED_WITH = 'X-Requested-With';
+    
+    /**
+     * Access-Control-Allow-Origin header name.
+     *
+     * @var string
+     */
+    const HEADER_ACCESS_CONTROL_ALLOW_ORIGIN = 'Access-Control-Allow-Origin';
+    
+    /**
+     * Access-Control-Allow-Credentials header name.
+     *
+     * @var string
+     */
+    const HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS = 'Access-Control-Allow-Credentials';
 
     /**
      * POST request method string.
