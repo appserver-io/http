@@ -267,7 +267,7 @@ class HttpResponse implements HttpResponseInterface
      */
     public function getHeader($name)
     {
-        if (!array_key_exists($name, $this->headers)) {
+        if (isset($this->headers[$name] === false)) {
             throw new HttpException("Response header not found '$name'");
         }
         return $this->headers[$name];
@@ -282,7 +282,7 @@ class HttpResponse implements HttpResponseInterface
      */
     public function removeHeader($name)
     {
-        if (array_key_exists($name, $this->headers)) {
+        if (isset($this->headers[$name])) {
             unset($this->headers[$name]);
         }
     }
