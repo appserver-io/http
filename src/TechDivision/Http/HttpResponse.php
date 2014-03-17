@@ -272,6 +272,20 @@ class HttpResponse implements HttpResponseInterface
         }
         return $this->headers[$name];
     }
+    
+    /**
+     * Removes the header with the passed name.
+     * 
+     * @param string $name Name of the header to remove
+     * 
+     * @return void
+     */
+    public function removeHeader($name)
+    {
+        if (array_key_exists($name, $this->headers)) {
+            unset($this->headers[$name]);
+        }
+    }
 
     /**
      * Return's all headers as array

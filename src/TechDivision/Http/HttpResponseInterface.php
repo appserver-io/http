@@ -76,6 +76,15 @@ interface HttpResponseInterface
      * @return string|null
      */
     public function getHeader($name);
+    
+    /**
+     * Removes the header with the passed name.
+     * 
+     * @param string $name Name of the header to remove
+     * 
+     * @return void
+     */
+    public function removeHeader($name);
 
     /**
      * Return's all headers as array
