@@ -109,6 +109,10 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // setup http parser
         $this->parser = new HttpParser($httpRequest, $httpResponse);
+
+        // register shutdown handler
+        register_shutdown_function(array(&$this, "shutdown"));
+
     }
 
     /**
@@ -174,6 +178,16 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     }
 
     /**
+     * Return's the worker instance which starte this worker thread
+     *
+     * @return \TechDivision\WebServer\Interfaces\WorkerInterface
+     */
+    protected function getWorker()
+    {
+        return $this->worker;
+    }
+
+    /**
      * Return's the template for errors page to render
      *
      * @return string
@@ -194,11 +208,10 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
      */
     public function handle(SocketInterface $connection, WorkerInterface $worker)
     {
-        // register shutdown handler with connection binding
-        register_shutdown_function(array(&$this, "shutdown"), $connection, $worker);
 
         // add connection ref to self
         $this->connection = $connection;
+        $this->worker = $worker;
 
         // get instances for short calls
         $parser = $this->getParser();
@@ -206,13 +219,14 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         $request = $parser->getRequest();
         $response = $parser->getResponse();
 
-
         // try to handle request if its a http request
         try {
 
             // reset request and response
             $request->init();
             $response->init();
+
+
 
             // set first line from connection
             $line = $connection->readLine();
@@ -431,52 +445,23 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             ServerVars::REQUEST_URI,
             $request->getUri()
         );
-
-        /**
-         * Due to we have noe infos about the client we're not able to set all remote server vars yet
-         * Todo: map them as soon it's possible to get remote connection infos
-         *
-         * REMOTE_ADDR
-         * REMOTE_HOST
-         * REMOTE_PORT
-         * REMOTE_USER
-         * REMOTE_IDENT
-         * REDIRECT_REMOTE_USER
-         */
-
-        /**
-         * Todo: implement date infos in server vars
-         *
-         * REQUEST_TIME
-         * REQUEST_TIME_FLOAT
-         * TIME_YEAR
-         * TIME_MON
-         * TIME_DAY
-         * TIME_HOUR
-         * TIME_MIN
-         * TIME_SEC
-         * TIME_WDAY
-         * TIME
-         */
     }
 
     /**
      * Does shutdown logic for worker if something breaks in process
      *
-     * @param \TechDivision\WebServer\Sockets\SocketInterface    $connection The connection to handle
-     * @param \TechDivision\WebServer\Interfaces\WorkerInterface $worker     The worker reference how called this
-     *
      * @return void
      */
-    public function shutdown(SocketInterface $connection, WorkerInterface $worker)
+    public function shutdown()
     {
         // set response code to 500 Internal Server Error
         $this->getParser()->getResponse()->setStatusCode(500);
 
-        // check if it was a fatal error
+        // get last error array
         $lastError = error_get_last();
 
-        if ($lastError['type'] == 1) {
+        // check if it was a fatal error
+        if (!is_null($lastError) && $lastError['type'] === 1) {
             $errorMessage = 'PHP Fatal error: ' . $lastError['message'] .
                 ' in ' . $lastError['file'] . ' on line ' . $lastError['line'];
             $this->renderErrorPage($errorMessage);
@@ -486,9 +471,9 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         $this->sendResponse();
 
         // close client connection
-        $connection->close();
+        $this->getConnection()->close();
 
         // call shutdown process on worker to respawn
-        $worker->shutdown();
+        $this->getWorker()->shutdown();
     }
 }
