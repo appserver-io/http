@@ -226,8 +226,6 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             $request->init();
             $response->init();
 
-
-
             // set first line from connection
             $line = $connection->readLine();
 
