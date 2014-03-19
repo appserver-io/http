@@ -75,6 +75,13 @@ class HttpRequest implements HttpRequestInterface
     protected $params;
 
     /**
+     * Holds collection of parts from multipart form data
+     *
+     * @var array A collection of HttpPart Objects
+     */
+    protected $parts = array();
+
+    /**
      * Initialises the request object to default properties
      *
      * @return void
@@ -353,5 +360,45 @@ class HttpRequest implements HttpRequestInterface
     public function setParams($params)
     {
         $this->params = $params;
+    }
+
+    /**
+     * Returns a part object by given name
+     *
+     * @param string $name The name of the form part
+     *
+     * @return \TechDivision\Http\HttpPart
+     */
+    public function getPart($name)
+    {
+        if (array_key_exists($name, $this->parts)) {
+            return $this->parts[$name];
+        }
+    }
+
+    /**
+     * Returns the parts collection as array
+     *
+     * @return array A collection of HttpPart objects
+     */
+    public function getParts()
+    {
+        return $this->parts;
+    }
+
+    /**
+     * adds a part to the parts collection
+     *
+     * @param \TechDivision\Http\HttpPart   $part A form part object
+     * @param string $name A manually defined name
+     *
+     * @return void
+     */
+    public function addPart(HttpPart $part, $name = null)
+    {
+        if (is_null($name)) {
+            $name = $part->getName();
+        }
+        $this->parts[$name] = $part;
     }
 }
