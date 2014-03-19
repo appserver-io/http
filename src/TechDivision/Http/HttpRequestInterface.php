@@ -238,8 +238,8 @@ interface HttpRequestInterface
     /**
      * adds a part to the parts collection
      *
-     * @param \TechDivision\Http\HttpPart   $part A form part object
-     * @param string $name A manually defined name
+     * @param \TechDivision\Http\HttpPart $part A form part object
+     * @param string                      $name A manually defined name
      *
      * @return void
      */
