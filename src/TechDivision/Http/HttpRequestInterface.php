@@ -225,4 +225,30 @@ interface HttpRequestInterface
      * @return array
      */
     public function setParams($params);
+
+    /**
+     * Returns a part object by given name
+     *
+     * @param string $name The name of the form part
+     *
+     * @return \TechDivision\Http\HttpPart
+     */
+    public function getPart($name);
+
+    /**
+     * Returns the parts collection as array
+     *
+     * @return array A collection of HttpPart objects
+     */
+    public function getParts();
+
+    /**
+     * adds a part to the parts collection
+     *
+     * @param \TechDivision\Http\HttpPart $part A form part object
+     * @param string                      $name A manually defined name
+     *
+     * @return void
+     */
+    public function addPart(HttpPart $part, $name = null);
 }

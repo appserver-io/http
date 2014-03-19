@@ -64,9 +64,21 @@ class HttpParser implements HttpParserInterface
     {
         // instantiate query parser
         $this->queryParser = new HttpQueryParser();
+        // instantiate part instance factory
+        $this->part = new HttpPart();
         // add request and response
         $this->request = $request;
         $this->response = $response;
+    }
+
+    /**
+     * Return's a new instance of http part
+     *
+     * @return \TechDivision\Http\HttpPart
+     */
+    public function getHttpPartInstance()
+    {
+        return $this->part->getInstance();
     }
 
     /**
@@ -182,7 +194,7 @@ class HttpParser implements HttpParserInterface
         list($headerName, $headerValue) = $extractedHeaderInfo;
 
         // normalize header names in case of 'Content-type' into 'Content-Type'
-        $headerName = str_replace(' ', '-',ucwords(str_replace('-', ' ', $headerName)));
+        $headerName = str_replace(' ', '-', ucwords(str_replace('-', ' ', $headerName)));
 
         // add header
         $this->getRequest()->addHeader(trim($headerName), trim($headerValue));
@@ -197,6 +209,8 @@ class HttpParser implements HttpParserInterface
      */
     public function parseMultipartFormData($content)
     {
+        // get request ref to local function context
+        $request = $this->getRequest();
         // grab multipart boundary from content type header
         preg_match('/boundary=(.*)$/', $this->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_TYPE), $matches);
         // get boundary
@@ -213,7 +227,7 @@ class HttpParser implements HttpParserInterface
             }
 
             // check if filename is given
-            /* todo: refactore file part generating
+            // todo: refactore file part generating
             if (strpos($block, '; filename="') !== false) {
                 // init new part instance
                 $part = $this->getHttpPartInstance();
@@ -236,16 +250,17 @@ class HttpParser implements HttpParserInterface
                 // put content to part
                 $part->putContent(preg_replace('/.' . PHP_EOL . '$/', '', $partBody));
                 // add the part instance to request
-                $this->addPart($part);
+                $request->addPart($part);
                 // parse all other fields as normal key value pairs
             } else {
-            */
                 // match "name" and optional value in between newline sequences
                 preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
+                // if no value given set null
+                if (!isset($matches[2])) {
+                    $matches[2] = null;
+                }
                 $this->getQueryParser()->parseKeyValue($matches[1], $matches[2]);
-            /*
             }
-            */
         }
     }
 }

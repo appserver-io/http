@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\ServletContainer\Http\Part
+ * TechDivision\Http\Part
  *
  * NOTICE OF LICENSE
  *
@@ -11,32 +11,27 @@
  *
  * PHP version 5
  *
- * @category   Appserver
- * @package    TechDivision_ServletContainer
- * @subpackage Http
- * @author     Johann Zelger <jz@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
 
-namespace TechDivision\ServletContainer\Http;
-
-use TechDivision\ServletContainer\Interfaces\Part;
-use TechDivision\ServletContainer\Http\Header;
+namespace TechDivision\Http;
 
 /**
  * A http part implementation.
  *
- * @category   Appserver
- * @package    TechDivision_ServletContainer
- * @subpackage Http
- * @author     Johann Zelger <jz@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
  */
-class HttpPart implements Part
+class HttpPart implements HttpPartInterface
 {
 
     /**
@@ -136,7 +131,7 @@ class HttpPart implements Part
     */
     public function getContentType()
     {
-        return $this->getHeader(Header::HEADER_NAME_CONTENT_TYPE);
+        return $this->getHeader(HttpProtocol::HEADER_CONTENT_TYPE);
     }
 
     /**
