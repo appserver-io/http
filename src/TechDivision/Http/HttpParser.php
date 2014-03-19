@@ -177,9 +177,15 @@ class HttpParser implements HttpParserInterface
         if (!$extractedHeaderInfo) {
             throw new HttpException('Wrong header format');
         }
+
+        // split name and value
         list($headerName, $headerValue) = $extractedHeaderInfo;
-        // add request header with name lowercase for further compare functions
-        $this->getRequest()->addHeader($headerName, $headerValue);
+
+        // normalize header names in case of 'Content-type' into 'Content-Type'
+        $headerName = str_replace(' ', '-',ucwords(str_replace('-', ' ', $headerName)));
+
+        // add header
+        $this->getRequest()->addHeader(trim($headerName), trim($headerValue));
     }
 
     /**
