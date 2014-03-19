@@ -226,8 +226,6 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             $request->init();
             $response->init();
 
-
-
             // set first line from connection
             $line = $connection->readLine();
 
@@ -265,22 +263,22 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             // check if message body will be transmitted
             if ($request->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
                 // get content-length header
-                $contentLength = (int)$request->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH);
-                // copy connection stream to body stream by given content length
-                $request->copyBodyStream($connection->getConnectionResource(), $contentLength);
-                // get content out for oldschool query parsing todo: refactor query parsing
-                $content = $request->getBodyContent();
-
-                // check if request has to be parsed depending on Content-Type header
-                if ($queryParser->isParsingRelevant($request->getHeader(HttpProtocol::HEADER_CONTENT_TYPE))) {
-                    // checks if request has multipart formdata or not
-                    preg_match('/boundary=(.*)$/', $request->getHeader(HttpProtocol::HEADER_CONTENT_TYPE), $boundaryMatches);
-                    // check if boundaryMatches are found
-                    // todo: refactor content string var to be able to use bodyStream
-                    if (count($boundaryMatches) > 0) {
-                        $parser->parseMultipartFormData($content);
-                    } else {
-                        $queryParser->parseStr(urldecode($content));
+                if (($contentLength = (int)$request->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) > 0) {
+                    // copy connection stream to body stream by given content length
+                    $request->copyBodyStream($connection->getConnectionResource(), $contentLength);
+                    // get content out for oldschool query parsing todo: refactor query parsing
+                    $content = $request->getBodyContent();
+                    // check if request has to be parsed depending on Content-Type header
+                    if ($queryParser->isParsingRelevant($request->getHeader(HttpProtocol::HEADER_CONTENT_TYPE))) {
+                        // checks if request has multipart formdata or not
+                        preg_match('/boundary=(.*)$/', $request->getHeader(HttpProtocol::HEADER_CONTENT_TYPE), $boundaryMatches);
+                        // check if boundaryMatches are found
+                        // todo: refactor content string var to be able to use bodyStream
+                        if (count($boundaryMatches) > 0) {
+                            $parser->parseMultipartFormData($content);
+                        } else {
+                            $queryParser->parseStr(urldecode($content));
+                        }
                     }
                 }
             }

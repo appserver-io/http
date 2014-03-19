@@ -73,7 +73,7 @@ class HttpQueryParser implements HttpQueryParserInterface
     public function isParsingRelevant($contentType)
     {
         foreach ($this->parsingRelevantContentTypes as $relevantContentType) {
-            if (strstr($contentType, $relevantContentType) !== false) {
+            if (strpos($contentType, $relevantContentType) !== false) {
                 return true;
             }
         }
