@@ -59,4 +59,17 @@ class HttpResponseTest extends \PHPUnit_Framework_TestCase {
         $this->assertSame('PhpUnit', $this->response->getHeader(HttpProtocol::HEADER_X_POWERED_BY));
         $this->assertSame($contentLength, $this->response->getHeader(HttpProtocol::HEADER_CONTENT_TYPE));
     }
+
+    /**
+     * Test set status code on response object and get correct status line.
+     */
+    public function testSetStatusCodeToResponseObjectAndGetStatusLine()
+    {
+        $this->response->setStatusCode(200);
+        $this->assertSame("HTTP/1.1 200 OK\r\n", $this->response->getStatusLine());
+        $this->response->setStatusCode(404);
+        $this->assertSame("HTTP/1.1 404 Not Found\r\n", $this->response->getStatusLine());
+        $this->response->setStatusCode(500);
+        $this->assertSame("HTTP/1.1 500 Internal Server Error\r\n", $this->response->getStatusLine());
+    }
 }
