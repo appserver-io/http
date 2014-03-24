@@ -27,9 +27,7 @@ use TechDivision\WebServer\Interfaces\ServerConfigurationInterface;
 use TechDivision\WebServer\Interfaces\ServerContextInterface;
 use TechDivision\WebServer\Interfaces\WorkerInterface;
 use TechDivision\WebServer\Sockets\SocketInterface;
-
-use TechDivision\WebServer\Modules\CoreModule;
-use TechDivision\WebServer\Modules\DirectoryModule;
+use TechDivision\WebServer\Sockets\SocketReadTimeoutException;
 
 use TechDivision\Http\HttpRequestInterface;
 use TechDivision\Http\HttpParserInterface;
@@ -77,6 +75,20 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
      * @var string
      */
     protected $errorsPageTemplate;
+
+    /**
+     * Hold's the connection instance
+     *
+     * @var \TechDivision\WebServer\Sockets\SocketInterface
+     */
+    protected $connection;
+
+    /**
+     * Hold's the worker instance
+     *
+     * @var \TechDivision\WebServer\Interfaces\WorkerInterface
+     */
+    protected $worker;
 
     /**
      * Inits the connection handler by given context and params
@@ -214,99 +226,164 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         $this->worker = $worker;
 
         // get instances for short calls
+        $serverContext = $this->getServerContext();
+        $serverConfig = $serverContext->getServerConfig();
         $parser = $this->getParser();
         $queryParser = $parser->getQueryParser();
         $request = $parser->getRequest();
         $response = $parser->getResponse();
 
-        // try to handle request if its a http request
-        try {
+        // init keep alive settings
+        $keepAliveTimeout = (int)$serverConfig->getKeepAliveTimeout();
+        $keepAliveMax = (int)$serverConfig->getKeepAliveMax();
 
-            // reset request and response
-            $request->init();
-            $response->init();
+        do {
+            // try to handle request if its a http request
+            try {
 
-            // set first line from connection
-            $line = $connection->readLine();
+                // reset connection infos to server vars
+                $serverContext->setConnectionServerVars($connection);
 
-            /**
-             * In the interest of robustness, servers SHOULD ignore any empty
-             * line(s) received where a Request-Line is expected. In other words, if
-             * the server is reading the protocol stream at the beginning of a
-             * message and receives a CRLF first, it should ignore the CRLF.
-             *
-             * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.1
-             */
-            if ($line === "\r\n") {
-                // ignore the first CRLF and go on reading the expected start-line.
-                $line = $connection->readLine();
-            }
-            // parse read line
-            $parser->parseStartLine($line);
+                // time settings
+                $serverContext->setServerVar(ServerVars::REQUEST_TIME, time());
 
-            /**
-             * Parse headers in a proper way
-             *
-             * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
-             */
-            $messageHeaders = '';
-            while ($line != "\r\n") {
-                // read next line
-                $line = $connection->readLine();
-                // enhance headers
-                $messageHeaders .= $line;
-            }
+                /**
+                 * Todo: maybe later on there have to be other time vars too especially for rewrite module.
+                 *
+                 * REQUEST_TIME_FLOAT
+                 * TIME_YEAR
+                 * TIME_MON
+                 * TIME_DAY
+                 * TIME_HOUR
+                 * TIME_MIN
+                 * TIME_SEC
+                 * TIME_WDAY
+                 * TIME
+                 */
 
-            // parse headers
-            $parser->parseHeaders($messageHeaders);
+                // reset request and response
+                $request->init();
+                $response->init();
 
-            // check if message body will be transmitted
-            if ($request->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
-                // get content-length header
-                if (($contentLength = (int)$request->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) > 0) {
-                    // copy connection stream to body stream by given content length
-                    $request->copyBodyStream($connection->getConnectionResource(), $contentLength);
-                    // get content out for oldschool query parsing todo: refactor query parsing
-                    $content = $request->getBodyContent();
-                    // check if request has to be parsed depending on Content-Type header
-                    if ($queryParser->isParsingRelevant($request->getHeader(HttpProtocol::HEADER_CONTENT_TYPE))) {
-                        // checks if request has multipart formdata or not
-                        preg_match('/boundary=(.*)$/', $request->getHeader(HttpProtocol::HEADER_CONTENT_TYPE), $boundaryMatches);
-                        // check if boundaryMatches are found
-                        // todo: refactor content string var to be able to use bodyStream
-                        if (count($boundaryMatches) > 0) {
-                            $parser->parseMultipartFormData($content);
-                        } else {
-                            $queryParser->parseStr(urldecode($content));
+                // init keep alive connection flag
+                $keepAliveConnection = false;
+
+                // set first line from connection
+                $line = $connection->readLine(1024, $keepAliveTimeout);
+
+                /**
+                 * In the interest of robustness, servers SHOULD ignore any empty
+                 * line(s) received where a Request-Line is expected. In other words, if
+                 * the server is reading the protocol stream at the beginning of a
+                 * message and receives a CRLF first, it should ignore the CRLF.
+                 *
+                 * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.1
+                 */
+                if ($line === "\r\n") {
+                    // ignore the first CRLF and go on reading the expected start-line.
+                    $line = $connection->readLine(1024, $keepAliveTimeout);
+                }
+
+                // parse read line
+                $parser->parseStartLine($line);
+
+                /**
+                 * Parse headers in a proper way
+                 *
+                 * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+                 */
+                $messageHeaders = '';
+                while ($line != "\r\n") {
+                    // read next line
+                    $line = $connection->readLine();
+                    // enhance headers
+                    $messageHeaders .= $line;
+                }
+
+                // parse headers
+                $parser->parseHeaders($messageHeaders);
+
+                // process connection type keep-alive
+                if (strcasecmp(
+                    $request->getHeader(HttpProtocol::HEADER_CONNECTION),
+                    HttpProtocol::HEADER_CONNECTION_VALUE_KEEPALIVE
+                ) === 0) {
+                    // only if max connections were not reached yet
+                    if ($keepAliveMax > 0) {
+                        // enable keep alive connection
+                        $keepAliveConnection = true;
+                        // set keep-alive headers
+                        $response->addHeader(HttpProtocol::HEADER_CONNECTION, HttpProtocol::HEADER_CONNECTION_VALUE_KEEPALIVE);
+                        $response->addHeader(HttpProtocol::HEADER_KEEP_ALIVE, "timeout: $keepAliveTimeout, max: $keepAliveMax");
+                        // decrease keep-alive max
+                        --$keepAliveMax;
+                    }
+                }
+
+                // check if message body will be transmitted
+                if ($request->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
+                    // get content-length header
+                    if (($contentLength = (int)$request->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) > 0) {
+                        // copy connection stream to body stream by given content length
+                        $request->copyBodyStream($connection->getConnectionResource(), $contentLength);
+                        // get content out for oldschool query parsing todo: refactor query parsing
+                        $content = $request->getBodyContent();
+                        // check if request has to be parsed depending on Content-Type header
+                        if ($queryParser->isParsingRelevant($request->getHeader(HttpProtocol::HEADER_CONTENT_TYPE))) {
+                            // checks if request has multipart formdata or not
+                            preg_match('/boundary=(.*)$/', $request->getHeader(HttpProtocol::HEADER_CONTENT_TYPE), $boundaryMatches);
+                            // check if boundaryMatches are found
+                            // todo: refactor content string var to be able to use bodyStream
+                            if (count($boundaryMatches) > 0) {
+                                $parser->parseMultipartFormData($content);
+                            } else {
+                                $queryParser->parseStr(urldecode($content));
+                            }
                         }
                     }
                 }
-            }
 
-            // set parsed query and multipart form params to request
-            $request->setParams($queryParser->getResult());
+                // set parsed query and multipart form params to request
+                $request->setParams($queryParser->getResult());
 
-            // init connection & protocol server vars
-            $this->initServerVars();
+                // init connection & protocol server vars
+                $this->initServerVars();
 
-            // process modules
-            $modules = $this->getModules();
-            foreach ($modules as $module) {
-                $module->process($request, $response);
-                // check if response should be dispatched now and stop other modules to process
-                if ($response->hasState(HttpResponseStates::DISPATCH)) {
-                    break;
+                // process modules
+                $modules = $this->getModules();
+                foreach ($modules as $module) {
+                    $module->process($request, $response);
+                    // check if response should be dispatched now and stop other modules to process
+                    if ($response->hasState(HttpResponseStates::DISPATCH)) {
+                        break;
+                    }
                 }
+
+                // if no module dispatched response throw internal server error 500
+                if (!$response->hasState(HttpResponseStates::DISPATCH)) {
+                    throw new \Exception(null, 500);
+                }
+
+            } catch (SocketReadTimeoutException $e) {
+                // set request timeout status code
+                $response->setStatusCode(408);
+                $this->renderErrorPage($e->__toString());
+
+            } catch (\Exception $e) {
+                // set status code given by exception
+                $response->setStatusCode($e->getCode());
+                $this->renderErrorPage($e->__toString());
             }
 
-        } catch (\Exception $e) {
-            $response->setStatusCode($e->getCode());
-            $this->renderErrorPage($e->__toString());
-        }
+            // send response to connected client
+            $this->sendResponse();
 
-        $this->sendResponse();
+            // init server vars
+            $serverContext->initServerVars();
 
-        // close connection todo: implement keep-alive
+        } while ($keepAliveConnection === true);
+
+        // finally close connection
         $connection->close();
     }
 
@@ -452,26 +529,36 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
      */
     public function shutdown()
     {
-        // set response code to 500 Internal Server Error
-        $this->getParser()->getResponse()->setStatusCode(500);
+        // get refs to local vars
+        $connection = $this->getConnection();
+        $worker = $this->getWorker();
 
-        // get last error array
-        $lastError = error_get_last();
+        // check if connections is still alive
+        if ($connection) {
+            // set response code to 500 Internal Server Error
+            $this->getParser()->getResponse()->setStatusCode(500);
 
-        // check if it was a fatal error
-        if (!is_null($lastError) && $lastError['type'] === 1) {
-            $errorMessage = 'PHP Fatal error: ' . $lastError['message'] .
-                ' in ' . $lastError['file'] . ' on line ' . $lastError['line'];
-            $this->renderErrorPage($errorMessage);
+            // get last error array
+            $lastError = error_get_last();
+
+            // check if it was a fatal error
+            if (!is_null($lastError) && $lastError['type'] === 1) {
+                $errorMessage = 'PHP Fatal error: ' . $lastError['message'] .
+                    ' in ' . $lastError['file'] . ' on line ' . $lastError['line'];
+                $this->renderErrorPage($errorMessage);
+            }
+
+            // send response before shutdown
+            $this->sendResponse();
+
+            // close client connection
+            $this->getConnection()->close();
         }
 
-        // send response before shutdown
-        $this->sendResponse();
-
-        // close client connection
-        $this->getConnection()->close();
-
-        // call shutdown process on worker to respawn
-        $this->getWorker()->shutdown();
+        // check if worker is given
+        if ($worker) {
+            // call shutdown process on worker to respawn
+            $this->getWorker()->shutdown();
+        }
     }
 }
