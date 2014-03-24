@@ -162,9 +162,7 @@ class HttpResponse implements HttpResponseInterface
         fseek($this->getBodyStream(), 0, SEEK_END);
         $contentLength = ftell($this->getBodyStream());
 
-        if ($contentLength > 0) {
-            $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $contentLength);
-        }
+        $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $contentLength);
 
         $headerString = '';
 

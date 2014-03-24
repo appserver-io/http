@@ -27,16 +27,13 @@ use TechDivision\WebServer\Interfaces\ServerConfigurationInterface;
 use TechDivision\WebServer\Interfaces\ServerContextInterface;
 use TechDivision\WebServer\Interfaces\WorkerInterface;
 use TechDivision\WebServer\Sockets\SocketInterface;
-
-use TechDivision\WebServer\Modules\CoreModule;
-use TechDivision\WebServer\Modules\DirectoryModule;
+use TechDivision\WebServer\Sockets\SocketReadTimeoutException;
 
 use TechDivision\Http\HttpRequestInterface;
 use TechDivision\Http\HttpParserInterface;
 use TechDivision\Http\HttpProtocol;
 use TechDivision\Http\HttpRequest;
 use TechDivision\Http\HttpResponse;
-use TechDivision\WebServer\Sockets\SocketReadTimeoutException;
 
 /**
  * Class HttpConnectionHandler
@@ -362,12 +359,24 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                         break;
                     }
                 }
+
+                // if no module dispatched response throw internal server error 500
+                if (!$response->hasState(HttpResponseStates::DISPATCH)) {
+                    throw new \Exception(null, 500);
+                }
+
             } catch (SocketReadTimeoutException $e) {
+
+                echo __METHOD__ . ':' . __LINE__ . PHP_EOL;
+
                 // set request timeout status code
                 $response->setStatusCode(408);
                 $this->renderErrorPage($e->__toString());
 
             } catch (\Exception $e) {
+
+                echo __METHOD__ . ':' . __LINE__ . PHP_EOL;
+
                 // set status code given by exception
                 $response->setStatusCode($e->getCode());
                 $this->renderErrorPage($e->__toString());
