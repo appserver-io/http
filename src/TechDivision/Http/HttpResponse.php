@@ -40,7 +40,7 @@ class HttpResponse implements HttpResponseInterface
      *
      * @var string
      */
-    protected $version;
+    protected $version = 'HTTP/1.1';
 
     /**
      * Hold's the servers signature
