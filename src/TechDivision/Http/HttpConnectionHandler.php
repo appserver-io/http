@@ -305,10 +305,9 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
                 // process connection type keep-alive
                 if (strcasecmp(
-                        $request->getHeader(HttpProtocol::HEADER_CONNECTION),
-                        HttpProtocol::HEADER_CONNECTION_VALUE_KEEPALIVE
-                    ) === 0
-                ) {
+                    $request->getHeader(HttpProtocol::HEADER_CONNECTION),
+                    HttpProtocol::HEADER_CONNECTION_VALUE_KEEPALIVE
+                ) === 0) {
                     // only if max connections were not reached yet
                     if ($keepAliveMax > 0) {
                         // enable keep alive connection
@@ -366,29 +365,23 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                 }
 
             } catch (SocketReadTimeoutException $e) {
-
-                echo __METHOD__ . ':' . __LINE__ . PHP_EOL;
-
                 // set request timeout status code
                 $response->setStatusCode(408);
                 $this->renderErrorPage($e->__toString());
 
             } catch (\Exception $e) {
-
-                echo __METHOD__ . ':' . __LINE__ . PHP_EOL;
-
                 // set status code given by exception
                 $response->setStatusCode($e->getCode());
                 $this->renderErrorPage($e->__toString());
             }
 
-            // send response to client
+            // send response to connected client
             $this->sendResponse();
 
             // init server vars
             $serverContext->initServerVars();
 
-        } while($keepAliveConnection === true);
+        } while ($keepAliveConnection === true);
 
         // finally close connection
         $connection->close();
