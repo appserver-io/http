@@ -361,7 +361,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
                 // if no module dispatched response throw internal server error 500
                 if (!$response->hasState(HttpResponseStates::DISPATCH)) {
-                    throw new \Exception(null, 500);
+                    throw new \Exception('Response state is not dispatched', 500);
                 }
 
             } catch (SocketReadTimeoutException $e) {
