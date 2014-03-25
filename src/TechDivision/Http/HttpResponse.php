@@ -125,8 +125,6 @@ class HttpResponse implements HttpResponseInterface
     {
         // set default headers
         $this->setHeaders($this->getDefaultHeaders());
-        // set date
-        $this->addHeader(HttpProtocol::HEADER_DATE, gmdate('D, d M Y H:i:s T'));
     }
 
     /**
@@ -162,7 +160,11 @@ class HttpResponse implements HttpResponseInterface
         fseek($this->getBodyStream(), 0, SEEK_END);
         $contentLength = ftell($this->getBodyStream());
 
-        $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $contentLength);
+        // check if status code is content-length relevant
+        // todo: refactor content-length setter to other function in future
+        if ((int)$this->getStatusCode() < 300 || (int)$this->getStatusCode() > 399) {
+            $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $contentLength);
+        }
 
         $headerString = '';
 
