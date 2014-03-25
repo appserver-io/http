@@ -426,6 +426,9 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         $response = $this->getParser()->getResponse();
         $connection = $this->getConnection();
 
+        // set current date before sending it
+        $response->addHeader(HttpProtocol::HEADER_DATE, gmdate(DATE_RFC822));
+
         // write response status-line
         $connection->write($response->getStatusLine());
         // write response headers

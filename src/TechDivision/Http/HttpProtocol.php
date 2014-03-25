@@ -61,14 +61,14 @@ class HttpProtocol
      *
      * @var string
      */
-    const HEADER_CONNECTION_VALUE_CLOSE = 'close';
+    const HEADER_CONNECTION_VALUE_CLOSE = 'Close';
 
     /**
      * Connection header value for keep-alive
      *
      * @var string
      */
-    const HEADER_CONNECTION_VALUE_KEEPALIVE = 'keep-alive';
+    const HEADER_CONNECTION_VALUE_KEEPALIVE = 'Keep-Alive';
     
     /**
      * Content-Type header name.
@@ -76,6 +76,13 @@ class HttpProtocol
      * @var string
      */
     const HEADER_CONTENT_TYPE = 'Content-Type';
+
+    /**
+     * If-None-Match header name
+     *
+     * @var string
+     */
+    const HEADER_IF_NONE_MATCH = 'If-None-Match';
     
     /**
      * Content-Disposition header name.
@@ -251,6 +258,13 @@ class HttpProtocol
      * @var string
      */
     const HEADER_AUTHORIZATION = 'Authorization';
+
+    /**
+     * ETag header name.
+     *
+     * @var string
+     */
+    const HEADER_ETAG = 'ETag';
 
     /**
      * Mainly used to identify Ajax requests.
