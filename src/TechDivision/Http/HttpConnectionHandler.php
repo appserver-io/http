@@ -523,6 +523,10 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             ServerVars::REQUEST_URI,
             $request->getUri()
         );
+        $serverContext->setServerVar(
+            ServerVars::X_REQUEST_URI,
+            $request->getUri()
+        );
     }
 
     /**
