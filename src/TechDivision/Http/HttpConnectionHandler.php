@@ -269,7 +269,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                 $keepAliveConnection = false;
 
                 // set first line from connection
-                $line = $connection->readLine(1024, $keepAliveTimeout);
+                $line = $connection->readLine(2048, $keepAliveTimeout);
 
                 /**
                  * In the interest of robustness, servers SHOULD ignore any empty
@@ -281,7 +281,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                  */
                 if ($line === "\r\n") {
                     // ignore the first CRLF and go on reading the expected start-line.
-                    $line = $connection->readLine(1024, $keepAliveTimeout);
+                    $line = $connection->readLine(2048, $keepAliveTimeout);
                 }
 
                 // parse read line
@@ -480,7 +480,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             $request->getHeader(HttpProtocol::HEADER_HOST)
         );
         $serverContext->setServerVar(
-            ServerVars::HTTP_HEADER_X_REQUESTED_WITH,
+            ServerVars::HTTP_X_REQUESTED_WITH,
             $request->getHeader(HttpProtocol::HEADER_X_REQUESTED_WITH)
         );
         $serverContext->setServerVar(
