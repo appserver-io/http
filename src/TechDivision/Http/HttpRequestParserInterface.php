@@ -1,6 +1,6 @@
 <?php
 /**
- * \TechDivision\Http\HttpParserInterface
+ * \TechDivision\Http\HttpRequestParserInterface
  *
  * NOTICE OF LICENSE
  *
@@ -21,7 +21,7 @@
 namespace TechDivision\Http;
 
 /**
- * Interface HttpParserInterface
+ * Interface HttpRequestParserInterface
  *
  * @category  Library
  * @package   TechDivision_Http
@@ -30,7 +30,7 @@ namespace TechDivision\Http;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/TechDivision_Http
  */
-interface HttpParserInterface
+interface HttpRequestParserInterface
 {
     /**
      * Parses the start line

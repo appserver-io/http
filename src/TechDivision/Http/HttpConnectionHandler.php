@@ -30,7 +30,7 @@ use TechDivision\WebServer\Sockets\SocketInterface;
 use TechDivision\WebServer\Sockets\SocketReadTimeoutException;
 
 use TechDivision\Http\HttpRequestInterface;
-use TechDivision\Http\HttpParserInterface;
+use TechDivision\Http\HttpRequestParserInterface;
 use TechDivision\Http\HttpProtocol;
 use TechDivision\Http\HttpRequest;
 use TechDivision\Http\HttpResponse;
@@ -51,7 +51,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     /**
      * Hold's parser instance
      *
-     * @var \TechDivision\Http\HttpParserInterface
+     * @var \TechDivision\Http\HttpRequestParserInterface
      */
     protected $parser;
 
@@ -120,7 +120,9 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         );
 
         // setup http parser
-        $this->parser = new HttpParser($httpRequest, $httpResponse);
+        $this->parser = new HttpRequestParser($httpRequest, $httpResponse);
+        $this->parser->injectQueryParser(new HttpQueryParser());
+        $this->parser->injectPart(new HttpPart());
 
         // register shutdown handler
         register_shutdown_function(array(&$this, "shutdown"));
@@ -172,7 +174,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     /**
      * Return's the parser instance
      *
-     * @return \TechDivision\Http\HttpParserInterface
+     * @return \TechDivision\Http\HttpRequestParserInterface
      */
     public function getParser()
     {
@@ -337,7 +339,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                             if (count($boundaryMatches) > 0) {
                                 $parser->parseMultipartFormData($content);
                             } else {
-                                $queryParser->parseStr(urldecode($content));
+                                $queryParser->parseStr($content);
                             }
                         }
                     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * \TechDivision\Http\HttpParser
+ * \TechDivision\Http\HttpRequestParser
  *
  * NOTICE OF LICENSE
  *
@@ -21,7 +21,7 @@
 namespace TechDivision\Http;
 
 /**
- * Class HttpParser
+ * Class HttpRequestParser
  *
  * @category  Library
  * @package   TechDivision_Http
@@ -30,7 +30,7 @@ namespace TechDivision\Http;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/TechDivision_Http
  */
-class HttpParser implements HttpParserInterface
+class HttpRequestParser implements HttpRequestParserInterface
 {
 
     /**
@@ -62,13 +62,34 @@ class HttpParser implements HttpParserInterface
      */
     public function __construct(HttpRequestInterface $request, HttpResponseInterface $response)
     {
-        // instantiate query parser
-        $this->queryParser = new HttpQueryParser();
-        // instantiate part instance factory
-        $this->part = new HttpPart();
         // add request and response
         $this->request = $request;
         $this->response = $response;
+    }
+
+    /**
+     * Injects query parser instance
+     *
+     * @param HttpQueryParserInterface $queryParser The query parser instance
+     *
+     * @return void
+     */
+    public function injectQueryParser(HttpQueryParserInterface $queryParser)
+    {
+        // inject query parser
+        $this->queryParser = $queryParser;
+    }
+
+    /**
+     * Injects http part implementation
+     *
+     * @param HttpPartInterface $part The part implementation
+     *
+     * @return void
+     */
+    public function injectPart(HttpPartInterface $part)
+    {
+        $this->part = $part;
     }
 
     /**
@@ -213,6 +234,10 @@ class HttpParser implements HttpParserInterface
         $request = $this->getRequest();
         // grab multipart boundary from content type header
         preg_match('/boundary=(.*)$/', $this->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_TYPE), $matches);
+        // check if boundary is not set
+        if (!isset($matches[1])) {
+            return;
+        }
         // get boundary
         $boundary = $matches[1];
         // split content by boundary
@@ -227,7 +252,7 @@ class HttpParser implements HttpParserInterface
             }
 
             // check if filename is given
-            // todo: refactore file part generating
+            // todo: refactor file part generating
             if (strpos($block, '; filename="') !== false) {
                 // init new part instance
                 $part = $this->getHttpPartInstance();
@@ -254,7 +279,7 @@ class HttpParser implements HttpParserInterface
                 // parse all other fields as normal key value pairs
             } else {
                 // match "name" and optional value in between newline sequences
-                preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
+                preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?[\n|\r]+$/', $block, $matches);
                 // if no value given set null
                 if (!isset($matches[2])) {
                     $matches[2] = null;
