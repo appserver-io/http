@@ -305,9 +305,9 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
                 // process connection type keep-alive
                 if (strcasecmp(
-                        $request->getHeader(HttpProtocol::HEADER_CONNECTION),
-                        HttpProtocol::HEADER_CONNECTION_VALUE_KEEPALIVE
-                    ) === 0) {
+                    $request->getHeader(HttpProtocol::HEADER_CONNECTION),
+                    HttpProtocol::HEADER_CONNECTION_VALUE_KEEPALIVE
+                ) === 0) {
                     // only if max connections were not reached yet
                     if ($keepAliveMax > 0) {
                         // enable keep alive connection
