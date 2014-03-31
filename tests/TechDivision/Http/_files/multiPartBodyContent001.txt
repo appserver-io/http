@@ -1,0 +1,38 @@
+------WebKitFormBoundaryaQdwdIDo9mKQdyJQ
+Content-Disposition: form-data; name="--databaseStep[__state]"
+
+TzozMzoiVFlQTzNcRm9ybVxDb3JlXFJ1bnRpbWVcRm9ybVN0YXRlIjoyOntzOjI1OiIAKgBsYXN0RGlzcGxheWVkUGFnZUluZGV4IjtpOjA7czoxMzoiACoAZm9ybVZhbHVlcyI7YTowOnt9fQ==ecd205bc939b500eb2fb977d0e24a3fd90ac6f72
+------WebKitFormBoundaryaQdwdIDo9mKQdyJQ
+Content-Disposition: form-data; name="--databaseStep[__trustedProperties]"
+
+a:6:{s:6:"driver";i:1;s:4:"user";i:1;s:8:"password";i:1;s:4:"host";i:1;s:6:"dbname";i:1;s:13:"__currentPage";i:1;}cfb1594e56810eaf65e05041b75a764c30991b14
+------WebKitFormBoundaryaQdwdIDo9mKQdyJQ
+Content-Disposition: form-data; name="__csrfToken"
+
+ad517faaae804530f70139f9925df2d1
+------WebKitFormBoundaryaQdwdIDo9mKQdyJQ
+Content-Disposition: form-data; name="--databaseStep[driver]"
+
+pdo_mysql
+------WebKitFormBoundaryaQdwdIDo9mKQdyJQ
+Content-Disposition: form-data; name="--databaseStep[user]"
+
+root
+------WebKitFormBoundaryaQdwdIDo9mKQdyJQ
+Content-Disposition: form-data; name="--databaseStep[password]"
+
+password
+------WebKitFormBoundaryaQdwdIDo9mKQdyJQ
+Content-Disposition: form-data; name="--databaseStep[host]"
+
+127.0.0.1
+------WebKitFormBoundaryaQdwdIDo9mKQdyJQ
+Content-Disposition: form-data; name="--databaseStep[dbname]"
+
+NeosTest006
+------WebKitFormBoundaryaQdwdIDo9mKQdyJQ
+Content-Disposition: form-data; name="--databaseStep[__currentPage]"
+
+1
+------WebKitFormBoundaryaQdwdIDo9mKQdyJQ--
+
