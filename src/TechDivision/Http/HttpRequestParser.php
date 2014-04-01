@@ -279,7 +279,7 @@ class HttpRequestParser implements HttpRequestParserInterface
                 // parse all other fields as normal key value pairs
             } else {
                 // match "name" and optional value in between newline sequences
-                preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?[\n|\r]+$/', $block, $matches);
+                preg_match('/name=\"([^\"]*)\"[\r\n]+([^\r\n]*)?/', $block, $matches);
                 // if no value given set null
                 if (!isset($matches[2])) {
                     $matches[2] = null;
