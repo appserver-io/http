@@ -54,28 +54,55 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Test multipart parsing
+     * Test multipart parsing with empty values
      */
-    public function testMultiPartParsing() {
-        $multiPartBodyContent = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . '_files/multiPartBodyContent001.txt');
+    public function testMultiPartParsingWithEmptyValues()
+    {
+        $multiPartBodyContent = "------WebKitFormBoundaryOO68wjlGqJLTz1AX\r\nContent-Disposition: form-data; name=\"--siteImportStep[__state]\"\r\n\r\nTzozMzoiVFlQTzNcRm9ybVxDb3JlXFJ1bnRpbWVcRm9ybVN0YXRlIjoyOntzOjI1OiIAKgBsYXN0RGlzcGxheWVkUGFnZUluZGV4IjtpOjA7czoxMzoiACoAZm9ybVZhbHVlcyI7YTowOnt9fQ==18325156e7fe63abd938069d4a08ae7dc95e2af6\r\n------WebKitFormBoundaryOO68wjlGqJLTz1AX\r\nContent-Disposition: form-data; name=\"--siteImportStep[__trustedProperties]\"\r\n\r\na:4:{s:4:\"site\";i:1;s:10:\"packageKey\";i:1;s:8:\"siteName\";i:1;s:13:\"__currentPage\";i:1;}264c581c4bacda4bda4ae728e84632d8547a5e6a\r\n------WebKitFormBoundaryOO68wjlGqJLTz1AX\r\nContent-Disposition: form-data; name=\"__csrfToken\"\r\n\r\nefbb4f9c952d3b0a8af54aff0a144090\r\n------WebKitFormBoundaryOO68wjlGqJLTz1AX\r\nContent-Disposition: form-data; name=\"--siteImportStep[site]\"\r\n\r\nTYPO3.NeosDemoTypo3Org\r\n------WebKitFormBoundaryOO68wjlGqJLTz1AX\r\nContent-Disposition: form-data; name=\"--siteImportStep[packageKey]\"\r\n\r\n\r\n------WebKitFormBoundaryOO68wjlGqJLTz1AX\r\nContent-Disposition: form-data; name=\"--siteImportStep[siteName]\"\r\n\r\n\r\n------WebKitFormBoundaryOO68wjlGqJLTz1AX\r\nContent-Disposition: form-data; name=\"--siteImportStep[__currentPage]\"\r\n\r\n1\r\n------WebKitFormBoundaryOO68wjlGqJLTz1AX--\r\n";
+        $expectedResult = array (
+            '--siteImportStep' =>
+                array (
+                    '__state' => 'TzozMzoiVFlQTzNcRm9ybVxDb3JlXFJ1bnRpbWVcRm9ybVN0YXRlIjoyOntzOjI1OiIAKgBsYXN0RGlzcGxheWVkUGFnZUluZGV4IjtpOjA7czoxMzoiACoAZm9ybVZhbHVlcyI7YTowOnt9fQ==18325156e7fe63abd938069d4a08ae7dc95e2af6',
+                    '__trustedProperties' => 'a:4:{s:4:"site";i:1;s:10:"packageKey";i:1;s:8:"siteName";i:1;s:13:"__currentPage";i:1;}264c581c4bacda4bda4ae728e84632d8547a5e6a',
+                    'site' => 'TYPO3.NeosDemoTypo3Org',
+                    'packageKey' => '',
+                    'siteName' => '',
+                    '__currentPage' => '1',
+                ),
+            '__csrfToken' => 'efbb4f9c952d3b0a8af54aff0a144090',
+        );
         $request = $this->parser->getRequest();
-        $request->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, 'multipart/form-data; boundary=----WebKitFormBoundaryaQdwdIDo9mKQdyJQ');
+        $request->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, 'multipart/form-data; boundary=----WebKitFormBoundaryOO68wjlGqJLTz1AX');
         $this->parser->parseMultipartFormData($multiPartBodyContent);
         $result = $this->parser->getQueryParser()->getResult();
-        $this->assertSame($result, array (
+        $this->assertSame(var_export($result, true), var_export($expectedResult, true));
+    }
+
+    /**
+     * Test multipart parsing with values
+     */
+    public function testMultiPartParsingWithValues()
+    {
+        $multiPartBodyContent = "------WebKitFormBoundaryUmLBdln8JKrYyp81\r\nContent-Disposition: form-data; name=\"--databaseStep[__state]\"\r\n\r\nTzozMzoiVFlQTzNcRm9ybVxDb3JlXFJ1bnRpbWVcRm9ybVN0YXRlIjoyOntzOjI1OiIAKgBsYXN0RGlzcGxheWVkUGFnZUluZGV4IjtpOjA7czoxMzoiACoAZm9ybVZhbHVlcyI7YTowOnt9fQ==546f5a1ab0b920821aaf34cdfb858717d666789b\r\n------WebKitFormBoundaryUmLBdln8JKrYyp81\r\nContent-Disposition: form-data; name=\"--databaseStep[__trustedProperties]\"\r\n\r\na:6:{s:6:\"driver\";i:1;s:4:\"user\";i:1;s:8:\"password\";i:1;s:4:\"host\";i:1;s:6:\"dbname\";i:1;s:13:\"__currentPage\";i:1;}6257cab62f04dfa156df41fccd93ee87ba816ebe\r\n------WebKitFormBoundaryUmLBdln8JKrYyp81\r\nContent-Disposition: form-data; name=\"__csrfToken\"\r\n\r\n23ca48201b96c207678c6154b0445444\r\n------WebKitFormBoundaryUmLBdln8JKrYyp81\r\nContent-Disposition: form-data; name=\"--databaseStep[driver]\"\r\n\r\npdo_mysql\r\n------WebKitFormBoundaryUmLBdln8JKrYyp81\r\nContent-Disposition: form-data; name=\"--databaseStep[user]\"\r\n\r\nroot\r\n------WebKitFormBoundaryUmLBdln8JKrYyp81\r\nContent-Disposition: form-data; name=\"--databaseStep[password]\"\r\n\r\npassword\r\n------WebKitFormBoundaryUmLBdln8JKrYyp81\r\nContent-Disposition: form-data; name=\"--databaseStep[host]\"\r\n\r\n127.0.0.1\r\n------WebKitFormBoundaryUmLBdln8JKrYyp81\r\nContent-Disposition: form-data; name=\"--databaseStep[dbname]\"\r\n\r\nNEOSASDFASDF\r\n------WebKitFormBoundaryUmLBdln8JKrYyp81\r\nContent-Disposition: form-data; name=\"--databaseStep[__currentPage]\"\r\n\r\n1\r\n------WebKitFormBoundaryUmLBdln8JKrYyp81--\r\n";
+        $expectedResult = array (
             '--databaseStep' =>
                 array (
-                    '__state' => 'TzozMzoiVFlQTzNcRm9ybVxDb3JlXFJ1bnRpbWVcRm9ybVN0YXRlIjoyOntzOjI1OiIAKgBsYXN0RGlzcGxheWVkUGFnZUluZGV4IjtpOjA7czoxMzoiACoAZm9ybVZhbHVlcyI7YTowOnt9fQ==ecd205bc939b500eb2fb977d0e24a3fd90ac6f72',
-                    '__trustedProperties' => 'a:6:{s:6:"driver";i:1;s:4:"user";i:1;s:8:"password";i:1;s:4:"host";i:1;s:6:"dbname";i:1;s:13:"__currentPage";i:1;}cfb1594e56810eaf65e05041b75a764c30991b14',
+                    '__state' => 'TzozMzoiVFlQTzNcRm9ybVxDb3JlXFJ1bnRpbWVcRm9ybVN0YXRlIjoyOntzOjI1OiIAKgBsYXN0RGlzcGxheWVkUGFnZUluZGV4IjtpOjA7czoxMzoiACoAZm9ybVZhbHVlcyI7YTowOnt9fQ==546f5a1ab0b920821aaf34cdfb858717d666789b',
+                    '__trustedProperties' => 'a:6:{s:6:"driver";i:1;s:4:"user";i:1;s:8:"password";i:1;s:4:"host";i:1;s:6:"dbname";i:1;s:13:"__currentPage";i:1;}6257cab62f04dfa156df41fccd93ee87ba816ebe',
                     'driver' => 'pdo_mysql',
                     'user' => 'root',
                     'password' => 'password',
                     'host' => '127.0.0.1',
-                    'dbname' => 'NeosTest006',
+                    'dbname' => 'NEOSASDFASDF',
                     '__currentPage' => '1',
                 ),
-            '__csrfToken' => 'ad517faaae804530f70139f9925df2d1',
-        ));
+            '__csrfToken' => '23ca48201b96c207678c6154b0445444',
+        );
+        $request = $this->parser->getRequest();
+        $request->addHeader(HttpProtocol::HEADER_CONTENT_TYPE, 'multipart/form-data; boundary=----WebKitFormBoundaryUmLBdln8JKrYyp81');
+        $this->parser->parseMultipartFormData($multiPartBodyContent);
+        $result = $this->parser->getQueryParser()->getResult();
+        $this->assertSame(var_export($result, true), var_export($expectedResult, true));
     }
 
     /**
