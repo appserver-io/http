@@ -32,7 +32,7 @@ namespace TechDivision\Http;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       https://github.com/techdivision/TechDivision_Http
  */
-class HttpResponseTest extends \PHPUnit_Framework_TestCase {
+class ResponseTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @var HttpResponse
