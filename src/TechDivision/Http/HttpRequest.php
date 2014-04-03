@@ -75,6 +75,13 @@ class HttpRequest implements HttpRequestInterface
     protected $params;
 
     /**
+     * Hold's the queryString parameters
+     *
+     * @var array
+     */
+    protected $queryString;
+
+    /**
      * Holds collection of parts from multipart form data
      *
      * @var array A collection of HttpPart Objects
@@ -101,7 +108,9 @@ class HttpRequest implements HttpRequestInterface
         $this->uri = null;
         $this->method = null;
         $this->version = null;
-        $this->queryString = null;
+
+        // Query string is always present, even if it is empty
+        $this->queryString = '';
     }
 
     /**

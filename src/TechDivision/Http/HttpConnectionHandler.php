@@ -231,7 +231,11 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         $serverContext = $this->getServerContext();
         $serverConfig = $serverContext->getServerConfig();
         $parser = $this->getParser();
+
+        // Get our query parser
         $queryParser = $parser->getQueryParser();
+
+        // Get the request and response
         $request = $parser->getRequest();
         $response = $parser->getResponse();
 
@@ -263,9 +267,8 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                  * TIME
                  */
 
-                // reset request and response
-                $request->init();
-                $response->init();
+                // init the request parser
+                $parser->init();
 
                 // init keep alive connection flag
                 $keepAliveConnection = false;
