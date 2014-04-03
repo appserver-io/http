@@ -68,6 +68,21 @@ class HttpRequestParser implements HttpRequestParserInterface
     }
 
     /**
+     * Will init the request parser anew so it can be reused even when being persistent
+     *
+     * @return void
+     */
+    public function init()
+    {
+        // Init the query parser
+        $this->getQueryParser()->clear();
+
+        // Init request and response
+        $this->getRequest()->init();
+        $this->getResponse()->init();
+    }
+
+    /**
      * Injects query parser instance
      *
      * @param HttpQueryParserInterface $queryParser The query parser instance
