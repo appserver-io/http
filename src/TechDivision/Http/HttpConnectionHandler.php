@@ -20,6 +20,7 @@
 
 namespace TechDivision\Http;
 
+use TechDivision\WebServer\Dictionaries\ModuleVars;
 use TechDivision\WebServer\Dictionaries\ServerVars;
 use TechDivision\WebServer\Exceptions\ModuleException;
 use TechDivision\WebServer\Interfaces\ConnectionHandlerInterface;
@@ -383,6 +384,9 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             // send response to connected client
             $this->sendResponse();
 
+            // log informations for access log etc...
+            $this->logAccess();
+
             // init server vars
             $serverContext->initServerVars();
 
@@ -441,6 +445,45 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // stream response body to connection
         $connection->copyStream($response->getBodyStream());
+    }
+
+    /**
+     * Log's access information from request and response
+     *
+     * @return void
+     */
+    public function logAccess()
+    {
+        // get object refs to local var
+        $request = $this->getParser()->getRequest();
+        $response = $this->getParser()->getResponse();
+        $serverContext = $this->getServerContext();
+
+        // log access information if AccessLogger exists
+        if ($accessLogger = $this->getServerContext()->getLogger(ServerVars::LOGGER_ACCESS)) {
+
+            // init datetime instance with current time and timezone
+            $datetime = new \DateTime('now');
+
+            $accessLogger->info(
+                sprintf(
+                    /**
+                     * This logs in apaches default combined format
+                     * LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+                     */
+                    '%s - - [%s] "%s %s %s" %s %s "%s" "%s"' . PHP_EOL,
+                    $serverContext->getServerVar(ServerVars::REMOTE_ADDR),
+                    $datetime->format('d/M/Y:H:i:s O'),
+                    $request->getMethod(),
+                    $request->getUri(),
+                    $request->getVersion(),
+                    $response->getStatusCode(),
+                    $response->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH) ? $response->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH) : '-',
+                    $request->hasHeader(HttpProtocol::HEADER_REFERER) ? $request->getHeader(HttpProtocol::HEADER_REFERER) : '-',
+                    $request->hasHeader(HttpProtocol::HEADER_USER_AGENT) ? $request->getHeader(HttpProtocol::HEADER_USER_AGENT) : '-'
+                )
+            );
+        }
     }
 
     /**
