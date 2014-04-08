@@ -467,10 +467,8 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
             $accessLogger->info(
                 sprintf(
-                    /**
-                     * This logs in apaches default combined format
-                     * LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
-                     */
+                    /* This logs in apaches default combined format */
+                    /* LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined */
                     '%s - - [%s] "%s %s %s" %s %s "%s" "%s"' . PHP_EOL,
                     $serverContext->getServerVar(ServerVars::REMOTE_ADDR),
                     $datetime->format('d/M/Y:H:i:s O'),
