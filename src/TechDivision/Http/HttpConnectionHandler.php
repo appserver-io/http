@@ -334,7 +334,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                     // get content-length header
                     if (($contentLength = (int)$request->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) > 0) {
                         // copy connection stream to body stream by given content length
-                        $request->copyBodyStream($connection->getConnectionResource());
+                        $request->copyBodyStream($connection->getConnectionResource(), $contentLength);
                         // get content out for oldschool query parsing todo: refactor query parsing
                         $content = $request->getBodyContent();
                         // check if request has to be parsed depending on Content-Type header
