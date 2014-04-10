@@ -85,6 +85,13 @@ class HttpResponse implements HttpResponseInterface
     protected $headers;
 
     /**
+     * Hold's the default headers
+     *
+     * @var array $defaultHeaders
+     */
+    protected $defaultHeaders = array();
+
+    /**
      * Represent's the state
      *
      * @var int
@@ -284,12 +291,12 @@ class HttpResponse implements HttpResponseInterface
         }
         return $this->headers[$name];
     }
-    
+
     /**
      * Removes the header with the passed name.
-     * 
+     *
      * @param string $name Name of the header to remove
-     * 
+     *
      * @return void
      */
     public function removeHeader($name)
