@@ -224,7 +224,6 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
      */
     public function handle(SocketInterface $connection, WorkerInterface $worker)
     {
-
         // add connection ref to self
         $this->connection = $connection;
         $this->worker = $worker;
@@ -385,7 +384,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             $this->prepareResponse();
 
             // process modules by hook RESPONSE_PRE
-            $this->processModules(ModuleHooks::REQUEST_POST);
+            $this->processModules(ModuleHooks::RESPONSE_POST);
 
             // send response to connected client
             $this->sendResponse();
