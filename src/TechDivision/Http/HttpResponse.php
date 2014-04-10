@@ -150,29 +150,43 @@ class HttpResponse implements HttpResponseInterface
     }
 
     /**
+     * Return's current content length
+     *
+     * @return int
+     */
+    public function getContentLength()
+    {
+        // checkout for content length
+        rewind($this->getBodyStream());
+        fseek($this->getBodyStream(), 0, SEEK_END);
+        return ftell($this->getBodyStream());
+    }
+
+    /**
+     * Prepares the headers to ready for delivery
+     *
+     * @return void
+     */
+    public function prepareHeaders()
+    {
+        // check if status code is content-length relevant
+        if ((int)$this->getStatusCode() < 300 || (int)$this->getStatusCode() > 399) {
+            $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $this->getContentLength());
+        }
+    }
+
+    /**
      * Return's all headers as string
      *
      * @return string
      */
     public function getHeaderString()
     {
-        // check if content length must be set
-        fseek($this->getBodyStream(), 0, SEEK_END);
-        $contentLength = ftell($this->getBodyStream());
-
-        // check if status code is content-length relevant
-        // todo: refactor content-length setter to other function in future
-        if ((int)$this->getStatusCode() < 300 || (int)$this->getStatusCode() > 399) {
-            $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $contentLength);
-        }
-
         $headerString = '';
-
         // enhance headers
         foreach ($this->getHeaders() as $headerName => $headerValue) {
             $headerString .= $headerName . ': ' . $headerValue . "\r\n";
         }
-
         // return with ending CRLF
         return $headerString . "\r\n";
     }

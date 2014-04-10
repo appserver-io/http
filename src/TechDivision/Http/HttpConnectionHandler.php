@@ -20,10 +20,12 @@
 
 namespace TechDivision\Http;
 
+use TechDivision\WebServer\Dictionaries\ModuleHooks;
 use TechDivision\WebServer\Dictionaries\ModuleVars;
 use TechDivision\WebServer\Dictionaries\ServerVars;
 use TechDivision\WebServer\Exceptions\ModuleException;
 use TechDivision\WebServer\Interfaces\ConnectionHandlerInterface;
+use TechDivision\WebServer\Interfaces\ModuleInterface;
 use TechDivision\WebServer\Interfaces\ServerConfigurationInterface;
 use TechDivision\WebServer\Interfaces\ServerContextInterface;
 use TechDivision\WebServer\Interfaces\WorkerInterface;
@@ -127,7 +129,6 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // register shutdown handler
         register_shutdown_function(array(&$this, "shutdown"));
-
     }
 
     /**
@@ -271,6 +272,9 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                 // init the request parser
                 $parser->init();
 
+                // process modules by hook REQUEST_PRE
+                $this->processModules(ModuleHooks::REQUEST_PRE);
+
                 // init keep alive connection flag
                 $keepAliveConnection = false;
 
@@ -355,15 +359,8 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                 // init connection & protocol server vars
                 $this->initServerVars();
 
-                // process modules
-                $modules = $this->getModules();
-                foreach ($modules as $module) {
-                    $module->process($request, $response);
-                    // check if response should be dispatched now and stop other modules to process
-                    if ($response->hasState(HttpResponseStates::DISPATCH)) {
-                        break;
-                    }
-                }
+                // process modules by hook REQUEST_POST
+                $this->processModules(ModuleHooks::REQUEST_POST);
 
                 // if no module dispatched response throw internal server error 500
                 if (!$response->hasState(HttpResponseStates::DISPATCH)) {
@@ -381,11 +378,17 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
                 $this->renderErrorPage($e->__toString());
             }
 
+            // process modules by hook RESPONSE_PRE
+            $this->processModules(ModuleHooks::RESPONSE_PRE);
+
+            // send response to connected client
+            $this->prepareResponse();
+
+            // process modules by hook RESPONSE_PRE
+            $this->processModules(ModuleHooks::REQUEST_POST);
+
             // send response to connected client
             $this->sendResponse();
-
-            // log informations for access log etc...
-            $this->logAccess();
 
             // init server vars
             $serverContext->initServerVars();
@@ -394,6 +397,33 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // finally close connection
         $connection->close();
+    }
+
+    /**
+     * Processes modules logic by given hook
+     *
+     * @param int $hook The hook identifier to process logic for
+     *
+     * @return void
+     */
+    protected function processModules($hook)
+    {
+        // get object refs to local vars
+        $modules = $this->getModules();
+        $request = $this->getParser()->getRequest();
+        $response = $this->getParser()->getResponse();
+
+        // interate all modules and call process by given hook
+        foreach ($modules as $module) {
+            /* @var $module \TechDivision\WebServer\Interfaces\ModuleInterface */
+            // process modules logic by hook
+            $module->process($request, $response, $hook);
+            // break chain if hook type is REQUEST_POST and response state is DISPATCH
+            if ($hook === ModuleHooks::REQUEST_POST && $response->hasState(HttpResponseStates::DISPATCH)) {
+                // break out
+                break;
+            }
+        }
     }
 
     /**
@@ -425,6 +455,21 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     }
 
     /**
+     * Prepare's the response object to be ready for delivery
+     *
+     * @return void
+     */
+    public function prepareResponse()
+    {
+        // get local var refs
+        $response = $this->getParser()->getResponse();
+        // prepare headers in response object to be ready for delivery
+        $response->prepareHeaders();
+        // set current date before sending it
+        $response->addHeader(HttpProtocol::HEADER_DATE, gmdate(DATE_RFC822));
+    }
+
+    /**
      * Send's response to connected client
      *
      * @return void
@@ -434,15 +479,10 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         // get local var refs
         $response = $this->getParser()->getResponse();
         $connection = $this->getConnection();
-
-        // set current date before sending it
-        $response->addHeader(HttpProtocol::HEADER_DATE, gmdate(DATE_RFC822));
-
         // write response status-line
         $connection->write($response->getStatusLine());
         // write response headers
         $connection->write($response->getHeaderString());
-
         // stream response body to connection
         $connection->copyStream($response->getBodyStream());
     }
