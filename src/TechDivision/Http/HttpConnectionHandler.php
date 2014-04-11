@@ -389,8 +389,8 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
             // send response to connected client
             $this->sendResponse();
 
-            // init server vars
-            $serverContext->initServerVars();
+            // init context vars afterwards to avoid performance issues
+            $serverContext->initVars();
 
         } while ($keepAliveConnection === true);
 
