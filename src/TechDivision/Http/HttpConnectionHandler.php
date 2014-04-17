@@ -482,6 +482,20 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         $connection->write($response->getStatusLine());
         // write response headers
         $connection->write($response->getHeaderString());
+        /*
+         * If we don't have any content, we send at least a new line.
+         * 
+         * This prevents Firefox/Safari to wait for response from server when
+         * we send a 302 on a HTTPS connection, like Magento does on login BE
+         * or customer account for example.
+         * 
+         * @author  Tim Wagner
+         * @date    2014-04-17
+         * @version 0.1.0beta
+         */
+        if ($response->getContentLength() === 0) {
+            $response->appendBodyStream("\r\n");
+        }
         // stream response body to connection
         $connection->copyStream($response->getBodyStream());
     }
