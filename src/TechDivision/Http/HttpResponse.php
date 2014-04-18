@@ -189,11 +189,19 @@ class HttpResponse implements HttpResponseInterface
      */
     public function getHeaderString()
     {
+        // initialize the string for the headers
         $headerString = '';
-        // enhance headers
-        foreach ($this->getHeaders() as $headerName => $headerValue) {
-            $headerString .= $headerName . ': ' . $headerValue . "\r\n";
-        }
+        // concatenate the headers to a string
+        foreach ($this->getHeaders() as $headerName => $headerValue) {    
+            // take care for the Set-Cookie headers
+            if (is_array($headerValue)) {
+                foreach ($headerValue as $value) {
+                    $headerString .= $headerName . ': ' . $value . "\r\n";
+                }
+            } else {
+                $headerString .= $headerName . ': ' . $headerValue . "\r\n";
+            }
+        }       
         // return with ending CRLF
         return $headerString . "\r\n";
     }
@@ -262,7 +270,8 @@ class HttpResponse implements HttpResponseInterface
     }
 
     /**
-     * Add's a header information got from connection
+     * Adds a header information got from connection. We've to take care that
+     * multiple Set-Cookie header can exist, so we hold them as an array.
      *
      * @param string $name  The header name
      * @param string $value The headers value
@@ -271,7 +280,23 @@ class HttpResponse implements HttpResponseInterface
      */
     public function addHeader($name, $value)
     {
-        $this->headers[$name] = $value;
+        
+        // check if we've a Set-Cookie header to process
+        if ($this->hasHeader($name) && strtolower($name) === strtolower(HttpProtocol::HEADER_SET_COOKIE)) {
+            
+            // then check if we've already one cookie header available
+            if (is_array($headerValue = $this->getHeader($name))) {
+                $headerValue[] = $value;
+            } else {
+                $headerValue = array($headerValue, $value);
+            }
+            
+            // if no cookie header simple add it
+            $this->headers[$name] = $headerValue;
+            
+        } else {
+            $this->headers[$name] = $value;
+        }
     }
 
     /**
@@ -287,17 +312,17 @@ class HttpResponse implements HttpResponseInterface
     }
 
     /**
-     * Return's header by given name
+     * Returns header by given name.
      *
      * @param string $name The header name to get
      *
-     * @return string
-     * @throws HttpException
+     * @return mixed Usually a string, but can also be an array if we request the Set-Cookie header
+     * @throws \TechDivision\Http\HttpException Is thrown if the requested header is not available
      */
     public function getHeader($name)
     {
         if (isset($this->headers[$name]) === false) {
-            throw new HttpException("Response header not found '$name'");
+            throw new HttpException("Response header '$name' not found");
         }
         return $this->headers[$name];
     }
