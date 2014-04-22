@@ -192,7 +192,7 @@ class HttpResponse implements HttpResponseInterface
         // initialize the string for the headers
         $headerString = '';
         // concatenate the headers to a string
-        foreach ($this->getHeaders() as $headerName => $headerValue) {    
+        foreach ($this->getHeaders() as $headerName => $headerValue) {
             // take care for the Set-Cookie headers
             if (is_array($headerValue)) {
                 foreach ($headerValue as $value) {
@@ -201,7 +201,7 @@ class HttpResponse implements HttpResponseInterface
             } else {
                 $headerString .= $headerName . ': ' . $headerValue . "\r\n";
             }
-        }       
+        }
         // return with ending CRLF
         return $headerString . "\r\n";
     }
@@ -280,20 +280,20 @@ class HttpResponse implements HttpResponseInterface
      */
     public function addHeader($name, $value)
     {
-        
+
         // check if we've a Set-Cookie header to process
         if ($this->hasHeader($name) && strtolower($name) === strtolower(HttpProtocol::HEADER_SET_COOKIE)) {
-            
+
             // then check if we've already one cookie header available
             if (is_array($headerValue = $this->getHeader($name))) {
                 $headerValue[] = $value;
             } else {
                 $headerValue = array($headerValue, $value);
             }
-            
+
             // if no cookie header simple add it
             $this->headers[$name] = $headerValue;
-            
+
         } else {
             $this->headers[$name] = $value;
         }
