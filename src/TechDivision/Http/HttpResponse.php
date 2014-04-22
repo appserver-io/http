@@ -270,20 +270,22 @@ class HttpResponse implements HttpResponseInterface
     }
 
     /**
-     * Adds a header information got from connection. We've to take care that
-     * multiple Set-Cookie header can exist, so we hold them as an array.
+     * Adds a header information got from connection. We've to take care that headers
+     * like Set-Cookie header can exist multiple times. To support this create an 
+     * array that keeps the multiple header values.
      *
-     * @param string $name  The header name
-     * @param string $value The headers value
+     * @param string  $name   The header name
+     * @param string  $value  The headers value
+     * @param boolean $append If TRUE and a header with the passed name already exists, the value will be appended
      *
      * @return void
      */
-    public function addHeader($name, $value)
+    public function addHeader($name, $value, $append = false)
     {
 
         // check if we've a Set-Cookie header to process
-        if ($this->hasHeader($name) && strtolower($name) === strtolower(HttpProtocol::HEADER_SET_COOKIE)) {
-
+        if ($this->hasHeader($name) && $append === true) {
+            
             // then check if we've already one cookie header available
             if (is_array($headerValue = $this->getHeader($name))) {
                 $headerValue[] = $value;
