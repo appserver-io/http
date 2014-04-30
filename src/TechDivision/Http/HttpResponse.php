@@ -237,6 +237,26 @@ class HttpResponse implements HttpResponseInterface
         return $this->bodyStream;
     }
 
+
+    /**
+     * Return's the body content stored in body stream
+     *
+     * @return string
+     */
+    public function getBodyContent()
+    {
+        // set bodystream resource ref to var
+        $bodyStream = $this->getBodyStream();
+        fseek($bodyStream, 0, SEEK_END);
+        $length = ftell($bodyStream);
+        // rewind pointer
+        rewind($bodyStream);
+        // returns whole body content
+        $content = fread($bodyStream, $length);
+        return $content;
+    }
+
+
     /**
      * Append's body stream with content
      *
