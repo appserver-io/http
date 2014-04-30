@@ -179,6 +179,8 @@ class HttpResponse implements HttpResponseInterface
         // check if status code is content-length relevant
         if ((int)$this->getStatusCode() < 300 || (int)$this->getStatusCode() > 399) {
             $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $this->getContentLength());
+        } else {
+            $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, 0);
         }
     }
 
