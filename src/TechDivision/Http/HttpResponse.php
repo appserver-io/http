@@ -237,6 +237,23 @@ class HttpResponse implements HttpResponseInterface
         return $this->bodyStream;
     }
 
+    /**
+     * Cleans the body stream
+     *
+     * @return void
+     */
+    public function unlinkBodyStream()
+    {
+        if (is_resource($this->bodyStream)) {
+            // close it before
+            fclose($this->bodyStream);
+            // free it
+            unset($this->bodyStream);
+        }
+
+        $this->bodyStream = fopen('php://memory', 'w+b');
+    }
+
 
     /**
      * Return's the body content stored in body stream
