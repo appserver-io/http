@@ -238,6 +238,43 @@ class HttpResponse implements HttpResponseInterface
     }
 
     /**
+     * Reset the body stream
+     *
+     * @return void
+     */
+    public function resetBodyStream()
+    {
+        if (is_resource($this->bodyStream)) {
+            // close it before
+            fclose($this->bodyStream);
+            // free it
+            unset($this->bodyStream);
+        }
+
+        $this->bodyStream = fopen('php://memory', 'w+b');
+    }
+
+
+    /**
+     * Return's the body content stored in body stream
+     *
+     * @return string
+     */
+    public function getBodyContent()
+    {
+        // set bodystream resource ref to var
+        $bodyStream = $this->getBodyStream();
+        fseek($bodyStream, 0, SEEK_END);
+        $length = ftell($bodyStream);
+        // rewind pointer
+        rewind($bodyStream);
+        // returns whole body content
+        $content = fread($bodyStream, $length);
+        return $content;
+    }
+
+
+    /**
      * Append's body stream with content
      *
      * @param string $content The content to append
