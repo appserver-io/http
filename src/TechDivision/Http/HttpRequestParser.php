@@ -176,7 +176,7 @@ class HttpRequestParser implements HttpRequestParserInterface
         $request->setVersion($reqVersion);
 
         // parse query string
-        if ($queryString = parse_url($reqUri, PHP_URL_QUERY)) {
+        if ($queryString = substr(strstr($reqUri, '?'), 1)) {
             $request->setQueryString($queryString);
             $this->getQueryParser()->parseStr($queryString);
         }

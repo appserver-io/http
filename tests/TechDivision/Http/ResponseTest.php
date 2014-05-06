@@ -46,6 +46,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
      */
     public function setUp() {
         $this->response = new HttpResponse();
+        $this->response->init();
     }
 
     /**
