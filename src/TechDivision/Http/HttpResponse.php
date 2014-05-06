@@ -238,11 +238,11 @@ class HttpResponse implements HttpResponseInterface
     }
 
     /**
-     * Cleans the body stream
+     * Reset the body stream
      *
      * @return void
      */
-    public function unlinkBodyStream()
+    public function resetBodyStream()
     {
         if (is_resource($this->bodyStream)) {
             // close it before
