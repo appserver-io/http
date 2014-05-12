@@ -123,6 +123,9 @@ class HttpRequest implements HttpRequestInterface
      */
     public function addHeader($name, $value)
     {
+        // normalize header names in case of 'Content-type' into 'Content-Type'
+        $name = str_replace(' ', '-', ucwords(str_replace('-', ' ', $name)));
+
         $this->headers[$name] = $value;
     }
 

@@ -229,9 +229,6 @@ class HttpRequestParser implements HttpRequestParserInterface
         // split name and value
         list($headerName, $headerValue) = $extractedHeaderInfo;
 
-        // normalize header names in case of 'Content-type' into 'Content-Type'
-        $headerName = str_replace(' ', '-', ucwords(str_replace('-', ' ', $headerName)));
-
         // add header
         $this->getRequest()->addHeader(trim($headerName), trim($headerValue));
     }
