@@ -321,6 +321,8 @@ class HttpResponse implements HttpResponseInterface
      */
     public function addHeader($name, $value, $append = false)
     {
+        // normalize header names in case of 'Content-type' into 'Content-Type'
+        $name = str_replace(' ', '-', ucwords(str_replace('-', ' ', $name)));
 
         // check if we've a Set-Cookie header to process
         if ($this->hasHeader($name) && $append === true) {
