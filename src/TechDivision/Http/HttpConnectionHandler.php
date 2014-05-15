@@ -544,7 +544,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         // get http host to set server name var
         $serverName = $request->getHeader(HttpProtocol::HEADER_HOST);
         if (strpos($serverName, ':') !== false) {
-            $serverName = strstr($serverName, ':', true);
+            $serverName = rtrim(strstr($serverName, ':', true), '.');
         }
 
         // set server name var
