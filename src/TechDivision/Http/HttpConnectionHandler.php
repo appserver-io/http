@@ -542,9 +542,9 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         $serverContext->setServerVar(ServerVars::SERVER_PROTOCOL, 'HTTP/1.1');
 
         // get http host to set server name var
-        $serverName = $request->getHeader(HttpProtocol::HEADER_HOST);
+        $serverName = rtrim($request->getHeader(HttpProtocol::HEADER_HOST), '.');
         if (strpos($serverName, ':') !== false) {
-            $serverName = rtrim(strstr($serverName, ':', true), '.');
+            $serverName = strstr($serverName, ':', true);
         }
 
         // set server name var
