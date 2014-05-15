@@ -396,7 +396,7 @@ class HttpProtocol
     const STATUS_REASONPHRASE_415 = "Unsupported Media Type"; //[RFC-ietf-httpbis-p2-semantics-26, Section 6.5.13]
     const STATUS_REASONPHRASE_416 = "Requested Range Not Satisfiable"; //[RFC-ietf-httpbis-p5-range-26, Section 4.4]
     const STATUS_REASONPHRASE_417 = "Expectation Failed"; //[RFC-ietf-httpbis-p2-semantics-26, Section 6.5.14]
-    const STATUS_REASONPHRASE_418 = "I’m a teapot"; //
+    const STATUS_REASONPHRASE_418 = "I’m a teapot"; //[RFC2324]
     const STATUS_REASONPHRASE_422 = "Unprocessable Entity"; //[RFC4918]
     const STATUS_REASONPHRASE_423 = "Locked"; //[RFC4918]
     const STATUS_REASONPHRASE_424 = "Failed Dependency"; //[RFC4918]

@@ -541,10 +541,10 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
         // set http protocol because this is the http connection class which implements http 1.1
         $serverContext->setServerVar(ServerVars::SERVER_PROTOCOL, 'HTTP/1.1');
 
-        // get http host to set server name var
+        // get http host to set server name var but trim the root domain
         $serverName = rtrim($request->getHeader(HttpProtocol::HEADER_HOST), '.');
         if (strpos($serverName, ':') !== false) {
-            $serverName = strstr($serverName, ':', true);
+            $serverName = rtrim(strstr($serverName, ':', true), '.');
         }
 
         // set server name var
