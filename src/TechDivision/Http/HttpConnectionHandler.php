@@ -20,17 +20,17 @@
 
 namespace TechDivision\Http;
 
-use TechDivision\WebServer\Dictionaries\ModuleHooks;
-use TechDivision\WebServer\Dictionaries\ModuleVars;
-use TechDivision\WebServer\Dictionaries\ServerVars;
-use TechDivision\WebServer\Exceptions\ModuleException;
-use TechDivision\WebServer\Interfaces\ConnectionHandlerInterface;
-use TechDivision\WebServer\Interfaces\ModuleInterface;
-use TechDivision\WebServer\Interfaces\ServerConfigurationInterface;
-use TechDivision\WebServer\Interfaces\ServerContextInterface;
-use TechDivision\WebServer\Interfaces\WorkerInterface;
-use TechDivision\WebServer\Sockets\SocketInterface;
-use TechDivision\WebServer\Sockets\SocketReadTimeoutException;
+use TechDivision\Server\Dictionaries\ModuleHooks;
+use TechDivision\Server\Dictionaries\ModuleVars;
+use TechDivision\Server\Dictionaries\ServerVars;
+use TechDivision\Server\Exceptions\ModuleException;
+use TechDivision\Server\Interfaces\ConnectionHandlerInterface;
+use TechDivision\Server\Interfaces\ModuleInterface;
+use TechDivision\Server\Interfaces\ServerConfigurationInterface;
+use TechDivision\Server\Interfaces\ServerContextInterface;
+use TechDivision\Server\Interfaces\WorkerInterface;
+use TechDivision\Server\Sockets\SocketInterface;
+use TechDivision\Server\Sockets\SocketReadTimeoutException;
 
 use TechDivision\Http\HttpRequestInterface;
 use TechDivision\Http\HttpRequestParserInterface;
@@ -61,7 +61,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     /**
      * Hold's the server context instance
      *
-     * @var \TechDivision\WebServer\Interfaces\ServerContextInterface
+     * @var \TechDivision\Server\Interfaces\ServerContextInterface
      */
     protected $serverContext;
 
@@ -82,21 +82,21 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     /**
      * Hold's the connection instance
      *
-     * @var \TechDivision\WebServer\Sockets\SocketInterface
+     * @var \TechDivision\Server\Sockets\SocketInterface
      */
     protected $connection;
 
     /**
      * Hold's the worker instance
      *
-     * @var \TechDivision\WebServer\Interfaces\WorkerInterface
+     * @var \TechDivision\Server\Interfaces\WorkerInterface
      */
     protected $worker;
 
     /**
      * Inits the connection handler by given context and params
      *
-     * @param \TechDivision\WebServer\Interfaces\ServerContextInterface $serverContext The server's context
+     * @param \TechDivision\Server\Interfaces\ServerContextInterface $serverContext The server's context
      * @param array                                                     $params        The params for connection handler
      *
      * @return void
@@ -156,7 +156,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     /**
      * Return's the server context instance
      *
-     * @return \TechDivision\WebServer\Interfaces\ServerContextInterface
+     * @return \TechDivision\Server\Interfaces\ServerContextInterface
      */
     public function getServerContext()
     {
@@ -166,7 +166,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     /**
      * Return's the server's configuration
      *
-     * @return \TechDivision\WebServer\Interfaces\ServerConfigurationInterface
+     * @return \TechDivision\Server\Interfaces\ServerConfigurationInterface
      */
     public function getServerConfig()
     {
@@ -186,7 +186,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     /**
      * Return's the connection used to handle with
      *
-     * @return \TechDivision\WebServer\Sockets\SocketInterface
+     * @return \TechDivision\Server\Sockets\SocketInterface
      */
     protected function getConnection()
     {
@@ -196,7 +196,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
     /**
      * Return's the worker instance which starte this worker thread
      *
-     * @return \TechDivision\WebServer\Interfaces\WorkerInterface
+     * @return \TechDivision\Server\Interfaces\WorkerInterface
      */
     protected function getWorker()
     {
@@ -217,8 +217,8 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
      * Handles the connection with the connected client in a proper way the given
      * protocol type and version expects for example.
      *
-     * @param \TechDivision\WebServer\Sockets\SocketInterface    $connection The connection to handle
-     * @param \TechDivision\WebServer\Interfaces\WorkerInterface $worker     The worker how started this handle
+     * @param \TechDivision\Server\Sockets\SocketInterface    $connection The connection to handle
+     * @param \TechDivision\Server\Interfaces\WorkerInterface $worker     The worker how started this handle
      *
      * @return bool Weather it was responsible to handle the firstLine or not.
      */
@@ -417,7 +417,7 @@ class HttpConnectionHandler implements ConnectionHandlerInterface
 
         // interate all modules and call process by given hook
         foreach ($modules as $module) {
-            /* @var $module \TechDivision\WebServer\Interfaces\ModuleInterface */
+            /* @var $module \TechDivision\Server\Interfaces\ModuleInterface */
             // process modules logic by hook
             $module->process($request, $response, $hook);
             // break chain if hook type is REQUEST_POST and response state is DISPATCH
