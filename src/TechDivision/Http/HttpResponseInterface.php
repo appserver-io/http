@@ -135,6 +135,13 @@ interface HttpResponseInterface
     public function appendBodyStream($content);
 
     /**
+     * Reset the body stream
+     *
+     * @return void
+     */
+    public function resetBodyStream();
+
+    /**
      * Copies a source stream to body stream
      *
      * @param resource $sourceStream The file pointer to source stream
