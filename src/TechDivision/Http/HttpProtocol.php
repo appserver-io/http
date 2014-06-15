@@ -41,14 +41,14 @@ class HttpProtocol
      * @var string
      */
     const HEADER_STATUS = 'Status';
-    
+
     /**
      * Date header name.
      *
      * @var string
      */
     const HEADER_DATE = 'Date';
-    
+
     /**
      * Connection header name.
      *
@@ -69,7 +69,7 @@ class HttpProtocol
      * @var string
      */
     const HEADER_CONNECTION_VALUE_KEEPALIVE = 'Keep-Alive';
-    
+
     /**
      * Content-Type header name.
      *
@@ -83,35 +83,35 @@ class HttpProtocol
      * @var string
      */
     const HEADER_IF_NONE_MATCH = 'If-None-Match';
-    
+
     /**
      * Content-Disposition header name.
      *
      * @var string
      */
     const HEADER_CONTENT_DISPOSITION = 'Content-Disposition';
-    
+
     /**
      * Content-Length header name.
      *
      * @var string
      */
     const HEADER_CONTENT_LENGTH = 'Content-Length';
-    
+
     /**
      * Content-Encoding header name.
      *
      * @var string
      */
     const HEADER_CONTENT_ENCODING = 'Content-Encoding';
-    
+
     /**
      * Cache-Control header name.
      *
      * @var string
      */
     const HEADER_CACHE_CONTROL = 'Cache-Control';
-    
+
     /**
      * Pragma header name.
      *
@@ -132,63 +132,63 @@ class HttpProtocol
      * @var string
      */
     const HEADER_X_FORWARD = 'X-Forward';
-    
+
     /**
      * Status header name.
      *
      * @var string
      */
     const HEADER_LAST_MODIFIED = 'Last-Modified';
-    
+
     /**
      * Expires header name.
      *
      * @var string
      */
     const HEADER_EXPIRES = 'Expires';
-    
+
     /**
      * If-Modified-Since header name.
      *
      * @var string
      */
     const HEADER_IF_MODIFIED_SINCE = 'If-Modified-Since';
-    
+
     /**
      * Location header name.
      *
      * @var string
      */
     const HEADER_LOCATION = 'Location';
-    
+
     /**
      * X-Powered-By header name.
      *
      * @var string
      */
     const HEADER_X_POWERED_BY = 'X-Powered-By';
-    
+
     /**
      * Cookie header name.
      *
      * @var string
      */
     const HEADER_COOKIE = 'Cookie';
-    
+
     /**
      * Set-Cookie header name.
      *
      * @var string
      */
     const HEADER_SET_COOKIE = 'Set-Cookie';
-    
+
     /**
      * Host header name.
      *
      * @var string
      */
     const HEADER_HOST = 'Host';
-    
+
     /**
      * Accept header name.
      *
@@ -209,49 +209,49 @@ class HttpProtocol
      * @var string
      */
     const HEADER_ACCEPT_LANGUAGE = 'Accept-Language';
-    
+
     /**
      * Accept-Encoding header name.
      *
      * @var string
      */
     const HEADER_ACCEPT_ENCODING = 'Accept-Encoding';
-    
+
     /**
      * User-Agent header name.
      *
      * @var string
      */
     const HEADER_USER_AGENT = 'User-Agent';
-    
+
     /**
      * Referer header name.
      *
      * @var string
      */
     const HEADER_REFERER = 'Referer';
-    
+
     /**
      * Keep-Alive header name.
      *
      * @var string
      */
     const HEADER_KEEP_ALIVE = 'Keep-Alive';
-    
+
     /**
      * Server header name.
      *
      * @var string
      */
     const HEADER_SERVER = 'Server';
-    
+
     /**
      * WWW-Authenticate header name.
      *
      * @var string
      */
     const HEADER_WWW_AUTHENTICATE = 'WWW-Authenticate';
-    
+
     /**
      * Authorization header name.
      *
@@ -273,14 +273,14 @@ class HttpProtocol
      * @var string
      */
     const HEADER_X_REQUESTED_WITH = 'X-Requested-With';
-    
+
     /**
      * Access-Control-Allow-Origin header name.
      *
      * @var string
      */
     const HEADER_ACCESS_CONTROL_ALLOW_ORIGIN = 'Access-Control-Allow-Origin';
-    
+
     /**
      * Access-Control-Allow-Credentials header name.
      *
@@ -289,61 +289,68 @@ class HttpProtocol
     const HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS = 'Access-Control-Allow-Credentials';
 
     /**
+     * Forwarded header name.
+     *
+     * @var string
+     */
+    const HEADER_FORWARDED = 'Forwarded';
+
+    /**
      * POST request method string.
      *
      * @var string
      */
     const METHOD_POST = 'POST';
-    
+
     /**
      * GET request method string.
      *
      * @var string
      */
     const METHOD_GET = 'GET';
-    
+
     /**
      * HEAD request method string.
      *
      * @var string
      */
     const METHOD_HEAD = 'HEAD';
-    
+
     /**
      * PUT request method string.
      *
      * @var string
      */
     const METHOD_PUT = 'PUT';
-    
+
     /**
      * DELETE request method string.
      *
      * @var string
      */
     const METHOD_DELETE = 'DELETE';
-    
+
     /**
      * OPTIONS request method string.
      *
      * @var string
      */
     const METHOD_OPTIONS = 'OPTIONS';
-    
+
     /**
      * TRACE request method string.
      *
      * @var string
      */
     const METHOD_TRACE = 'TRACE';
-    
+
     /**
      * CONNECT request method string.
      *
      * @var string
      */
     const METHOD_CONNECT = 'CONNECT';
-    
+
     /**
      * Defines status const's
      *
