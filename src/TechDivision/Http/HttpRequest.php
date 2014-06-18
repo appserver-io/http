@@ -35,9 +35,16 @@ class HttpRequest implements HttpRequestInterface
     /**
      * Hold's all headers got from http connection
      *
-     * @var
+     * @var array
      */
     protected $headers = array();
+
+    /**
+     * Hold's all parsed cookie objects as array collection
+     *
+     * @var array
+     */
+    protected $cookies;
 
     /**
      * Hold's the http request method
@@ -71,7 +78,12 @@ class HttpRequest implements HttpRequestInterface
      * Hold's the request parameters
      *
      * @var array
-     */
+     */ * @category  Library
+ * @package   TechDivision_Http
+ * @author    Johann Zelger <jz@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_Http
     protected $params;
 
     /**
@@ -175,6 +187,31 @@ class HttpRequest implements HttpRequestInterface
     public function setHeaders(array $headers)
     {
         $this->headers = $headers;
+    }
+
+    /**
+     * Add's the given cookie instance to request
+     *
+     * @param HttpCookieInterface $cookie The cookie object
+     */
+    public function addCookie(HttpCookieInterface $cookie)
+    {
+        $this->
+    }
+
+    public function hasCookie($name)
+    {
+
+    }
+
+    public function getCookies()
+    {
+
+    }
+
+    public function setCookies($cookies)
+    {
+
     }
 
     /**

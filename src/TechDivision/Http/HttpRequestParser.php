@@ -234,6 +234,26 @@ class HttpRequestParser implements HttpRequestParserInterface
     }
 
     /**
+     * Parses the http set cookie header
+     *
+     * @param string $headerValue The header value with cookie info in it
+     *
+     * @return void
+     */
+    public function parseSetCookieHeaderLine($headerValue)
+    {
+        $request = $this->getRequest();
+        // parse cookies and iterate over
+        foreach (explode(';', $headerValue) as $cookieStr) {
+            // check if cookieStr is no just a empty str
+            if (strlen($cookieStr) > 0) {
+                // add cookie object to request
+                $request->addCookie(HttpCookie::createFromRawSetCookieHeader($cookieStr));
+            }
+        }
+    }
+
+    /**
      * Parse multipart form data
      *
      * @param string $content The content to parse
