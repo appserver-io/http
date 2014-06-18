@@ -54,8 +54,8 @@ class HttpQueryParser implements HttpQueryParserInterface
      * @var array
      */
     protected $parsingRelevantContentTypes = array(
-        'application/x-www-form-urlencoded',
-        'multipart/form-data'
+        HttpProtocol::HEADER_CONTENT_TYPE_VALUE_APPLICATION_X_WWW_FORM_URLENCODED,
+        HttpProtocol::HEADER_CONTENT_TYPE_VALUE_MULTIPART_FORM_DATA
     );
 
     /**
@@ -120,8 +120,6 @@ class HttpQueryParser implements HttpQueryParserInterface
      */
     public function prepareQueryStr($queryStr)
     {
-        // decode query string
-        $queryStr = urldecode($queryStr);
         // cut off '?' if its at the beginning of given query string
         if (strpos($queryStr, '?') !== false) {
             $queryStr = substr($queryStr, 1, strlen($queryStr));
@@ -154,13 +152,15 @@ class HttpQueryParser implements HttpQueryParserInterface
         // check if query string is empty
         if (empty($queryStr) === false) {
             // fetch pairs from query
-            $pairs = explode('&', $this->prepareQueryStr($queryStr));
+            $pairs = explode('&', $queryStr);
             // iterate over all pairs1
             foreach ($pairs as $pair) {
-                // split pair into param and value
-                list($param, $value) = explode('=', $pair);
-                // parse key value
-                $this->parseKeyValue($param, $value);
+                // split pair into param and value if '=' exists in pair string
+                if (strpos($pair, '=') !== false) {
+                    list($param, $value) = explode('=', $pair);
+                    // parse key value
+                    $this->parseKeyValue($param, $value);
+                }
             }
         }
         // return new merged result
@@ -177,6 +177,9 @@ class HttpQueryParser implements HttpQueryParserInterface
      */
     public function parseKeyValue($param, $value)
     {
+        // decode param and value
+        $param = urldecode($param);
+        $value = urldecode($value);
         // set default buildValue if no array structure is given
         $buildValue = array($param => $value);
         // grab array structure if its given

@@ -296,6 +296,14 @@ class HttpProtocol
     const HEADER_FORWARDED = 'Forwarded';
 
     /**
+     * Defines the value consts for content-type header
+     *
+     * @var string
+     */
+    const HEADER_CONTENT_TYPE_VALUE_APPLICATION_X_WWW_FORM_URLENCODED = 'application/x-www-form-urlencoded';
+    const HEADER_CONTENT_TYPE_VALUE_MULTIPART_FORM_DATA = 'multipart/form-data';
+
+    /**
      * POST request method string.
      *
      * @var string

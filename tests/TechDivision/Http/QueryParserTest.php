@@ -109,7 +109,9 @@ class HttpQueryParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseStrFunctionWithNonEmptyEncodedQueryStringAndLeadingQuestionMark()
     {
-        $queryString = urlencode('?@key-3=@value-1&key-2=value-2&key-1=value-3');
+        $queryString = '?' . urlencode('@key-3') . '=' . urlencode('@value-1') . '&' .
+            urlencode('key-2') . '=' . urlencode('value-2') . '&' .
+            urlencode('key-1') . '=' . urlencode('value-3');
 
         $this->queryParser->parseStr($queryString);
 
@@ -127,12 +129,14 @@ class HttpQueryParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseStrFunctionWithNonEmptyDoubleEncodedQueryStringAndLeadingQuestionMark()
     {
-        $queryString = urlencode(urlencode('?@key-3=@value-1&key-2=value-2&key-1=value-3'));
+        $queryString = '?' . (urlencode(urlencode('@key-3'))) . '=' . urlencode(urlencode('@value-1')) . '&' .
+            urlencode(urlencode('key-2')) . '=' . urlencode(urlencode('value-2')) . '&' .
+            urlencode(urlencode('key-1')) . '=' . urlencode(urlencode('value-3'));
 
         $this->queryParser->parseStr($queryString);
 
         $expectedResult = array(
-            '@key-3' => '@value-1',
+            '%40key-3' => '%40value-1',
             'key-2' => 'value-2',
             'key-1' => 'value-3'
         );
@@ -324,5 +328,41 @@ class HttpQueryParserTest extends \PHPUnit_Framework_TestCase
             'host' => '127.0.0.1',
             '_' => '1396280213348',
         ));
+    }
+
+    /**
+     * Test to parse url encoded values with ampersand in its value and first param with empty value
+     */
+    public function testParseUrlEncodedValuesWithAmpersandInItsValuesAndEmptyParamFirst()
+    {
+        $queryStr = "sender=&receiver=test%40techdivision.com&subject=TEST-+(67806+%5BHauptgetriebe%5D)+%232328682&id=1700935&lang=DE&diagnosis=Es+sind+lediglich+geringe+Abweichungen+im+Vergleich+mit+der+vorherigen+Probe+feststellbar.%0A++++++++++Falls+noch+kein+%C3%96lwechsel+erfolgt+ist%2C+w%C3%A4re+eine+weitere+Verwendung+des+%C3%96les+bei+%C3%A4hnlichen%0A++++++++++Betriebsbedingungen+unter+Beibehaltung+%C3%BCblicher+Wartungsarbeiten+m%C3%B6glich.+Ich+rate+Ihnen%3A+Senden+Sie%0A++++++++++uns+die+n%C3%A4chste+Probe+bei+Ihrer+n%C3%A4chsten+Wartung+oder+anl%C3%A4sslich+der+%C3%BCblichen+Inspektion+zu+einer%0A++++++++++Beobachtung+des+Trendverhaltens.%0A++++++&message=yadsasd%25C3%25B6asdasd%2526ycxyc%250A";
+        $this->queryParser->parseStr($queryStr);
+        $result = $this->queryParser->getResult();
+
+        $this->assertSame($result, array (
+            'sender' => '',
+            'receiver' => "test@techdivision.com",
+            'subject' => "TEST- (67806 [Hauptgetriebe]) #2328682",
+            'id' => "1700935",
+            'lang' => "DE",
+            'diagnosis' => "Es sind lediglich geringe Abweichungen im Vergleich mit der vorherigen Probe feststellbar.
+          Falls noch kein Ölwechsel erfolgt ist, wäre eine weitere Verwendung des Öles bei ähnlichen
+          Betriebsbedingungen unter Beibehaltung üblicher Wartungsarbeiten möglich. Ich rate Ihnen: Senden Sie
+          uns die nächste Probe bei Ihrer nächsten Wartung oder anlässlich der üblichen Inspektion zu einer
+          Beobachtung des Trendverhaltens.
+      ",
+            'message' => "yadsasd%C3%B6asdasd%26ycxyc%0A",
+        ));
+    }
+
+    /**
+     * test false urlencoded querystring where the whole querystring was urlencoded
+     */
+    public function testWrongQueryStringWhichIsTotallyUrlEncoded()
+    {
+        $queryStr = "sender%3D%26receiver%3Dtest%2540techdivision.com%26subject%3D%2B%2867806%2B%255B%255D%29%2B%25232328682%26id%3D1700935%26lang%3DDE%26diagnosis%3DEs%2Bsind%2Blediglich%2Bgeringe%2BAbweichungen%2Bim%2BVergleich%2Bmit%2Bder%2Bvorherigen%2BProbe%2Bfeststellbar.%250A%2B%2B%2B%2B%2B%2B%2B%2B%2B%2BFalls%2Bnoch%2Bkein%2B%25C3%2596lwechsel%2Berfolgt%2Bist%252C%2Bw%25C3%25A4re%2Beine%2Bweitere%2BVerwendung%2Bdes%2B%25C3%2596les%2Bbei%2B%25C3%25A4hnlichen%250A%2B%2B%2B%2B%2B%2B%2B%2B%2B%2BBetriebsbedingungen%2Bunter%2BBeibehaltung%2B%25C3%25BCblicher%2BWartungsarbeiten%2Bm%25C3%25B6glich.%2BIch%2Brate%2BIhnen%253A%2BSenden%2BSie%250A%2B%2B%2B%2B%2B%2B%2B%2B%2B%2Buns%2Bdie%2Bn%25C3%25A4chste%2BProbe%2Bbei%2BIhrer%2Bn%25C3%25A4chsten%2BWartung%2Boder%2Banl%25C3%25A4sslich%2Bder%2B%25C3%25BCblichen%2BInspektion%2Bzu%2Beiner%250A%2B%2B%2B%2B%2B%2B%2B%2B%2B%2BBeobachtung%2Bdes%2BTrendverhaltens.%250A%2B%2B%2B%2B%2B%2B%26message%3Dyadsasd%2525C3%2525B6asdasd%252526ycxyc%25250A";
+        $this->queryParser->parseStr($queryStr);
+        $result = $this->queryParser->getResult();
+        $this->assertSame($result, array());
     }
 }
