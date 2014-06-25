@@ -230,7 +230,8 @@ class HttpRequestParser implements HttpRequestParserInterface
         list($headerName, $headerValue) = $extractedHeaderInfo;
 
         // add header
-        $this->getRequest()->addHeader(trim($headerName), trim($headerValue));
+        // We will urldecode all the values as a precaution
+        $this->getRequest()->addHeader(trim($headerName), trim(urldecode($headerValue)));
     }
 
     /**
