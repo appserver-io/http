@@ -158,9 +158,14 @@ class HttpQueryParser implements HttpQueryParserInterface
                 // split pair into param and value if '=' exists in pair string
                 if (strpos($pair, '=') !== false) {
                     list($param, $value) = explode('=', $pair);
-                    // parse key value
-                    $this->parseKeyValue($param, $value);
+                // if there is no '=' it's only a param without a value
+                } else {
+                    // in this case the value is String(0) "" and the pair represents the param
+                    $param = $pair;
+                    $value = "";
                 }
+                // parse key value
+                $this->parseKeyValue($param, $value);
             }
         }
         // return new merged result
