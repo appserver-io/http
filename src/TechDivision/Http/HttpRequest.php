@@ -188,6 +188,8 @@ class HttpRequest implements HttpRequestInterface
      * Add's the cookie by name to the cookies array
      *
      * @param HttpCookieInterface $cookie The cookie object
+     *
+     * @return void
      */
     public function addCookie(HttpCookieInterface $cookie)
     {
@@ -238,6 +240,8 @@ class HttpRequest implements HttpRequestInterface
      * Resets the whole cookies array by another array collection of cookie instances
      *
      * @param array $cookies The array of Cookie instances
+     *
+     * @return void
      */
     public function setCookies(array $cookies)
     {
