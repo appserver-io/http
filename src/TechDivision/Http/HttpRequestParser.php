@@ -221,7 +221,7 @@ class HttpRequestParser implements HttpRequestParserInterface
     public function parseHeaderLine($line)
     {
         // extract header info
-        $extractedHeaderInfo = explode(': ', trim($line));
+        $extractedHeaderInfo = explode(HttpProtocol::HEADER_SEPARATOR, trim($line));
         if (!$extractedHeaderInfo) {
             throw new HttpException('Wrong header format');
         }
@@ -231,6 +231,31 @@ class HttpRequestParser implements HttpRequestParserInterface
 
         // add header
         $this->getRequest()->addHeader(trim($headerName), trim($headerValue));
+
+        // check if we got a cookie header name so parse the cookie
+        if ($headerName === HttpProtocol::HEADER_COOKIE) {
+            $this->parseCookieHeaderValue($headerValue);
+        }
+    }
+
+    /**
+     * Parses the http set cookie header
+     *
+     * @param string $headerValue The header value with cookie info in it
+     *
+     * @return void
+     */
+    public function parseCookieHeaderValue($headerValue)
+    {
+        $request = $this->getRequest();
+        // parse cookies and iterate over
+        foreach (explode(';', $headerValue) as $cookieStr) {
+            // check if cookieStr is no just a empty str
+            if (strlen($cookieStr) > 0) {
+                // add cookie object to request
+                $request->addCookie(HttpCookie::createFromRawSetCookieHeader($cookieStr));
+            }
+        }
     }
 
     /**

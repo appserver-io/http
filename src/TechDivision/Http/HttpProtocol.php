@@ -34,6 +34,12 @@ namespace TechDivision\Http;
  */
 class HttpProtocol
 {
+    /**
+     * Header name value separator
+     *
+     * @var string
+     */
+    const HEADER_SEPARATOR = ': ';
 
     /**
      * Status header name.
