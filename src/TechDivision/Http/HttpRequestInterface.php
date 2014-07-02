@@ -183,6 +183,45 @@ interface HttpRequestInterface
     public function getVersion();
 
     /**
+     * Add's the cookie by name to the cookies array
+     *
+     * @param HttpCookieInterface $cookie The cookie object
+     */
+    public function addCookie(HttpCookieInterface $cookie);
+
+    /**
+     * Just returns the array of cookie objects
+     *
+     * @return array
+     */
+    public function getCookies();
+
+    /**
+     * Check if request has specific cookie
+     *
+     * @param string $name The name of the cookie to check for
+     *
+     * @return bool
+     */
+    public function hasCookie($name);
+
+    /**
+     * Resets the whole cookies array by another array collection of cookie instances
+     *
+     * @param array $cookies The array of cookie instances
+     */
+    public function setCookies(array $cookies);
+
+    /**
+     * Get cookie by given name
+     *
+     * @param string $name The cookies name to get
+     *
+     * @return \TechDivision\Http\HttpCookie|void
+     */
+    public function getCookie($name);
+
+    /**
      * Set's specific http version
      *
      * @param string $version The version e.g. HTTP/1.1

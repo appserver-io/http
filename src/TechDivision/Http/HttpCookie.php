@@ -166,7 +166,7 @@ class HttpCookie implements HttpCookieInterface
          * 
          * Fix for Chrome issue https://code.google.com/p/chromium/issues/detail?id=56211
          */
-        if ($domain !== Cookie::LOCALHOST) {
+        if ($domain !== HttpCookie::LOCALHOST) {
             $this->domain = $domain;
         }
         
@@ -190,7 +190,7 @@ class HttpCookie implements HttpCookieInterface
      *
      * @param string $header The Set-Cookie string without the actual "Set-Cookie:" part
      *
-     * @return \TechDivision\Servlet\Http\Cookie
+     * @return \TechDivision\Http\HttpCookie
      * @see http://tools.ietf.org/html/rfc6265
      */
     public static function createFromRawSetCookieHeader($header)
@@ -423,9 +423,9 @@ class HttpCookie implements HttpCookieInterface
         if ($this->domain !== null) {
             $attributes .= '; Domain=' . $this->domain;
         }
-        
+
         $attributes .= '; Path=' . $this->path;
-        
+
         if ($this->secure) {
             $attributes .= '; Secure';
         }

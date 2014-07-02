@@ -78,12 +78,7 @@ class HttpRequest implements HttpRequestInterface
      * Hold's the request parameters
      *
      * @var array
-     */ * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+     */
     protected $params;
 
     /**
@@ -190,28 +185,63 @@ class HttpRequest implements HttpRequestInterface
     }
 
     /**
-     * Add's the given cookie instance to request
+     * Add's the cookie by name to the cookies array
      *
      * @param HttpCookieInterface $cookie The cookie object
      */
     public function addCookie(HttpCookieInterface $cookie)
     {
-        $this->
+        // add's the cookie by name to the cookies array
+        $this->cookies[$cookie->getName()] = $cookie;
     }
 
+    /**
+     * Check if request has specific cookie
+     *
+     * @param string $name The name of the cookie to check for
+     *
+     * @return bool
+     */
     public function hasCookie($name)
     {
-
+        // check if request has specific cookie
+        return (isset($this->cookies[$name]) &&  $this->cookies[$name]->getName() === $name);
     }
 
+    /**
+     * Just returns the array of cookie objects
+     *
+     * @return array
+     */
     public function getCookies()
     {
-
+        // just returns the array of cookie objects
+        return $this->cookies;
     }
 
-    public function setCookies($cookies)
+    /**
+     * Get cookie by given name
+     *
+     * @param string $name The cookies name to get
+     *
+     * @return \TechDivision\Http\HttpCookie|void
+     */
+    public function getCookie($name)
     {
+        // check if has specific cookie
+        if ($this->hasCookie($name)) {
+            return $this->cookies[$name];
+        }
+    }
 
+    /**
+     * Resets the whole cookies array by another array collection of cookie instances
+     *
+     * @param array $cookies The array of Cookie instances
+     */
+    public function setCookies(array $cookies)
+    {
+        $this->cookies = $cookies;
     }
 
     /**
