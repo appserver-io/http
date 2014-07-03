@@ -99,6 +99,13 @@ class HttpResponse implements HttpResponseInterface
     protected $state;
 
     /**
+     * The array containing the response cookies.
+     *
+     * @var array
+     */
+    protected $cookies = array();
+
+    /**
      * Initialises the response object to default properties
      *
      * @return void
@@ -318,7 +325,7 @@ class HttpResponse implements HttpResponseInterface
 
     /**
      * Adds a header information got from connection. We've to take care that headers
-     * like Set-Cookie header can exist multiple times. To support this create an 
+     * like Set-Cookie header can exist multiple times. To support this create an
      * array that keeps the multiple header values.
      *
      * @param string  $name   The header name
@@ -334,7 +341,7 @@ class HttpResponse implements HttpResponseInterface
 
         // check if we've a Set-Cookie header to process
         if ($this->hasHeader($name) && $append === true) {
-            
+
             // then check if we've already one cookie header available
             if (is_array($headerValue = $this->getHeader($name))) {
                 $headerValue[] = $value;
