@@ -125,6 +125,7 @@ class HttpResponse implements HttpResponseInterface
         $this->statusReasonPhrase = "OK";
         $this->mimeType = "text/plain";
         $this->state = HttpResponseStates::INITIAL;
+        $this->cookies = array();
 
         // reset to default headers
         $this->initHeaders();
@@ -170,25 +171,28 @@ class HttpResponse implements HttpResponseInterface
      */
     public function getContentLength()
     {
-        // checkout for content length
-        rewind($this->getBodyStream());
-        fseek($this->getBodyStream(), 0, SEEK_END);
-        return ftell($this->getBodyStream());
+        // check if status code is content-length relevant
+        if ((int)$this->getStatusCode() < 300 || (int)$this->getStatusCode() > 399) {
+            // checkout for content length
+            rewind($this->getBodyStream());
+            fseek($this->getBodyStream(), 0, SEEK_END);
+            return ftell($this->getBodyStream());
+        }
+        return 0;
     }
 
     /**
-     * Prepares the headers to ready for delivery
+     * Prepare's the headers for dispatch
      *
      * @return void
      */
     public function prepareHeaders()
     {
-        // check if status code is content-length relevant
-        if ((int)$this->getStatusCode() < 300 || (int)$this->getStatusCode() > 399) {
-            $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $this->getContentLength());
-        } else {
-            $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, 0);
-        }
+        // set current date before render it
+        $this->addHeader(HttpProtocol::HEADER_DATE, gmdate(DATE_RFC822));
+
+        // render content length to header
+        $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $this->getContentLength());
     }
 
     /**
