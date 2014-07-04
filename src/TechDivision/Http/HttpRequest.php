@@ -44,7 +44,7 @@ class HttpRequest implements HttpRequestInterface
      *
      * @var array
      */
-    protected $cookies;
+    protected $cookies = array();
 
     /**
      * Hold's the http request method
@@ -115,6 +115,7 @@ class HttpRequest implements HttpRequestInterface
         $this->uri = null;
         $this->method = null;
         $this->version = null;
+        $this->cookies = array();
 
         // Query string is always present, even if it is empty
         $this->queryString = '';
