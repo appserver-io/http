@@ -20,6 +20,8 @@
 
 namespace TechDivision\Http;
 
+use TechDivision\Connection\ConnectionResponseInterface;
+
 /**
  * Interface HttpResponseInterface
  *
@@ -30,7 +32,7 @@ namespace TechDivision\Http;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/techdivision/TechDivision_Http
  */
-interface HttpResponseInterface
+interface HttpResponseInterface extends ConnectionResponseInterface
 {
 
     /**
@@ -248,6 +250,13 @@ interface HttpResponseInterface
      * @return bool Wheater state is equal (true) or not (false)
      */
     public function hasState($state);
+
+    /**
+     * Prepare's the headers for dispatch
+     *
+     * @return void
+     */
+    public function prepareHeaders();
 
     /**
      * Add's the cookie by name to the cookies array
