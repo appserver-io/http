@@ -99,6 +99,13 @@ class HttpResponse implements HttpResponseInterface
     protected $state;
 
     /**
+     * The array containing the response cookies.
+     *
+     * @var array
+     */
+    protected $cookies = array();
+
+    /**
      * Initialises the response object to default properties
      *
      * @return void
@@ -193,17 +200,25 @@ class HttpResponse implements HttpResponseInterface
     {
         // initialize the string for the headers
         $headerString = '';
+
         // concatenate the headers to a string
         foreach ($this->getHeaders() as $headerName => $headerValue) {
-            // take care for the Set-Cookie headers
+
+            // take care for manuel added headers with appending
             if (is_array($headerValue)) {
                 foreach ($headerValue as $value) {
-                    $headerString .= $headerName . ': ' . $value . "\r\n";
+                    $headerString .= $headerName . HttpProtocol::HEADER_SEPARATOR . $value . "\r\n";
                 }
             } else {
-                $headerString .= $headerName . ': ' . $headerValue . "\r\n";
+                $headerString .= $headerName . HttpProtocol::HEADER_SEPARATOR . $headerValue . "\r\n";
             }
         }
+
+        // add set-cookie headers by cookie collection
+        foreach ($this->getCookies() as $cookieName => $cookie) {
+            $headerString .= HttpProtocol::HEADER_SET_COOKIE . HttpProtocol::HEADER_SEPARATOR . $cookie->__toString() . "\r\n";
+        }
+
         // return with ending CRLF
         return $headerString . "\r\n";
     }
@@ -310,7 +325,7 @@ class HttpResponse implements HttpResponseInterface
 
     /**
      * Adds a header information got from connection. We've to take care that headers
-     * like Set-Cookie header can exist multiple times. To support this create an 
+     * like Set-Cookie header can exist multiple times. To support this create an
      * array that keeps the multiple header values.
      *
      * @param string  $name   The header name
@@ -326,7 +341,7 @@ class HttpResponse implements HttpResponseInterface
 
         // check if we've a Set-Cookie header to process
         if ($this->hasHeader($name) && $append === true) {
-            
+
             // then check if we've already one cookie header available
             if (is_array($headerValue = $this->getHeader($name))) {
                 $headerValue[] = $value;
@@ -404,6 +419,70 @@ class HttpResponse implements HttpResponseInterface
     public function setHeaders(array $headers)
     {
         $this->headers = $headers;
+    }
+
+    /**
+     * Add's the cookie by name to the cookies array
+     *
+     * @param \TechDivision\Http\HttpCookieInterface $cookie The cookie object
+     *
+     * @return void
+     */
+    public function addCookie(HttpCookieInterface $cookie)
+    {
+        // add's the cookie by name to the cookies array
+        $this->cookies[$cookie->getName()] = $cookie;
+    }
+
+    /**
+     * Check if request has specific cookie
+     *
+     * @param string $name The name of the cookie to check for
+     *
+     * @return bool
+     */
+    public function hasCookie($name)
+    {
+        // check if request has specific cookie
+        return (isset($this->cookies[$name]) &&  $this->cookies[$name]->getName() === $name);
+    }
+
+    /**
+     * Get cookie by given name
+     *
+     * @param string $name The cookies name to get
+     *
+     * @return \TechDivision\Http\HttpCookie|void
+     */
+    public function getCookie($name)
+    {
+        // check if has specific cookie
+        if ($this->hasCookie($name)) {
+            return $this->cookies[$name];
+        }
+    }
+
+    /**
+     * Just returns the array of cookie objects
+     *
+     * @return array
+     */
+    public function getCookies()
+    {
+        // just returns the array of cookie objects
+        return $this->cookies;
+    }
+
+    /**
+     * Resets the whole cookies array by another array collection of cookie instances
+     *
+     * @param array $cookies The array of Cookie instances
+     *
+     * @return void
+     */
+    public function setCookies(array $cookies)
+    {
+        $this->cookies = $cookies;
     }
 
     /**

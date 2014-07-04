@@ -117,4 +117,39 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase {
         $this->assertSame($request->getVersion(), 'HTTP/1.1');
         $this->assertSame($request->getQueryString(), '%40action=checkConnection&__widgetContext=TzozNzoiVFlQTzNcRmx1aWRcQ29yZVxXaWRnZXRcV2lkZ2V0Q29udGV4dCI6NDp7czoxOToiACoAd2lkZ2V0SWRlbnRpZmllciI7czo1NzoidHlwbzMtc2V0dXAtdmlld2hlbHBlcnMtd2lkZ2V0LWRhdGFiYXNlc2VsZWN0b3J2aWV3aGVscGVyIjtzOjIzOiIAKgBhamF4V2lkZ2V0SWRlbnRpZmllciI7TjtzOjI2OiIAKgBhamF4V2lkZ2V0Q29uZmlndXJhdGlvbiI7YTo5OntzOjIxOiJkcml2ZXJEcm9wZG93bkZpZWxkSWQiO3M6MTk6ImRhdGFiYXNlU3RlcC1kcml2ZXIiO3M6MTE6InVzZXJGaWVsZElkIjtzOjE3OiJkYXRhYmFzZVN0ZXAtdXNlciI7czoxNToicGFzc3dvcmRGaWVsZElkIjtzOjIxOiJkYXRhYmFzZVN0ZXAtcGFzc3dvcmQiO3M6MTE6Imhvc3RGaWVsZElkIjtzOjE3OiJkYXRhYmFzZVN0ZXAtaG9zdCI7czoxNzoiZGJOYW1lVGV4dEZpZWxkSWQiO3M6MTk6ImRhdGFiYXNlU3RlcC1kYm5hbWUiO3M6MjE6ImRiTmFtZURyb3Bkb3duRmllbGRJZCI7czoyODoiZGF0YWJhc2VTdGVwLWRibmFtZS1kcm9wZG93biI7czoxNzoic3RhdHVzQ29udGFpbmVySWQiO3M6MjY6ImRhdGFiYXNlU3RlcC1kYm5hbWUtc3RhdHVzIjtzOjI1OiJtZXRhZGF0YVN0YXR1c0NvbnRhaW5lcklkIjtzOjM1OiJkYXRhYmFzZVN0ZXAtZGJuYW1lLW1ldGFkYXRhLXN0YXR1cyI7czo4OiJ3aWRnZXRJZCI7Tjt9czoyMzoiACoAY29udHJvbGxlck9iamVjdE5hbWUiO3M6Njg6IlRZUE8zXFNldHVwXFZpZXdIZWxwZXJzXFdpZGdldFxDb250cm9sbGVyXERhdGFiYXNlU2VsZWN0b3JDb250cm9sbGVyIjt9b42869a28db333e870e3df6e4bd866fb571fc573&driver=pdo_mysql&user=root&password=password&host=127.0.0.1&_=1396280213348');
     }
+
+    /**
+     * Test to parse cookie header with one cookie in it
+     */
+    public function testCookieHeaderParsingWithOneCookie()
+    {
+        $requestHeaders = "Host: www.test.local\r\n".
+            "Cookie: testcookiename0001=fq38o74fQFQFHf73h48fh837hq34fq34fq34q4; \r\n".
+            "Connection: close";
+        $this->parser->parseHeaders($requestHeaders);
+        // get first cookies from collection
+        $cookie = array_shift($this->parser->getRequest()->getCookies());
+        // check if values are correct
+        $this->assertSame($cookie->getName(), 'testcookiename0001');
+        $this->assertSame($cookie->getValue(), 'fq38o74fQFQFHf73h48fh837hq34fq34fq34q4');
+    }
+
+    /**
+     * Test to parse cookie header with many cookie in it
+     */
+    public function testCookieHeaderParsingWithManyCookie()
+    {
+        $requestHeaders = "Host: www.test.local\r\n".
+            "Cookie: testcookiename0001=1111; testcookiename0002=2222; testcookiename0003=3333; testcookiename0004=4444; testcookiename0005=5555; \r\n".
+            "Connection: close";
+        $this->parser->parseHeaders($requestHeaders);
+        // get cookies from collection
+        $cookies = $this->parser->getRequest()->getCookies();
+        // iterate and check values
+        for ($i = 1; $i <= 5; $i++) {
+            // check if values are correct
+            $this->assertSame($cookies["testcookiename000$i"]->getName(), "testcookiename000$i");
+            $this->assertSame($cookies["testcookiename000$i"]->getValue(), "$i$i$i$i");
+        }
+    }
 }

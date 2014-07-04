@@ -35,9 +35,16 @@ class HttpRequest implements HttpRequestInterface
     /**
      * Hold's all headers got from http connection
      *
-     * @var
+     * @var array
      */
     protected $headers = array();
+
+    /**
+     * Hold's all parsed cookie objects as array collection
+     *
+     * @var array
+     */
+    protected $cookies = array();
 
     /**
      * Hold's the http request method
@@ -108,6 +115,7 @@ class HttpRequest implements HttpRequestInterface
         $this->uri = null;
         $this->method = null;
         $this->version = null;
+        $this->cookies = array();
 
         // Query string is always present, even if it is empty
         $this->queryString = '';
@@ -175,6 +183,70 @@ class HttpRequest implements HttpRequestInterface
     public function setHeaders(array $headers)
     {
         $this->headers = $headers;
+    }
+
+    /**
+     * Add's the cookie by name to the cookies array
+     *
+     * @param HttpCookieInterface $cookie The cookie object
+     *
+     * @return void
+     */
+    public function addCookie(HttpCookieInterface $cookie)
+    {
+        // add's the cookie by name to the cookies array
+        $this->cookies[$cookie->getName()] = $cookie;
+    }
+
+    /**
+     * Check if request has specific cookie
+     *
+     * @param string $name The name of the cookie to check for
+     *
+     * @return bool
+     */
+    public function hasCookie($name)
+    {
+        // check if request has specific cookie
+        return (isset($this->cookies[$name]) &&  $this->cookies[$name]->getName() === $name);
+    }
+
+    /**
+     * Just returns the array of cookie objects
+     *
+     * @return array
+     */
+    public function getCookies()
+    {
+        // just returns the array of cookie objects
+        return $this->cookies;
+    }
+
+    /**
+     * Get cookie by given name
+     *
+     * @param string $name The cookies name to get
+     *
+     * @return \TechDivision\Http\HttpCookie|void
+     */
+    public function getCookie($name)
+    {
+        // check if has specific cookie
+        if ($this->hasCookie($name)) {
+            return $this->cookies[$name];
+        }
+    }
+
+    /**
+     * Resets the whole cookies array by another array collection of cookie instances
+     *
+     * @param array $cookies The array of Cookie instances
+     *
+     * @return void
+     */
+    public function setCookies(array $cookies)
+    {
+        $this->cookies = $cookies;
     }
 
     /**
