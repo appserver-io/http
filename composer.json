@@ -2,8 +2,8 @@
     "name": "techdivision/http",
     "description": "HTTP protocol implementation for usage in server context",
     "homepage": "https://github.com/techdivision/TechDivision_Http",
-    "keywords": ["php", "http", "server", "protocol"],
-    "license": ["OSL-3.0"],
+    "keywords": [ "php", "http", "server", "protocol" ],
+    "license": [ "OSL-3.0" ],
     "authors": [
         {
             "name": "Johann Zelger",
@@ -14,10 +14,12 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "techdivision/connection": "dev-master"
+        "techdivision/connection": "0.1.*"
     },
     "autoload": {
-        "psr-0": {"TechDivision": ["src/", "tests/"]}
+        "psr-0": {
+            "TechDivision\\Http": [ "src/", "tests/" ]
+        }
     },
     "config":{
         "github-oauth":{
