@@ -366,6 +366,20 @@ class HttpProtocol
     const METHOD_CONNECT = 'CONNECT';
 
     /**
+     * Defines the http 1.0 protocol version identifier
+     *
+     * @var string
+     */
+    const VERSION_1_0 = 'HTTP/1.0';
+
+    /**
+     * Defines the http 1.1 protocol version identifier
+     *
+     * @var string
+     */
+    const VERSION_1_1 = 'HTTP/1.1';
+
+    /**
      * Defines status const's
      *
      * @var string
