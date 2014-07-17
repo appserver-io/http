@@ -25,7 +25,7 @@
     <!-- Installs composer dependencies if not done yet                       -->
     <!-- ==================================================================== -->
     <target name="composer-install" depends="is-composer-installed" unless="composer.present" description="Installs all dependencies defined in composer.json">
-        <exec dir="${basedir}" executable="composer.phar">
+        <exec dir="${basedir}" executable="composer">
             <arg line="--no-interaction install"/>
         </exec>
     </target>
