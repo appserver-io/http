@@ -320,8 +320,9 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
             "Cookie: testcookiename0001=fq38o74fQFQFHf73h48fh837hq34fq34fq34q4; \r\n" .
             "Connection: close";
         $this->parser->parseHeaders($requestHeaders);
-        // get first cookies from collection
-        $cookie = array_shift($this->parser->getRequest()->getCookies());
+        // get cookie from collection
+        $cookies = $this->parser->getRequest()->getCookies();
+        $cookie = $cookies['testcookiename0001'];
         // check if values are correct
         $this->assertSame($cookie->getName(), 'testcookiename0001');
         $this->assertSame($cookie->getValue(), 'fq38o74fQFQFHf73h48fh837hq34fq34fq34q4');
