@@ -82,7 +82,7 @@ interface HttpRequestInterface extends ConnectionRequestInterface
     /**
      * Initialises the request object to default properties
      *
-     * @return void
+     * @return \TechDivision\Http\HttpRequestInterface
      */
     public function init();
 

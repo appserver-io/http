@@ -15,11 +15,28 @@
     <property name="php-target.dir" value="${basedir}/target"/>
 
     <!-- ==================================================================== -->
+    <!-- Checks if composer has installed it's dependencies                   -->
+    <!-- ==================================================================== -->
+    <target name="is-composer-installed">
+        <available file="composer.lock" property="composer.present"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Installs composer dependencies if not done yet                       -->
+    <!-- ==================================================================== -->
+    <target name="composer-install" depends="is-composer-installed" unless="composer.present" description="Installs all dependencies defined in composer.json">
+        <exec dir="${basedir}" executable="composer.phar">
+            <arg line="--no-interaction install"/>
+        </exec>
+    </target>
+
+    <!-- ==================================================================== -->
     <!-- Cleans the directories with the generated source files				  -->
     <!-- ==================================================================== -->
     <target name="clean" description="Cleans almost everything, so use carefully.">
         <delete dir="${php-target.dir}" includeemptydirs="true" quiet="false" verbose="true" failonerror="true"/>
     </target>
+
 
     <!-- ==================================================================== -->
     <!-- Prepares all the required directories								  -->
@@ -109,40 +126,16 @@
     </target>
 
     <!-- ==================================================================== -->
-    <!-- Copies the test sources to the target directory					  -->
-    <!-- ==================================================================== -->
-    <target name="copy-tests" depends="copy" description="Copies the test sources to the target directory.">
-    	<!-- copy the test classes to the target directory -->
-        <copy todir="${php-target.dir}/${unique.name}/src">
-            <fileset dir="${php-test.dir}">
-                <include name="**/*" />
-            </fileset>
-            <filterchain>
-                <expandproperties/>
-            </filterchain>
-        </copy>
-        <!-- copy the composer configuration file to the target directory -->
-        <copy file="${basedir}/composer.json" todir="${php-target.dir}" />
-        <!-- install composer packages -->
-        <exec dir="${php-target.dir}" executable="composer">
-            <env key="PATH" value="${instance.base.dir}/bin:${env.PATH}"/>
-            <arg line="--no-interaction update"/>
-        </exec>
-    </target>
-
-    <!-- ==================================================================== -->
     <!-- Runs the PHPUnit tests on Travis-CI and generates a report           -->
     <!-- ==================================================================== -->
-    <target name="run-tests" depends="copy-tests" description="Runs the PHPUnit tests on Travis-CI and generates a report.">
-        <exec executable="phpunit" dir="${php-target.dir}/${unique.name}/src">
-        	<arg line="--configuration phpunit.xml.dist" />
-        </exec>
+    <target name="run-tests" depends="composer-install" description="Runs the PHPUnit tests on Travis-CI and generates a report.">
+        <exec executable="phpunit" dir="${php-test.dir}"/>
     </target>
 
     <!-- ==================================================================== -->
     <!-- Runs the PHPUnit tests and generates a report                        -->
     <!-- ==================================================================== -->
-    <target name="run-tests-in-runtime" depends="copy-tests" description="Runs the PHPUnit tests and generates a report.">
+    <target name="run-tests-in-runtime" description="Runs the PHPUnit tests and generates a report.">
         <exec executable="${instance.base.dir}/bin/php" dir="${php-target.dir}/${unique.name}/src" failonerror="true">
             <arg line="-d zend_extension=xdebug.so ${instance.base.dir}/app/code/vendor/bin/phpunit --configuration phpunit.xml.dist" />
         </exec>
@@ -154,13 +147,6 @@
     <target name="build" description="Runs the PHPUnit tests and generates the code metrics.">
         <antcall target="phpcs"/>
         <antcall target="run-tests"/>
-        <!--
-        <antcall target="apidoc"/>
-        <antcall target="phpcpd"/>
-        <antcall target="phploc"/>
-        <antcall target="pdepend"/>
-        <antcall target="phpmd"/>
-        -->
     </target>
 
 </project>

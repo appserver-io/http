@@ -222,7 +222,8 @@ class HttpRequestParser implements HttpRequestParserInterface
     {
         // extract header info
         $extractedHeaderInfo = explode(HttpProtocol::HEADER_SEPARATOR, trim($line));
-        if (!$extractedHeaderInfo) {
+
+        if ((!$extractedHeaderInfo) || ($extractedHeaderInfo[0] === $line)) {
             throw new HttpException('Wrong header format');
         }
 
@@ -270,7 +271,7 @@ class HttpRequestParser implements HttpRequestParserInterface
         // get request ref to local function context
         $request = $this->getRequest();
         // grab multipart boundary from content type header
-        preg_match('/boundary=(.*)$/', $this->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_TYPE), $matches);
+        preg_match('/boundary=(.+)$/', $this->getRequest()->getHeader(HttpProtocol::HEADER_CONTENT_TYPE), $matches);
         // check if boundary is not set
         if (!isset($matches[1])) {
             return;
@@ -304,24 +305,22 @@ class HttpRequestParser implements HttpRequestParserInterface
                     }
                 }
                 // match name and filename
-                preg_match("/name=\"([^\"]*)\"; filename=\"([^\"]*)\".*$/s", $partHeaders, $matches);
-                // set name
-                $part->setName($matches[1]);
-                // set given filename
-                $part->setFilename($matches[2]);
-                // put content to part
-                $part->putContent(preg_replace('/.' . PHP_EOL . '$/', '', $partBody));
-                // add the part instance to request
-                $request->addPart($part);
+                if (preg_match("/name=\"([^\"]*)\"; filename=\"([^\"]*)\".*$/s", $partHeaders, $matches) !== 0) {
+                    // set name
+                    $part->setName($matches[1]);
+                    // set given filename is is set
+                    $part->setFilename($matches[2]);
+                    // put content to part
+                    $part->putContent(preg_replace('/.' . PHP_EOL . '$/', '', $partBody));
+                    // add the part instance to request
+                    $request->addPart($part);
+                }
                 // parse all other fields as normal key value pairs
             } else {
                 // match "name" and optional value in between newline sequences
-                preg_match('/name=\"([^\"]*)\"[\r\n]+([^\r\n]*)?/', $block, $matches);
-                // if no value given set null
-                if (!isset($matches[2])) {
-                    $matches[2] = null;
+                if (preg_match('/name=\"([^\"]*)\"[\r\n]+([^\r\n]*)?/', $block, $matches) !== 0) {
+                    $this->getQueryParser()->parseKeyValue($matches[1], $matches[2]);
                 }
-                $this->getQueryParser()->parseKeyValue($matches[1], $matches[2]);
             }
         }
     }

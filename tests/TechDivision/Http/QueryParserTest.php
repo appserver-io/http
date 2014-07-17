@@ -399,4 +399,22 @@ class HttpQueryParserTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertSame($expectedResult, $this->queryParser->getResult());
     }
+
+    /**
+     * Test's parsing relevant check depending on given content type
+     */
+    public function testIfContentTypeIsParsingRelevant()
+    {
+        $contentType = 'multipart/form-data';
+        $this->assertSame(true, $this->queryParser->isParsingRelevant($contentType));
+    }
+
+    /**
+     * Test's parsing relevant check depending on given content type which is not parsing relevant
+     */
+    public function testIfContentTypeIsNotParsingRelevant()
+    {
+        $contentType = 'text/plain';
+        $this->assertSame(false, $this->queryParser->isParsingRelevant($contentType));
+    }
 }

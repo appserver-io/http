@@ -48,7 +48,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test instantiation of cookie object class
      */
-    public function testInstantiationOfCookieObject()
+    public function testHttpCookieInstantiationOfCookieObject()
     {
         $hash = md5(time());
         $dateTimeNow = new \DateTime();
@@ -78,7 +78,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test if is expired on a expired cookie
      */
-    public function testIsExpiredOnAExpiredCookie()
+    public function testHttpCookieIsExpiredOnAExpiredCookie()
     {
         $hash = md5(time());
         $dateTime = new \DateTime();
@@ -101,7 +101,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test if is expired on a non expired cookie
      */
-    public function testIsExpiredOnANonExpiredCookie()
+    public function testHttpCookieIsExpiredOnANonExpiredCookie()
     {
         $hash = md5(time());
         $dateTime = new \DateTime();
@@ -124,7 +124,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test explicit expire on a non expired cookie
      */
-    public function testExplicitExpireOnANonExpiredCookie()
+    public function testHttpCookieExplicitExpireOnANonExpiredCookie()
     {
         $hash = md5(time());
         $dateTime = new \DateTime();
@@ -152,7 +152,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test the __toString method on a full filled cookie object
      */
-    public function testCookieToStringMethodWithAllParamsSet()
+    public function testHttpCookieCookieToStringMethodWithAllParamsSet()
     {
         $dateTime = new \DateTime('2014-07-02 01:02:03 GMT');
         // init parser
@@ -172,7 +172,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test the __toString method on a partial filled cookie object
      */
-    public function testCookieToStringMethodWithPartialParamsSet()
+    public function testHttpCookieCookieToStringMethodWithPartialParamsSet()
     {
         $dateTime = new \DateTime('2014-07-02 01:02:03 GMT');
         // init parser
@@ -186,7 +186,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test create From Raw Cookie Request Header
      */
-    public function testCreateFromRawCookieRequestHeader()
+    public function testHttpCookieCreateFromRawCookieRequestHeader()
     {
         $cookieHeader = 'cookietestname01=2q9nfp98q2funq423iuf;  ';
         // init cookie by raw header
@@ -199,7 +199,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
     /**
      * Test create From Raw Set Cookie Response Header
      */
-    public function testCreateFromRawSetCookieResponseHeader()
+    public function testHttpCookieCreateFromRawSetCookieResponseHeader()
     {
         $cookieHeader = 'UserID=FooBar; Max-Age=3600; Version=1; Domain=test.local; Path=/testpath';
         // init cookie by raw header
@@ -213,5 +213,123 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
         $this->assertSame($cookie->getPath(), '/testpath');
         $this->assertSame($cookie->isSecure(), false);
         $this->assertSame($cookie->isHttpOnly(), true);
+    }
+
+    public function testHttpCookieCreateFromRawSetCookieResponseHeaderWithUnexpectedNameValuePair()
+    {
+        $cookieHeader = 'UserID; Max-Age=3600; Version=1; Domain=test.local; Path=/testpath';
+        // init cookie by raw header
+        $cookie = HttpCookie::createFromRawSetCookieHeader($cookieHeader);
+        $this->assertNull($cookie);
+    }
+
+    public function testHttpCookieCreateFromRawSetCookieResponseHeaderWithoutCookieName()
+    {
+        $cookieHeader = '=value; Max-Age=3600; Version=1; Domain=test.local; Path=/testpath';
+        // init cookie by raw header
+        $cookie = HttpCookie::createFromRawSetCookieHeader($cookieHeader);
+        $this->assertNull($cookie);
+    }
+
+    public function testHttpCookieCreateFromRawSetCookieResponseHeaderWithInvalidExpiresTimestamp()
+    {
+        $cookieHeader = 'cookieName=value; Expires=asdfasdf; Version=1; Domain=test.local; Path=/testpath';
+        // init cookie by raw header
+        $cookie = HttpCookie::createFromRawSetCookieHeader($cookieHeader);
+        $this->assertSame(0, $cookie->getExpires());
+    }
+
+    public function testHttpCookieCreateFromRawSetCookieResponseHeaderWithEmptyPath()
+    {
+        $cookieHeader = 'cookieName=value; Expires=asdfasdf; Version=1; Domain=test.local; Path=';
+        // init cookie by raw header
+        $cookie = HttpCookie::createFromRawSetCookieHeader($cookieHeader);
+        $this->assertSame('/', $cookie->getPath());
+    }
+
+    public function testHttpCookieCreateFromRawSetCookieResponseHeaderWithSecureEnabled()
+    {
+        $cookieHeader = 'cookieName=value; Expires=asdfasdf; Version=1; Domain=test.local; Path=/; Secure;';
+        // init cookie by raw header
+        $cookie = HttpCookie::createFromRawSetCookieHeader($cookieHeader);
+        $this->assertSame(true, $cookie->isSecure());
+    }
+
+    public function testHttpCookieCreateFromRawSetCookieResponseHeaderWithHttpOnlyEnabled()
+    {
+        $cookieHeader = 'cookieName=value; Expires=asdfasdf; Version=1; Domain=test.local; Path=/; Secure; HttpOnly';
+        // init cookie by raw header
+        $cookie = HttpCookie::createFromRawSetCookieHeader($cookieHeader);
+        $this->assertSame(true, $cookie->isHttpOnly());
+    }
+
+    public function testHttpCookieConstructorWithInvalidNameArgument()
+    {
+        $testException = null;
+        try {
+            $cookie = new HttpCookie('#testCookie\\/', md5(1), 0, null, 'testdomain.local', '/', false, true);
+        } catch (\Exception $e) {
+            $testException = $e;
+        }
+        $this->assertInstanceOf('InvalidArgumentException', $testException);
+    }
+
+    public function testHttpCookieConstructorWithInvalidExpireArgument()
+    {
+        $testException = null;
+        try {
+            $cookie = new HttpCookie('testCookie', md5(1), '12738718273', null, 'testdomain.local', '/', false, true);
+        } catch (\Exception $e) {
+            $testException = $e;
+        }
+        $this->assertInstanceOf('InvalidArgumentException', $testException);
+    }
+
+    public function testHttpCookieConstructorWithInvalidMaximumAgeArgument()
+    {
+        $testException = null;
+        try {
+            $cookie = new HttpCookie('testCookie', md5(1), 0, '12', 'testdomain.local', '/', false, true);
+        } catch (\Exception $e) {
+            $testException = $e;
+        }
+        $this->assertInstanceOf('InvalidArgumentException', $testException);
+    }
+
+    public function testHttpCookieConstructorWithInvalidDomainArgument()
+    {
+        $testException = null;
+        try {
+            $cookie = new HttpCookie('testCookie', md5(1), 0, null, 'testdomain-#\\', '/', false, true);
+        } catch (\Exception $e) {
+            $testException = $e;
+        }
+        $this->assertInstanceOf('InvalidArgumentException', $testException);
+    }
+
+    public function testHttpCookieConstructorWithInvalidPathArgument()
+    {
+        $testException = null;
+        try {
+            $cookie = new HttpCookie('testCookie', md5(1), 0, null, 'testdomain.local', '§/§/§/§/', false, true);
+        } catch (\Exception $e) {
+            $testException = $e;
+        }
+        $this->assertInstanceOf('InvalidArgumentException', $testException);
+    }
+
+    public function testHttpCookieSetAndGetValueMethod()
+    {
+        $cookie = new HttpCookie('testCookie');
+        $testValue = md5(time());
+        $cookie->setValue($testValue);
+        $this->assertSame($testValue, $cookie->getValue());
+    }
+
+    public function testHttpCookieToStringMethodWithBooleanFalseAsValue()
+    {
+        $cookie = new HttpCookie('testCookie');
+        $cookie->setValue(false);
+        $this->assertSame($cookie->__toString(), 'testCookie=0; Path=/; HttpOnly');
     }
 }
