@@ -1,4 +1,5 @@
-.idea
+/.idea
+/*.iml
 build.properties
 /target
 /instance-src
@@ -6,3 +7,4 @@ build.properties
 /.buildpath
 /.project
 /.settings
+/composer.lock

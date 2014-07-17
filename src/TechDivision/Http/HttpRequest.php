@@ -79,14 +79,14 @@ class HttpRequest implements HttpRequestInterface
      *
      * @var array
      */
-    protected $params;
+    protected $params = array();
 
     /**
      * Hold's the queryString parameters
      *
      * @var array
      */
-    protected $queryString;
+    protected $queryString = '';
 
     /**
      * Holds collection of parts from multipart form data
@@ -96,18 +96,36 @@ class HttpRequest implements HttpRequestInterface
     protected $parts = array();
 
     /**
+     * Init's the body stream
+     *
+     * @return void
+     */
+    protected function resetBodyStream()
+    {
+        // if body stream exists close it
+        if (is_resource($this->bodyStream)) {
+            fclose($this->bodyStream);
+        }
+        $this->setBodyStream(fopen('php://memory', 'w+'));
+    }
+
+    /**
+     * Constructs the request object
+     */
+    public function __construct()
+    {
+        $this->resetBodyStream();
+    }
+
+    /**
      * Initialises the request object to default properties
      *
      * @return void
      */
     public function init()
     {
-        // if body stream exists close it
-        if (is_resource($this->bodyStream)) {
-            fclose($this->bodyStream);
-        }
         // init body stream
-        $this->bodyStream = fopen('php://memory', 'w+');
+        $this->bodyStream = $this->resetBodyStream();
 
         // init default response properties
         $this->headers = array();
@@ -116,9 +134,12 @@ class HttpRequest implements HttpRequestInterface
         $this->method = null;
         $this->version = null;
         $this->cookies = array();
+        $this->parts = array();
 
         // Query string is always present, even if it is empty
         $this->queryString = '';
+
+        return $this;
     }
 
     /**
@@ -328,8 +349,6 @@ class HttpRequest implements HttpRequestInterface
         if (is_resource($this->bodyStream)) {
             // close it before
             fclose($this->bodyStream);
-            // free it
-            unset($this->bodyStream);
         }
         $this->bodyStream = $bodyStream;
     }
@@ -355,7 +374,7 @@ class HttpRequest implements HttpRequestInterface
         $bodyStream = $this->getBodyStream();
         // rewind pointer
         rewind($bodyStream);
-        // returns whole body content
+        // returns whole body content by given content length
         return fread($bodyStream, $this->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH));
     }
 
@@ -370,15 +389,22 @@ class HttpRequest implements HttpRequestInterface
      */
     public function copyBodyStream($sourceStream, $maxlength = null, $offset = null)
     {
+        // check if offset is given without maxlength
+        if ($offset && !$maxlength) {
+            throw new \InvalidArgumentException('offset can not be without a maxlength');
+        }
+
+        // first rewind sourceStream
+        rewind($sourceStream);
+
         if ($offset && $maxlength) {
             return stream_copy_to_stream($sourceStream, $this->getBodyStream(), $maxlength, $offset);
         }
         if (!$offset && $maxlength) {
             return stream_copy_to_stream($sourceStream, $this->getBodyStream(), $maxlength);
         }
-        if (!$offset && !$maxlength) {
-            return stream_copy_to_stream($sourceStream, $this->getBodyStream());
-        }
+        // and finally
+        return stream_copy_to_stream($sourceStream, $this->getBodyStream());
     }
 
     /**

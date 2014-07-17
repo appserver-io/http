@@ -54,14 +54,14 @@ class HttpResponse implements HttpResponseInterface
      *
      * @var int
      */
-    protected $statusCode;
+    protected $statusCode = 200;
 
     /**
      * Defines the response reason phrase
      *
      * @var string
      */
-    protected $statusReasonPhrase;
+    protected $statusReasonPhrase = HttpProtocol::STATUS_REASONPHRASE_200;
 
     /**
      * Defines the response mime type
@@ -82,7 +82,7 @@ class HttpResponse implements HttpResponseInterface
      *
      * @var
      */
-    protected $headers;
+    protected $headers = array();
 
     /**
      * Hold's the default headers
@@ -96,7 +96,7 @@ class HttpResponse implements HttpResponseInterface
      *
      * @var int
      */
-    protected $state;
+    protected $state = HttpResponseStates::INITIAL;
 
     /**
      * The array containing the response cookies.
@@ -106,23 +106,27 @@ class HttpResponse implements HttpResponseInterface
     protected $cookies = array();
 
     /**
+     * Constructs the request object
+     */
+    public function __construct()
+    {
+        $this->resetBodyStream();
+    }
+
+    /**
      * Initialises the response object to default properties
      *
      * @return void
      */
     public function init()
     {
-        // if body stream exists close it
-        if (is_resource($this->bodyStream)) {
-            fclose($this->bodyStream);
-        }
         // init body stream
-        $this->bodyStream = fopen('php://memory', 'w+b');
+        $this->resetBodyStream();
 
         // init default response properties
         $this->statusCode = 200;
         $this->version = 'HTTP/1.1';
-        $this->statusReasonPhrase = "OK";
+        $this->statusReasonPhrase = HttpProtocol::STATUS_REASONPHRASE_200;
         $this->mimeType = "text/plain";
         $this->state = HttpResponseStates::INITIAL;
         $this->cookies = array();
@@ -240,8 +244,6 @@ class HttpResponse implements HttpResponseInterface
         if (is_resource($this->bodyStream)) {
             // close it before
             fclose($this->bodyStream);
-            // free it
-            unset($this->bodyStream);
         }
         $this->bodyStream = $bodyStream;
     }
@@ -266,8 +268,6 @@ class HttpResponse implements HttpResponseInterface
         if (is_resource($this->bodyStream)) {
             // close it before
             fclose($this->bodyStream);
-            // free it
-            unset($this->bodyStream);
         }
 
         $this->bodyStream = fopen('php://memory', 'w+b');
@@ -316,15 +316,22 @@ class HttpResponse implements HttpResponseInterface
      */
     public function copyBodyStream($sourceStream, $maxlength = null, $offset = null)
     {
+        // check if offset is given without maxlength
+        if ($offset && !$maxlength) {
+            throw new \InvalidArgumentException('offset can not be without a maxlength');
+        }
+
+        // first rewind sourceStream
+        rewind($sourceStream);
+
         if ($offset && $maxlength) {
             return stream_copy_to_stream($sourceStream, $this->getBodyStream(), $maxlength, $offset);
         }
         if (!$offset && $maxlength) {
             return stream_copy_to_stream($sourceStream, $this->getBodyStream(), $maxlength);
         }
-        if (!$offset && !$maxlength) {
-            return stream_copy_to_stream($sourceStream, $this->getBodyStream());
-        }
+        // and finally
+        return stream_copy_to_stream($sourceStream, $this->getBodyStream());
     }
 
     /**

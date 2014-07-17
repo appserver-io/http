@@ -73,15 +73,14 @@ class HttpPart implements HttpPartInterface
      * Initiates a http form part object
      *
      * @param string $streamWrapper The stream wrapper to use per default temp stream wrapper
-     * @param long   $maxMemory     MaxMemory in bytes per default to 5 MB.
+     * @param int    $maxMemory     MaxMemory in bytes per default to 5 MB.
      *
      * @throws \Exception
-     * @return void
      */
     public function __construct($streamWrapper = self::STREAM_WRAPPER_TEMP, $maxMemory = 5242880)
     {
         // init inputStream
-        if (!$this->inputStream = fopen($streamWrapper . '/maxmemory:' . $maxMemory, 'r+')) {
+        if (!$this->inputStream = @fopen($streamWrapper . '/maxmemory:' . $maxMemory, 'r+')) {
             throw new \Exception();
         }
     }
@@ -92,11 +91,17 @@ class HttpPart implements HttpPartInterface
      * @param string $streamWrapper The stream wrapper to init
      * @param int    $maxMemory     The memory limit for upload
      *
-     * @return mixed
+     * @return HttpPart|null
      */
     public function getInstance($streamWrapper = self::STREAM_WRAPPER_TEMP, $maxMemory = 5242880)
     {
-        return new self($streamWrapper, $maxMemory);
+        $instance = null;
+        try {
+            $instance = new self($streamWrapper, $maxMemory);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+        return $instance;
     }
 
     /**
