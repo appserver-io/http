@@ -321,8 +321,11 @@ class HttpResponse implements HttpResponseInterface
             throw new \InvalidArgumentException('offset can not be without a maxlength');
         }
 
-        // first rewind sourceStream
-        rewind($sourceStream);
+        // first rewind sourceStream if its seekable
+        $sourceStreamMetaData = stream_get_meta_data($sourceStream);
+        if ($sourceStreamMetaData['seekable']) {
+            rewind($sourceStream);
+        }
 
         if ($offset && $maxlength) {
             return stream_copy_to_stream($sourceStream, $this->getBodyStream(), $maxlength, $offset);
