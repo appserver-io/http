@@ -143,6 +143,31 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test's the copy body stream method without arguments on a socket stream source
+     * @link https://github.com/techdivision/TechDivision_Http/issues/76
+     */
+    public function testHttpRequestCopyBodyStreamWithoutArgumentsOnSocketStream()
+    {
+        $request = $this->request;
+        $testContent = 'copyBodyStreamTestContent';
+        $streamServer = stream_socket_server('tcp://127.0.0.1:31337');
+        $streamClient = fsockopen('tcp://127.0.0.1:31337');
+        if (!$streamClient) {
+            throw new \Exception("Unable to create socket");
+        }
+        $streamConnection = stream_socket_accept($streamServer);
+        fwrite($streamConnection, $testContent);
+        $request->copyBodyStream($streamClient, strlen($testContent));
+        rewind($request->getBodyStream());
+        $actualRequestContent = fread($request->getBodyStream(), strlen($testContent));
+        $this->assertSame($testContent, $actualRequestContent);
+        // close all sockets
+        fclose($streamConnection);
+        fclose($streamClient);
+        fclose($streamServer);
+    }
+
+    /**
      * Test's the copy body stream method with given Offset but without maxlength
      */
     public function testHttpRequestCopyBodyStreamWithOffset()
