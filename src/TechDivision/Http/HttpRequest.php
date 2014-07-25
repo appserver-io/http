@@ -125,7 +125,7 @@ class HttpRequest implements HttpRequestInterface
     public function init()
     {
         // init body stream
-        $this->bodyStream = $this->resetBodyStream();
+        $this->resetBodyStream();
 
         // init default response properties
         $this->headers = array();
