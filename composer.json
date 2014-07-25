@@ -1,32 +1,45 @@
 {
-    "name": "techdivision/http",
-    "description": "HTTP protocol implementation for usage in server context",
-    "homepage": "https://github.com/techdivision/TechDivision_Http",
-    "keywords": [ "php", "http", "server", "protocol" ],
-    "license": [ "OSL-3.0" ],
-    "authors": [
-        {
-            "name": "Johann Zelger",
-            "email": "jz@techdivision.com",
-            "homepage": "http://www.techdivision.com",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.0",
-        "techdivision/connection": "0.1.*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "3.7.*"
-    },
-    "autoload": {
-        "psr-0": {
-            "TechDivision\\Http": [ "src/", "tests/" ]
-        }
-    },
-    "config":{
-        "github-oauth":{
-            "github.com":"604a3b5943228e434a5b52c2ba3cf72286d30db9"
-        }
-    }
+	"name" : "techdivision/http",
+	"description" : "HTTP protocol implementation for usage in server context",
+	"homepage" : "https://github.com/techdivision/TechDivision_Http",
+	"keywords" : [
+		"php",
+		"http",
+		"server",
+		"protocol"
+	],
+	"license" : "OSL-3.0",
+	"authors" : [{
+			"name" : "Johann Zelger",
+			"email" : "jz@techdivision.com",
+			"homepage" : "http://www.techdivision.com",
+			"role" : "Developer"
+		}
+	],
+	"require" : {
+		"php" : ">=5.4.0",
+		"techdivision/connection" : "0.1.*"
+	},
+	"require-dev" : {
+		"phpunit/phpunit" : "3.7.*",
+		"appserver-io/build" : "0.1.*"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"TechDivision\\Http" : [
+				"src/",
+				"tests/"
+			]
+		}
+	},
+	"config" : {
+		"github-oauth" : {
+			"github.com" : "604a3b5943228e434a5b52c2ba3cf72286d30db9"
+		}
+	},
+	"support" : {
+		"email" : "jz@techdivision.com",
+		"issues" : "https://github.com/techdivision/TechDivision_Http/issues",
+		"source" : "https://github.com/techdivision/TechDivision_Http"
+	}
 }
