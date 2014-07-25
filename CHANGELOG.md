@@ -2,6 +2,16 @@
 
 ## Bugfixes
 
+* fixed #79 (https://github.com/techdivision/TechDivision_Http/issues/79)
+
+## Features
+
+* None
+
+# Version 0.1.2
+
+## Bugfixes
+
 * fixed #76 (https://github.com/techdivision/TechDivision_Http/issues/76)
 
 ## Features

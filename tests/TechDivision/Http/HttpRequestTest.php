@@ -95,6 +95,16 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test's if http request body stream is a resource after calling init
+     * @see https://github.com/techdivision/TechDivision_Http/issues/79
+     */
+    public function testInitBodyStreamToBeAResource()
+    {
+        $request = $this->request;
+        $this->assertSame(true, is_resource($request->getBodyStream()));
+    }
+
+    /**
      * Test's the copy body stream method without arguments
      */
     public function testHttpRequestCopyBodyStreamWithoutArguments()

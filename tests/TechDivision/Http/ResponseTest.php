@@ -49,6 +49,16 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Test's if http response body stream is a resource after calling init
+     * @see https://github.com/techdivision/TechDivision_Http/issues/79
+     */
+    public function testInitBodyStreamToBeAResource()
+    {
+        $response = $this->response;
+        $this->assertSame(true, is_resource($response->getBodyStream()));
+    }
+
+    /**
      * Test add header functionality on response object.
      */
     public function testAddHeaderToResponseObject() {
