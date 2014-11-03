@@ -244,6 +244,17 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Test's if an empty body content will be returned correctly
+     */
+    public function testGetEmptyBodyContent()
+    {
+        $response = $this->response;
+        $testContent = '';
+        $response->appendBodyStream($testContent);
+        $this->assertSame($testContent, $response->getBodyContent());
+    }
+
+    /**
      * Test's the copy body stream method without arguments
      */
     public function testCopyBodyStreamWithoutArguments()

@@ -370,12 +370,19 @@ class HttpRequest implements HttpRequestInterface
      */
     public function getBodyContent()
     {
-        // set bodystream resource ref to var
-        $bodyStream = $this->getBodyStream();
-        // rewind pointer
-        rewind($bodyStream);
-        // returns whole body content by given content length
-        return fread($bodyStream, $this->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH));
+        // init vars
+        $bodyContent = "";
+        $contentLength = $this->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH);
+        // just if we got a body content
+        if ($contentLength > 0) {
+            // set bodystream resource ref to var
+            $bodyStream = $this->getBodyStream();
+            // rewind pointer
+            rewind($bodyStream);
+            // returns whole body content by given content length
+            $bodyContent =  fread($bodyStream, $contentLength);
+        }
+        return $bodyContent;
     }
 
     /**
