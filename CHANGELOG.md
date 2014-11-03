@@ -1,3 +1,13 @@
+# Version 0.1.4
+
+## Bugfixes
+
+* minor fix for getBodyContent on zero length in req and res classes
+
+## Features
+
+* None
+
 # Version 0.1.2
 
 ## Bugfixes

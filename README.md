@@ -10,7 +10,7 @@ Have a look at [TechDivision_WebServer](<https://github.com/techdivision/TechDiv
 
 ## Installation
 
-If you want to use the library in your own application you can install it by adding
+If you want to use the library in your own application you can add ...
 
 ```sh
 {
