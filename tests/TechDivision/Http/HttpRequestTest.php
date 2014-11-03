@@ -206,6 +206,19 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test's if the empty body content will be returned correctly
+     */
+    public function testHttpRequestGetEmptyBodyContent()
+    {
+        $request = $this->request;
+        $testContent = "";
+        // add correct content-length to request header to be able to read body content as string from stream
+        $request->addHeader('Content-Length', strlen($testContent));
+        $request->appendBodyStream($testContent);
+        $this->assertSame($testContent, $request->getBodyContent());
+    }
+
+    /**
      * Test's set and get functionality on http request object
      */
     public function testHttpRequestSetAndGetParam()

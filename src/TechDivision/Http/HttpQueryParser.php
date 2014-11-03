@@ -84,8 +84,8 @@ class HttpQueryParser implements HttpQueryParserInterface
      * Internal recursive array merge functionality, due to the array_merge_recursive core php function
      * handles array indices on its own, so its not possible to set it manually while merging.
      *
-     * @param array &$array   The existing array reference to merge another array in.
-     * @param array &$array_i The array reference which should be merged into a existing one.
+     * @param array $array   The existing array reference to merge another array in.
+     * @param array $array_i The array reference which should be merged into a existing one.
      *
      * @return void
      */
