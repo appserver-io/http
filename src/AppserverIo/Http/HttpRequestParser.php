@@ -21,6 +21,10 @@
 
 namespace AppserverIo\Http;
 
+use AppserverIo\Psr\HttpMessage\PartInterface;
+use AppserverIo\Psr\HttpMessage\RequestInterface;
+use AppserverIo\Psr\HttpMessage\ResponseInterface;
+
 /**
  * Class HttpRequestParser
  *
@@ -58,10 +62,10 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Set's the given request and response class names
      *
-     * @param \AppserverIo\Http\HttpRequestInterface  $request  The request instance
-     * @param \AppserverIo\Http\HttpResponseInterface $response The response instance
+     * @param \AppserverIo\Psr\HttpMessage\RequestInterface  $request  The request instance
+     * @param \AppserverIo\Psr\HttpMessage\ResponseInterface $response The response instance
      */
-    public function __construct(HttpRequestInterface $request, HttpResponseInterface $response)
+    public function __construct(RequestInterface $request, ResponseInterface $response)
     {
         // add request and response
         $this->request = $request;
@@ -99,11 +103,11 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Injects http part implementation
      *
-     * @param HttpPartInterface $part The part implementation
+     * @param \AppserverIo\Psr\HttpMessage\PartInterface $part The part implementation
      *
      * @return void
      */
-    public function injectPart(HttpPartInterface $part)
+    public function injectPart(PartInterface $part)
     {
         $this->part = $part;
     }
@@ -131,7 +135,7 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Return's the request instance to pass parsed content to
      *
-     * @return \AppserverIo\Http\HttpRequestInterface
+     * @return \AppserverIo\Psr\HttpMessage\RequestInterface
      */
     public function getRequest()
     {
@@ -141,7 +145,7 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Return's the response instance
      *
-     * @return \AppserverIo\Http\HttpResponseInterface
+     * @return \AppserverIo\Psr\HttpMessage\ResponseInterface
      */
     public function getResponse()
     {

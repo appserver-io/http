@@ -21,7 +21,9 @@
 
 namespace AppserverIo\Http;
 
-use AppserverIo\Http\HttpProtocol;
+use AppserverIo\Psr\HttpMessage\CookieInterface;
+use AppserverIo\Psr\HttpMessage\Protocol;
+use AppserverIo\Psr\HttpMessage\ResponseInterface;
 
 /**
  * Class HttpResponse
@@ -33,7 +35,7 @@ use AppserverIo\Http\HttpProtocol;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
  */
-class HttpResponse implements HttpResponseInterface
+class HttpResponse implements ResponseInterface
 {
 
     /**
@@ -444,11 +446,11 @@ class HttpResponse implements HttpResponseInterface
     /**
      * Add's the cookie by name to the cookies array
      *
-     * @param \AppserverIo\Http\HttpCookieInterface $cookie The cookie object
+     * @param \AppserverIo\Http\CookieInterface $cookie The cookie object
      *
      * @return void
      */
-    public function addCookie(HttpCookieInterface $cookie)
+    public function addCookie(CookieInterface $cookie)
     {
         // add's the cookie by name to the cookies array
         $this->cookies[$cookie->getName()] = $cookie;

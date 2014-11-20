@@ -12,13 +12,14 @@
 	"authors" : [{
 			"name" : "Johann Zelger",
 			"email" : "jz@appserver.io",
-			"homepage" : "http://www.techdivision.com",
+			"homepage" : "http://www.appserver.io",
 			"role" : "Developer"
 		}
 	],
 	"require" : {
 		"php" : ">=5.4.0",
-		"techdivision/connection" : "0.1.*"
+		"appserver-io-psr/connection" : "0.1.*",
+        "appserver-io-psr/http-message": "0.1.*"
 	},
 	"require-dev" : {
 		"phpunit/phpunit" : "3.7.*",
@@ -26,7 +27,7 @@
 	},
 	"autoload" : {
 		"psr-0" : {
-			"TechDivision\\Http" : [
+			"AppserverIo\\Http" : [
 				"src/",
 				"tests/"
 			]

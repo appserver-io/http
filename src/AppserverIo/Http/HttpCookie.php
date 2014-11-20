@@ -31,6 +31,8 @@ namespace AppserverIo\Http;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AppserverIo\Psr\HttpMessage\CookieInterface;
+
 /**
  * Represents a HTTP Cookie as of RFC 6265
  *
@@ -42,7 +44,7 @@ namespace AppserverIo\Http;
  * @link      https://github.com/appserver-io/http
  * @see       http://tools.ietf.org/html/rfc6265
  */
-class HttpCookie implements HttpCookieInterface
+class HttpCookie implements CookieInterface
 {
     
     /**

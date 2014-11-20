@@ -21,6 +21,8 @@
 
 namespace AppserverIo\Http;
 
+use AppserverIo\Psr\HttpMessage\PartInterface;
+
 /**
  * A http part implementation.
  *
@@ -31,7 +33,8 @@ namespace AppserverIo\Http;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
  */
-class HttpPart implements HttpPartInterface
+
+class HttpPart implements PartInterface
 {
 
     /**

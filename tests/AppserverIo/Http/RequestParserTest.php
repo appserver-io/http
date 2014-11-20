@@ -126,7 +126,7 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, count($this->parser->getRequest()->getParts()));
         // get part instance for file1
         $part = $this->parser->getRequest()->getPart('file1');
-        $this->assertInstanceOf('AppserverIo\Http\HttpPartInterface', $part);
+        $this->assertInstanceOf('AppserverIo\Psr\HttpMessage\PartInterface', $part);
         $this->assertSame("testUpload.txt", $part->getFilename());
         $this->assertSame(19, $part->getSize());
         $this->assertSame("text/plain", $part->getContentType());
