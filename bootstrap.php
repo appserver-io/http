@@ -12,12 +12,12 @@
  * PHP version 5
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 
 $loader = require 'vendor/autoload.php';
-$loader->add('TechDivision\\Http', 'src');
+$loader->add('AppserverIo\\Http', 'src');

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * \TechDivision\Http\HttpRequest
+ * AppserverIo\Http\HttpRequest
  *
  * NOTICE OF LICENSE
  *
@@ -11,24 +12,24 @@
  * PHP version 5
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
 /**
  * Class HttpRequest
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 class HttpRequest implements HttpRequestInterface
 {
@@ -248,7 +249,7 @@ class HttpRequest implements HttpRequestInterface
      *
      * @param string $name The cookies name to get
      *
-     * @return \TechDivision\Http\HttpCookie|void
+     * @return \AppserverIo\Http\HttpCookie|void
      */
     public function getCookie($name)
     {
@@ -505,7 +506,7 @@ class HttpRequest implements HttpRequestInterface
      *
      * @param string $name The name of the form part
      *
-     * @return \TechDivision\Http\HttpPart
+     * @return \AppserverIo\Http\HttpPart
      */
     public function getPart($name)
     {
@@ -527,7 +528,7 @@ class HttpRequest implements HttpRequestInterface
     /**
      * adds a part to the parts collection
      *
-     * @param \TechDivision\Http\HttpPart $part A form part object
+     * @param \AppserverIo\Http\HttpPart $part A form part object
      * @param string                      $name A manually defined name
      *
      * @return void

@@ -1,6 +1,6 @@
 <phpunit>
     <testsuites>
-	    <testsuite name="techdivision/http PHPUnit testsuite">
+	    <testsuite name="appserver-io/http PHPUnit testsuite">
 	        <directory suffix="Test.php">tests</directory>
 	    </testsuite>
 	</testsuites>

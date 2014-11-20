@@ -12,7 +12,7 @@
 
 ## Bugfixes
 
-* fixed #79 (https://github.com/techdivision/TechDivision_Http/issues/79)
+* fixed #79 (https://github.com/appserver-io/http/issues/79)
 
 ## Features
 
@@ -22,7 +22,7 @@
 
 ## Bugfixes
 
-* fixed #76 (https://github.com/techdivision/TechDivision_Http/issues/76)
+* fixed #76 (https://github.com/appserver-io/http/issues/76)
 
 ## Features
 

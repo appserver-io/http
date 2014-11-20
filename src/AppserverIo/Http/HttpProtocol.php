@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \TechDivision\Http\HttpProtocol
+ * AppserverIo\Http\HttpProtocol
  *
  * NOTICE OF LICENSE
  *
@@ -12,24 +12,24 @@
  * PHP version 5
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
 /**
  * Class HttpProtocol
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  * @link      http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
  */
 class HttpProtocol
@@ -461,8 +461,8 @@ class HttpProtocol
     public static function getStatusReasonPhraseByCode($statusCode)
     {
         $reasonPhraseConstant = 'STATUS_REASONPHRASE_' . (string)$statusCode;
-        if (defined('\TechDivision\Http\HttpProtocol::' . $reasonPhraseConstant)) {
-            return constant('\TechDivision\Http\HttpProtocol::' . $reasonPhraseConstant);
+        if (defined('\AppserverIo\Http\HttpProtocol::' . $reasonPhraseConstant)) {
+            return constant('\AppserverIo\Http\HttpProtocol::' . $reasonPhraseConstant);
         }
         return HttpProtocol::STATUS_REASONPHRASE_UNASSIGNED;
     }

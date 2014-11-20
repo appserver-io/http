@@ -1,6 +1,7 @@
 <?php
+
 /**
- * \TechDivision\Http\HttpRequestParserInterface
+ * AppserverIo\Http\HttpRequestParserInterface
  *
  * NOTICE OF LICENSE
  *
@@ -11,24 +12,24 @@
  * PHP version 5
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
 /**
  * Interface HttpRequestParserInterface
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 interface HttpRequestParserInterface
 {
@@ -38,7 +39,7 @@ interface HttpRequestParserInterface
      * @param string $line The start line
      *
      * @return void
-     * @throws \TechDivision\Http\HttpException
+     * @throws \AppserverIo\Http\HttpException
      *
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.1
      */
@@ -59,7 +60,7 @@ interface HttpRequestParserInterface
      * @param string $messageHeaders The message headers
      *
      * @return void
-     * @throws \TechDivision\Http\HttpException
+     * @throws \AppserverIo\Http\HttpException
      *
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
      */
@@ -68,13 +69,13 @@ interface HttpRequestParserInterface
     /**
      * Return's the request instance to pass parsed content to
      *
-     * @return \TechDivision\Http\HttpRequestInterface
+     * @return \AppserverIo\Http\HttpRequestInterface
      */
     public function getRequest();
     /**
      * Return's the response instance
      *
-     * @return \TechDivision\Http\HttpResponseInterface
+     * @return \AppserverIo\Http\HttpResponseInterface
      */
     public function getResponse();
 }

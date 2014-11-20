@@ -1,7 +1,7 @@
 {
-	"name" : "techdivision/http",
+	"name" : "appserver-io/http",
 	"description" : "HTTP protocol implementation for usage in server context",
-	"homepage" : "https://github.com/techdivision/TechDivision_Http",
+	"homepage" : "https://github.com/appserver-io/http",
 	"keywords" : [
 		"php",
 		"http",
@@ -11,7 +11,7 @@
 	"license" : "OSL-3.0",
 	"authors" : [{
 			"name" : "Johann Zelger",
-			"email" : "jz@techdivision.com",
+			"email" : "jz@appserver.io",
 			"homepage" : "http://www.techdivision.com",
 			"role" : "Developer"
 		}
@@ -38,8 +38,8 @@
 		}
 	},
 	"support" : {
-		"email" : "jz@techdivision.com",
-		"issues" : "https://github.com/techdivision/TechDivision_Http/issues",
-		"source" : "https://github.com/techdivision/TechDivision_Http"
+		"email" : "jz@appserver.io",
+		"issues" : "https://github.com/appserver-io/http/issues",
+		"source" : "https://github.com/appserver-io/http"
 	}
 }

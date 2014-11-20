@@ -1,6 +1,7 @@
 <?php
+
 /**
- * \TechDivision\Http\HttpResponseInterface
+ * AppserverIo\Http\HttpResponseInterface
  *
  * NOTICE OF LICENSE
  *
@@ -11,14 +12,14 @@
  * PHP version 5
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
 use TechDivision\Connection\ConnectionResponseInterface;
 
@@ -26,11 +27,11 @@ use TechDivision\Connection\ConnectionResponseInterface;
  * Interface HttpResponseInterface
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 interface HttpResponseInterface extends ConnectionResponseInterface
 {
@@ -288,7 +289,7 @@ interface HttpResponseInterface extends ConnectionResponseInterface
      *
      * @param string $name The cookies name to get
      *
-     * @return \TechDivision\Http\HttpCookie|void
+     * @return \AppserverIo\Http\HttpCookie|void
      */
     public function getCookie($name);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * \TechDivision\Http\HttpResponseTest
+ * \AppserverIo\Http\HttpResponseTest
  *
  * NOTICE OF LICENSE
  *
@@ -10,27 +10,25 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    TechDivision_Http
- * @subpackage tests
- * @author     Johann Zelger <jz@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       https://github.com/techdivision/TechDivision_Http
+ * @category  Library
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
 /**
  * Class HttpResponseTest
  *
- * @category   Library
- * @package    TechDivision_Http
- * @subpackage tests
- * @author     Johann Zelger <jz@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       https://github.com/techdivision/TechDivision_Http
+ * @category  Library
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/http
  */
 class ResponseTest extends \PHPUnit_Framework_TestCase {
 
@@ -50,7 +48,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * Test's if http response body stream is a resource after calling init
-     * @see https://github.com/techdivision/TechDivision_Http/issues/79
+     * @see https://github.com/appserver-io/http/issues/79
      */
     public function testInitBodyStreamToBeAResource()
     {
@@ -304,7 +302,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * Test's the copy body stream method without arguments on a socket stream source
-     * @link https://github.com/techdivision/TechDivision_Http/issues/76
+     * @link https://github.com/appserver-io/http/issues/76
      */
     public function testHttpRequestCopyBodyStreamWithoutArgumentsOnSocketStream()
     {
@@ -356,7 +354,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
             $testException = $e;
         }
         $this->assertSame(null, $testValue);
-        $this->assertInstanceOf('TechDivision\Http\HttpException', $testException);
+        $this->assertInstanceOf('AppserverIo\Http\HttpException', $testException);
     }
 
     /**

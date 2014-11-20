@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
-<project name="techdivision/http" default="composer-init" basedir=".">
+<project name="appserver-io/http" default="composer-init" basedir=".">
     
     <!-- initialize ENV variable -->
     <property environment="env" />

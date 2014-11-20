@@ -1,6 +1,7 @@
 <?php
+
 /**
- * \TechDivision\Http\HttpResponse
+ * AppserverIo\Http\HttpResponse
  *
  * NOTICE OF LICENSE
  *
@@ -11,26 +12,26 @@
  * PHP version 5
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
-use TechDivision\Http\HttpProtocol;
+use AppserverIo\Http\HttpProtocol;
 
 /**
  * Class HttpResponse
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 class HttpResponse implements HttpResponseInterface
 {
@@ -394,7 +395,7 @@ class HttpResponse implements HttpResponseInterface
      * @param string $name The header name to get
      *
      * @return mixed Usually a string, but can also be an array if we request the Set-Cookie header
-     * @throws \TechDivision\Http\HttpException Is thrown if the requested header is not available
+     * @throws \AppserverIo\Http\HttpException Is thrown if the requested header is not available
      */
     public function getHeader($name)
     {
@@ -443,7 +444,7 @@ class HttpResponse implements HttpResponseInterface
     /**
      * Add's the cookie by name to the cookies array
      *
-     * @param \TechDivision\Http\HttpCookieInterface $cookie The cookie object
+     * @param \AppserverIo\Http\HttpCookieInterface $cookie The cookie object
      *
      * @return void
      */
@@ -471,7 +472,7 @@ class HttpResponse implements HttpResponseInterface
      *
      * @param string $name The cookies name to get
      *
-     * @return \TechDivision\Http\HttpCookie|void
+     * @return \AppserverIo\Http\HttpCookie|void
      */
     public function getCookie($name)
     {

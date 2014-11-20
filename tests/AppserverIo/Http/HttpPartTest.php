@@ -1,6 +1,6 @@
 <?php
 /**
- * \TechDivision\Http\HttpPartTest
+ * \AppserverIo\Http\HttpPartTest
  *
  * NOTICE OF LICENSE
  *
@@ -10,29 +10,27 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    TechDivision_Http
- * @subpackage tests
- * @author     Johann Zelger <jz@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       https://github.com/techdivision/TechDivision_Http
+ * @category  Library
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
-use TechDivision\Http\HttpPart;
+use AppserverIo\Http\HttpPart;
 
 /**
  * Class HttpPartTest
  *
- * @category   Library
- * @package    TechDivision_Http
- * @subpackage tests
- * @author     Johann Zelger <jz@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       https://github.com/techdivision/TechDivision_Http
+ * @category  Library
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/http
  */
 class HttpPartTest extends \PHPUnit_Framework_TestCase
 {

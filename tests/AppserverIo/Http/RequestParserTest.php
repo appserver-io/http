@@ -1,6 +1,6 @@
 <?php
 /**
- * \TechDivision\Http\RequestParserTest
+ * \AppserverIo\Http\RequestParserTest
  *
  * NOTICE OF LICENSE
  *
@@ -10,27 +10,25 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    TechDivision_Http
- * @subpackage tests
- * @author     Johann Zelger <jz@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       https://github.com/techdivision/TechDivision_Http
+ * @category  Library
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
 /**
  * Class RequestParserTest
  *
- * @category   Library
- * @package    TechDivision_Http
- * @subpackage tests
- * @author     Johann Zelger <jz@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       https://github.com/techdivision/TechDivision_Http
+ * @category  Library
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/http
  */
 class RequestParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -128,7 +126,7 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, count($this->parser->getRequest()->getParts()));
         // get part instance for file1
         $part = $this->parser->getRequest()->getPart('file1');
-        $this->assertInstanceOf('TechDivision\Http\HttpPartInterface', $part);
+        $this->assertInstanceOf('AppserverIo\Http\HttpPartInterface', $part);
         $this->assertSame("testUpload.txt", $part->getFilename());
         $this->assertSame(19, $part->getSize());
         $this->assertSame("text/plain", $part->getContentType());
@@ -308,7 +306,7 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             $testException = $e;
         }
-        $this->assertInstanceOf('TechDivision\Http\HttpException', $testException);
+        $this->assertInstanceOf('AppserverIo\Http\HttpException', $testException);
     }
 
     /**
@@ -360,7 +358,7 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             $testException = $e;
         }
-        $this->assertInstanceOf('TechDivision\Http\HttpException', $testException);
+        $this->assertInstanceOf('AppserverIo\Http\HttpException', $testException);
     }
 
     /**
@@ -376,7 +374,7 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             $testException = $e;
         }
-        $this->assertInstanceOf('TechDivision\Http\HttpException', $testException);
+        $this->assertInstanceOf('AppserverIo\Http\HttpException', $testException);
     }
 
     /**

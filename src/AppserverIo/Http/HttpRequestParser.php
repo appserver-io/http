@@ -1,6 +1,7 @@
 <?php
+
 /**
- * \TechDivision\Http\HttpRequestParser
+ * AppserverIo\Http\HttpRequestParser
  *
  * NOTICE OF LICENSE
  *
@@ -11,24 +12,24 @@
  * PHP version 5
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
 /**
  * Class HttpRequestParser
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 class HttpRequestParser implements HttpRequestParserInterface
 {
@@ -36,29 +37,29 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Holds the request instance to prepare
      *
-     * @var \TechDivision\Http\HttpRequestInterface
+     * @var \AppserverIo\Http\HttpRequestInterface
      */
     protected $request;
 
     /**
      * Holds the response instance to prepare
      *
-     * @var \TechDivision\Http\HttpResponseInterface
+     * @var \AppserverIo\Http\HttpResponseInterface
      */
     protected $response;
 
     /**
      * Holds the query parser instance
      *
-     * @var \TechDivision\Http\HttpQueryParser
+     * @var \AppserverIo\Http\HttpQueryParser
      */
     protected $queryParser;
 
     /**
      * Set's the given request and response class names
      *
-     * @param \TechDivision\Http\HttpRequestInterface  $request  The request instance
-     * @param \TechDivision\Http\HttpResponseInterface $response The response instance
+     * @param \AppserverIo\Http\HttpRequestInterface  $request  The request instance
+     * @param \AppserverIo\Http\HttpResponseInterface $response The response instance
      */
     public function __construct(HttpRequestInterface $request, HttpResponseInterface $response)
     {
@@ -110,7 +111,7 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Return's a new instance of http part
      *
-     * @return \TechDivision\Http\HttpPart
+     * @return \AppserverIo\Http\HttpPart
      */
     public function getHttpPartInstance()
     {
@@ -120,7 +121,7 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Return's the query parser instance
      *
-     * @return \TechDivision\Http\HttpQueryParser
+     * @return \AppserverIo\Http\HttpQueryParser
      */
     public function getQueryParser()
     {
@@ -130,7 +131,7 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Return's the request instance to pass parsed content to
      *
-     * @return \TechDivision\Http\HttpRequestInterface
+     * @return \AppserverIo\Http\HttpRequestInterface
      */
     public function getRequest()
     {
@@ -140,7 +141,7 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Return's the response instance
      *
-     * @return \TechDivision\Http\HttpResponseInterface
+     * @return \AppserverIo\Http\HttpResponseInterface
      */
     public function getResponse()
     {
@@ -153,7 +154,7 @@ class HttpRequestParser implements HttpRequestParserInterface
      * @param string $line The start line
      *
      * @return void
-     * @throws \TechDivision\Http\HttpException
+     * @throws \AppserverIo\Http\HttpException
      *
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.1
      */
@@ -189,7 +190,7 @@ class HttpRequestParser implements HttpRequestParserInterface
      * @param string $messageHeaders The message headers
      *
      * @return void
-     * @throws \TechDivision\Http\HttpException
+     * @throws \AppserverIo\Http\HttpException
      *
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
      */
@@ -216,7 +217,7 @@ class HttpRequestParser implements HttpRequestParserInterface
      * @param string $line The line defining a http request header
      *
      * @return mixed
-     * @throws \TechDivision\Http\HttpException
+     * @throws \AppserverIo\Http\HttpException
      */
     public function parseHeaderLine($line)
     {

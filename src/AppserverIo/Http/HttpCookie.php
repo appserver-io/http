@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\Http\HttpCookie
+ * AppserverIo\Http\HttpCookie
  *
  * NOTICE OF LICENSE
  *
@@ -12,14 +12,14 @@
  * PHP version 5
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Tim Wagner <tw@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Tim Wagner <tw@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
 /*
  * This script belongs to the TYPO3 Flow framework.
@@ -35,11 +35,11 @@ namespace TechDivision\Http;
  * Represents a HTTP Cookie as of RFC 6265
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Tim Wagner <tw@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Tim Wagner <tw@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  * @see       http://tools.ietf.org/html/rfc6265
  */
 class HttpCookie implements HttpCookieInterface
@@ -190,7 +190,7 @@ class HttpCookie implements HttpCookieInterface
      *
      * @param string $header The Set-Cookie string without the actual "Set-Cookie:" part
      *
-     * @return \TechDivision\Http\HttpCookie
+     * @return \AppserverIo\Http\HttpCookie
      * @see http://tools.ietf.org/html/rfc6265
      */
     public static function createFromRawSetCookieHeader($header)

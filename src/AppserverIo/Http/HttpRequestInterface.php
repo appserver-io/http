@@ -1,6 +1,7 @@
 <?php
+
 /**
- * \TechDivision\Http\HttpRequestInterface
+ * AppserverIo\Http\HttpRequestInterface
  *
  * NOTICE OF LICENSE
  *
@@ -11,14 +12,14 @@
  * PHP version 5
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 
-namespace TechDivision\Http;
+namespace AppserverIo\Http;
 
 use TechDivision\Connection\ConnectionRequestInterface;
 
@@ -26,11 +27,11 @@ use TechDivision\Connection\ConnectionRequestInterface;
  * Interface HttpRequestInterface
  *
  * @category  Library
- * @package   TechDivision_Http
- * @author    Johann Zelger <jz@techdivision.com>
- * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @package   Http
+ * @author    Johann Zelger <jz@appserver.io>
+ * @copyright 2014 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/techdivision/TechDivision_Http
+ * @link      https://github.com/appserver-io/http
  */
 interface HttpRequestInterface extends ConnectionRequestInterface
 {
@@ -82,7 +83,7 @@ interface HttpRequestInterface extends ConnectionRequestInterface
     /**
      * Initialises the request object to default properties
      *
-     * @return \TechDivision\Http\HttpRequestInterface
+     * @return \AppserverIo\Http\HttpRequestInterface
      */
     public function init();
 
@@ -223,7 +224,7 @@ interface HttpRequestInterface extends ConnectionRequestInterface
      *
      * @param string $name The cookies name to get
      *
-     * @return \TechDivision\Http\HttpCookie|void
+     * @return \AppserverIo\Http\HttpCookie|void
      */
     public function getCookie($name);
 
@@ -276,7 +277,7 @@ interface HttpRequestInterface extends ConnectionRequestInterface
      *
      * @param string $name The name of the form part
      *
-     * @return \TechDivision\Http\HttpPart
+     * @return \AppserverIo\Http\HttpPart
      */
     public function getPart($name);
 
@@ -290,7 +291,7 @@ interface HttpRequestInterface extends ConnectionRequestInterface
     /**
      * adds a part to the parts collection
      *
-     * @param \TechDivision\Http\HttpPart $part A form part object
+     * @param \AppserverIo\Http\HttpPart $part A form part object
      * @param string                      $name A manually defined name
      *
      * @return void
