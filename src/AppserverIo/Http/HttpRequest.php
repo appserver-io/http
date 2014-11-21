@@ -532,7 +532,7 @@ class HttpRequest implements RequestInterface
      * adds a part to the parts collection
      *
      * @param \AppserverIo\Http\HttpPart $part A form part object
-     * @param string                      $name A manually defined name
+     * @param string                     $name A manually defined name
      *
      * @return void
      */
