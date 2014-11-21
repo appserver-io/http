@@ -18,7 +18,6 @@
 	],
 	"require" : {
 		"php" : ">=5.4.0",
-		"appserver-io-psr/connection" : "0.1.*",
         "appserver-io-psr/http-message": "0.1.*"
 	},
 	"require-dev" : {
