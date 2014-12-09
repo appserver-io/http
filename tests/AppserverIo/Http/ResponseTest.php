@@ -438,11 +438,13 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * Test's get cookie when not exists on response
+     *
+     * @expectedException AppserverIo\Http\HttpException
      */
     public function testGetCookieWhenNotExists()
     {
         $response = $this->response;
-        $this->assertSame(null, $response->getCookie('testcookie01'));
+        $response->getCookie('testcookie01');
     }
 
     /**

@@ -1,3 +1,13 @@
+# Version 0.2.1
+
+## Bugfixes
+
+* Bugfix for invalid cookie handling allows one cookie per name, but multiple cookies are allowed, e. g. Set-Cookie
+
+## Features
+
+* None
+
 # Version 0.2.0
 
 ## Bugfixes

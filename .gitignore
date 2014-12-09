@@ -10,3 +10,5 @@
 /composer.lock
 /composer.phar
 /*.iml
+.README.md.html
+.CHANGELOG.md.html
