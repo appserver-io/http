@@ -21,8 +21,8 @@
 
 namespace AppserverIo\Http;
 
-use AppserverIo\Psr\HttpMessage\CookieInterface;
 use AppserverIo\Psr\HttpMessage\Protocol;
+use AppserverIo\Psr\HttpMessage\CookieInterface;
 use AppserverIo\Psr\HttpMessage\ResponseInterface;
 
 /**
@@ -226,8 +226,20 @@ class HttpResponse implements ResponseInterface
         }
 
         // add set-cookie headers by cookie collection
-        foreach ($this->getCookies() as $cookieName => $cookie) {
-            $headerString .= HttpProtocol::HEADER_SET_COOKIE . HttpProtocol::HEADER_SEPARATOR . $cookie->__toString() . "\r\n";
+        foreach ($this->getCookies() as $cookieName => $cookieValue) {
+
+            // take care for multiple cookies
+            if (is_array($cookieValue)) {
+
+                // iterate of the cookies
+                foreach ($cookieValue as $cookie) {
+                    $headerString .= HttpProtocol::HEADER_SET_COOKIE . HttpProtocol::HEADER_SEPARATOR . $cookie->__toString() . "\r\n";
+                }
+
+            // if we've a single cookie, add it directly
+            } elseif ($cookieValue instanceof HttpCookie) {
+                $headerString .= HttpProtocol::HEADER_SET_COOKIE . HttpProtocol::HEADER_SEPARATOR . $cookieValue->__toString() . "\r\n";
+            }
         }
 
         // return with ending CRLF
@@ -371,10 +383,10 @@ class HttpResponse implements ResponseInterface
                 $headerValue = array($headerValue, $value);
             }
 
-            // if no cookie header simple add it
+            // add the header array
             $this->headers[$name] = $headerValue;
 
-        } else {
+        } else { // when add it the first time, simply add it
             $this->headers[$name] = $value;
         }
     }
@@ -388,7 +400,7 @@ class HttpResponse implements ResponseInterface
      */
     public function hasHeader($name)
     {
-        return array_key_exists($name, $this->headers);
+        return isset($this->headers[$name]);
     }
 
     /**
@@ -444,7 +456,9 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Add's the cookie by name to the cookies array
+     * Adds the cookie information got from connection. We've to take care that cookies can
+     * multiple times. To support this create an array that keeps the multiple exist cookie
+     * values.
      *
      * @param \AppserverIo\Http\CookieInterface $cookie The cookie object
      *
@@ -452,8 +466,23 @@ class HttpResponse implements ResponseInterface
      */
     public function addCookie(CookieInterface $cookie)
     {
-        // add's the cookie by name to the cookies array
-        $this->cookies[$cookie->getName()] = $cookie;
+
+        // check if this cookie has already been set
+        if ($this->hasCookie($name = $cookie->getName())) {
+
+            // then check if we've already one cookie header available
+            if (is_array($cookieValue = $this->getCookie($name))) {
+                $cookieValue[] = $cookie;
+            } else {
+                $cookieValue = array($cookieValue, $cookie);
+            }
+
+            // add the cookie array
+            $this->cookies[$name] = $cookieValue;
+
+        } else { // when add it the first time, simply add it
+            $this->cookies[$name] = $cookie;
+        }
     }
 
     /**
@@ -465,8 +494,7 @@ class HttpResponse implements ResponseInterface
      */
     public function hasCookie($name)
     {
-        // check if request has specific cookie
-        return (isset($this->cookies[$name]) &&  $this->cookies[$name]->getName() === $name);
+        return isset($this->cookies[$name]);
     }
 
     /**
@@ -474,14 +502,15 @@ class HttpResponse implements ResponseInterface
      *
      * @param string $name The cookies name to get
      *
-     * @return \AppserverIo\Http\HttpCookie|void
+     * @return mixed The cookie instance or an array of cookie instances
+     * @throws \AppserverIo\Http\HttpException Is thrown if the cookie is not available
      */
     public function getCookie($name)
     {
-        // check if has specific cookie
-        if ($this->hasCookie($name)) {
-            return $this->cookies[$name];
+        if ($this->hasCookie($name) === false) {
+            throw new HttpException("Cookie '$name' not found");
         }
+        return $this->cookies[$name];
     }
 
     /**
@@ -505,6 +534,20 @@ class HttpResponse implements ResponseInterface
     public function setCookies(array $cookies)
     {
         $this->cookies = $cookies;
+    }
+
+    /**
+     * Removes the cookie with the passed name.
+     *
+     * @param string $name Name of the cookie to remove
+     *
+     * @return void
+     */
+    public function removeCookie($name)
+    {
+        if (isset($this->cookies[$name])) {
+            unset($this->cookies[$name]);
+        }
     }
 
     /**
