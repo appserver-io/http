@@ -503,4 +503,25 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
         $this->assertSame(false, $response->hasState(999));
     }
 
+    /**
+     * Test's the redirect method with default status code
+     */
+    public function testRedirectWithDefaultStatusCode()
+    {
+        $response = $this->response;
+        $response->redirect($url = 'http://test.local');
+        $this->assertSame($url, $response->getHeader(HttpProtocol::HEADER_LOCATION));
+        $this->assertSame(302, $response->getStatusCode());
+    }
+
+    /**
+     * Test's the redirect method with custom status code
+     */
+    public function testRedirectWithCustomStatusCode()
+    {
+        $response = $this->response;
+        $response->redirect($url = 'http://test.local', $code = 301);
+        $this->assertSame($url, $response->getHeader(HttpProtocol::HEADER_LOCATION));
+        $this->assertSame($code, $response->getStatusCode());
+    }
 }

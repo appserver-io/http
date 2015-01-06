@@ -483,6 +483,18 @@ class HttpRequest implements RequestInterface
     }
 
     /**
+     * Queries whether the request contains a parameter or not.
+     *
+     * @param boolean $param TRUE if the parameter is available, else FALSE
+     *
+     * @return void
+     */
+    public function hasParam($param)
+    {
+        return isset($this->params[$param]);
+    }
+
+    /**
      * Return's the array of all params
      *
      * @return array
