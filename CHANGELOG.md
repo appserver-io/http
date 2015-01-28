@@ -1,3 +1,14 @@
+# Version 0.2.3
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Applied new coding conventions
+* Updated dependencies
+
 # Version 0.2.2
 
 ## Bugfixes

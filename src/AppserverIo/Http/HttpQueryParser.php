@@ -11,12 +11,11 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 
 namespace AppserverIo\Http;
@@ -24,12 +23,11 @@ namespace AppserverIo\Http;
 /**
  * A http query parser to parse post and get params to array from query string
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 class HttpQueryParser implements HttpQueryParserInterface
 {
@@ -50,7 +48,7 @@ class HttpQueryParser implements HttpQueryParserInterface
     
     /**
      * The array with content types where the content has to be parsed.
-     * 
+     *
      * @var array
      */
     protected $parsingRelevantContentTypes = array(
@@ -60,10 +58,10 @@ class HttpQueryParser implements HttpQueryParserInterface
 
     /**
      * Returns TRUE if the request is a multipart from data request with
-     * content type <code>application/x-www-form-urlencoded</code> or 
+     * content type <code>application/x-www-form-urlencoded</code> or
      * <code>multipart/form-data</code>.
-     * 
-     * It is not necessary to use in_array() because the content type can be 
+     *
+     * It is not necessary to use in_array() because the content type can be
      * extended by encoding, e. g. application/x-www-form-urlencoded; UTF-8.
      *
      * @param string|null $contentType The content's type
