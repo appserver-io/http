@@ -11,12 +11,11 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 
 namespace AppserverIo\Http;
@@ -28,12 +27,11 @@ use AppserverIo\Psr\HttpMessage\ResponseInterface;
 /**
  * Class HttpRequestParser
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 class HttpRequestParser implements HttpRequestParserInterface
 {
@@ -41,14 +39,14 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Holds the request instance to prepare
      *
-     * @var \AppserverIo\Http\HttpRequestInterface
+     * @var \AppserverIo\Psr\HttpMessage\RequestInterface
      */
     protected $request;
 
     /**
      * Holds the response instance to prepare
      *
-     * @var \AppserverIo\Http\HttpResponseInterface
+     * @var \AppserverIo\Psr\HttpMessage\ResponseInterface
      */
     protected $response;
 

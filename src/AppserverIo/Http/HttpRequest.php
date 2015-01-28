@@ -11,12 +11,11 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 
 namespace AppserverIo\Http;
@@ -27,38 +26,37 @@ use AppserverIo\Psr\HttpMessage\RequestInterface;
 /**
  * Class HttpRequest
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 class HttpRequest implements RequestInterface
 {
     /**
-     * Hold's all headers got from http connection
+     * Holds all headers got from http connection
      *
      * @var array
      */
     protected $headers = array();
 
     /**
-     * Hold's all parsed cookie objects as array collection
+     * Holds all parsed cookie objects as array collection
      *
      * @var array
      */
     protected $cookies = array();
 
     /**
-     * Hold's the http request method
+     * Holds the http request method
      *
      * @var string
      */
     protected $method;
 
     /**
-     * Hold's the protocol version
+     * Holds the protocol version
      *
      * @var string
      */
@@ -72,21 +70,21 @@ class HttpRequest implements RequestInterface
     protected $uri;
 
     /**
-     * Hold's the file descriptor resource to body stream
+     * Holds the file descriptor resource to body stream
      *
      * @var resource
      */
     protected $bodyStream;
 
     /**
-     * Hold's the request parameters
+     * Holds the request parameters
      *
      * @var array
      */
     protected $params = array();
 
     /**
-     * Hold's the queryString parameters
+     * Holds the queryString parameters
      *
      * @var array
      */
@@ -100,7 +98,7 @@ class HttpRequest implements RequestInterface
     protected $parts = array();
 
     /**
-     * Init's the body stream
+     * Inits the body stream
      *
      * @return void
      */
@@ -147,7 +145,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Add's a header information got from connection
+     * Adds a header information got from connection
      *
      * @param string $name  The header name
      * @param string $value The headers value
@@ -163,7 +161,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Check's if header exists by given name
+     * Checks if header exists by given name
      *
      * @param string $name The header name to check
      *
@@ -175,7 +173,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Return's header by given name
+     * Returns header by given name
      *
      * @param string $name The header name to get
      *
@@ -189,7 +187,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Return's all headers as array
+     * Returns all headers as array
      *
      * @return array
      */
@@ -211,7 +209,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Add's the cookie by name to the cookies array
+     * Adds the cookie by name to the cookies array
      *
      * @param CookieInterface $cookie The cookie object
      *
@@ -275,7 +273,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Set's the uri
+     * Sets the uri
      *
      * @param string $uri The uri
      *
@@ -287,7 +285,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Set's the method
+     * Sets the method
      *
      * @param string $method The http method
      *
@@ -299,7 +297,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Get's request method
+     * Gets request method
      *
      * @return string
      */
@@ -309,7 +307,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Return's requested uri
+     * Returns requested uri
      *
      * @return string
      */
@@ -319,7 +317,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Set's query string
+     * Sets query string
      *
      * @param string $queryString The requests query string
      *
@@ -331,7 +329,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Return's query string
+     * Returns query string
      *
      * @return string The query string
      */
@@ -341,7 +339,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Reset's the stream resource pointing to body content
+     * Resets the stream resource pointing to body content
      *
      * @param resource $bodyStream The body content stream resource
      *
@@ -358,7 +356,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Return's the stream resource pointing to body content
+     * Returns the stream resource pointing to body content
      *
      * @return resource The body content stream resource
      */
@@ -368,7 +366,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Return's the body content stored in body stream
+     * Returns the body content stored in body stream
      *
      * @return string
      */
@@ -422,7 +420,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Append's body stream with content
+     * Appends body stream with content
      *
      * @param string $content The content to append
      *
@@ -444,7 +442,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Set's the http request version
+     * Sets the http request version
      *
      * @param string $version The http request version
      *
@@ -456,7 +454,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Set's a parameter given in query string
+     * Sets a parameter given in query string
      *
      * @param string $param The param key
      * @param string $value The param value
@@ -469,7 +467,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Return's a param value by given key
+     * Returns a param value by given key
      *
      * @param string $param The param key
      *
@@ -495,7 +493,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Return's the array of all params
+     * Returns the array of all params
      *
      * @return array
      */
@@ -505,7 +503,7 @@ class HttpRequest implements RequestInterface
     }
 
     /**
-     * Set's the array of all params
+     * Sets the array of all params
      *
      * @param array $params The params array to set
      *

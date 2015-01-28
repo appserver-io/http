@@ -11,12 +11,11 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 
 namespace AppserverIo\Http;
@@ -26,12 +25,11 @@ use AppserverIo\Psr\HttpMessage\PartInterface;
 /**
  * A http part implementation.
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 
 class HttpPart implements PartInterface
@@ -95,6 +93,8 @@ class HttpPart implements PartInterface
      * @param int    $maxMemory     The memory limit for upload
      *
      * @return HttpPart|null
+     *
+     * @throws \Exception
      */
     public function getInstance($streamWrapper = self::STREAM_WRAPPER_TEMP, $maxMemory = 5242880)
     {
@@ -158,8 +158,6 @@ class HttpPart implements PartInterface
      * Gets the orig firm filename
      *
      * @return string The file's name
-     *
-     * @return string
      */
     public function getFilename()
     {
