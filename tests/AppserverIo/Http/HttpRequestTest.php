@@ -241,6 +241,25 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test's has non existing param on http request object
+     */
+    public function testHttpRequestHasParamWhenNonExists()
+    {
+        $request = $this->request;
+        $this->assertFalse($request->hasParam('NonExistingParam'));
+    }
+
+    /**
+     * Test's has existing param on http request object
+     */
+    public function testHttpRequestHasParamWhenExists()
+    {
+        $request = $this->request;
+        $request->setParam('param1', 'value1');
+        $this->assertTrue($request->hasParam('param1'));
+    }
+
+    /**
      * Test's get non existing part on http request object
      */
     public function testHttpRequestGetPartWhenNonExists()
@@ -376,4 +395,3 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
     }
 
 }
- 

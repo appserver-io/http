@@ -8,6 +8,17 @@
 
 * Switched to stable dependencies due to version 1.0.0 release
 
+# Version 0.2.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Add Response::redirect() method to simplify redirects
+* Add Request::hasParam() method to allow query whether a param exists in the request or not
+
 # Version 0.2.1
 
 ## Bugfixes
