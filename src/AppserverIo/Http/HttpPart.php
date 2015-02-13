@@ -158,8 +158,6 @@ class HttpPart implements PartInterface
      * Gets the orig firm filename
      *
      * @return string The file's name
-     *
-     * @return string
      */
     public function getFilename()
     {

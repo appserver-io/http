@@ -47,10 +47,10 @@ class HttpQueryParser implements HttpQueryParserInterface
      * @var array
      */
     protected $indexCounter = array();
-    
+
     /**
      * The array with content types where the content has to be parsed.
-     * 
+     *
      * @var array
      */
     protected $parsingRelevantContentTypes = array(
@@ -60,10 +60,10 @@ class HttpQueryParser implements HttpQueryParserInterface
 
     /**
      * Returns TRUE if the request is a multipart from data request with
-     * content type <code>application/x-www-form-urlencoded</code> or 
+     * content type <code>application/x-www-form-urlencoded</code> or
      * <code>multipart/form-data</code>.
-     * 
-     * It is not necessary to use in_array() because the content type can be 
+     *
+     * It is not necessary to use in_array() because the content type can be
      * extended by encoding, e. g. application/x-www-form-urlencoded; UTF-8.
      *
      * @param string|null $contentType The content's type

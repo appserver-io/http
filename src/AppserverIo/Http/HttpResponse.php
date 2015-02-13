@@ -214,7 +214,6 @@ class HttpResponse implements ResponseInterface
 
         // concatenate the headers to a string
         foreach ($this->getHeaders() as $headerName => $headerValue) {
-
             // take care for manuel added headers with appending
             if (is_array($headerValue)) {
                 foreach ($headerValue as $value) {
@@ -227,10 +226,8 @@ class HttpResponse implements ResponseInterface
 
         // add set-cookie headers by cookie collection
         foreach ($this->getCookies() as $cookieName => $cookieValue) {
-
             // take care for multiple cookies
             if (is_array($cookieValue)) {
-
                 // iterate of the cookies
                 foreach ($cookieValue as $cookie) {
                     $headerString .= HttpProtocol::HEADER_SET_COOKIE . HttpProtocol::HEADER_SEPARATOR . $cookie->__toString() . "\r\n";
@@ -375,7 +372,6 @@ class HttpResponse implements ResponseInterface
 
         // check if we've a Set-Cookie header to process
         if ($this->hasHeader($name) && $append === true) {
-
             // then check if we've already one cookie header available
             if (is_array($headerValue = $this->getHeader($name))) {
                 $headerValue[] = $value;
@@ -386,7 +382,8 @@ class HttpResponse implements ResponseInterface
             // add the header array
             $this->headers[$name] = $headerValue;
 
-        } else { // when add it the first time, simply add it
+        } else {
+            // when add it the first time, simply add it
             $this->headers[$name] = $value;
         }
     }
@@ -469,7 +466,6 @@ class HttpResponse implements ResponseInterface
 
         // check if this cookie has already been set
         if ($this->hasCookie($name = $cookie->getName())) {
-
             // then check if we've already one cookie header available
             if (is_array($cookieValue = $this->getCookie($name))) {
                 $cookieValue[] = $cookie;
@@ -480,7 +476,8 @@ class HttpResponse implements ResponseInterface
             // add the cookie array
             $this->cookies[$name] = $cookieValue;
 
-        } else { // when add it the first time, simply add it
+        } else {
+            // when add it the first time, simply add it
             $this->cookies[$name] = $cookie;
         }
     }

@@ -46,10 +46,10 @@ use AppserverIo\Psr\HttpMessage\CookieInterface;
  */
 class HttpCookie implements CookieInterface
 {
-    
+
     /**
      * Domain name for 'localhost'
-     * 
+     *
      * @var string
      */
     const LOCALHOST = 'localhost';
@@ -76,7 +76,7 @@ class HttpCookie implements CookieInterface
 
     /**
      * Cookie Name, a token (RFC 6265, 4.1.1)
-     * 
+     *
      * @var string
      */
     protected $name;
@@ -89,21 +89,21 @@ class HttpCookie implements CookieInterface
 
     /**
      * Unix timestamp of the expiration date / time or 0 for "session" expiration (RFC 6265, 4.1.2.1)
-     * 
+     *
      * @var integer
      */
     protected $expiresTimestamp;
 
     /**
      * Number of seconds until the cookie expires (RFC 6265, 4.1.2.2)
-     * 
+     *
      * @var integer
      */
     protected $maximumAge;
 
     /**
      * Hosts to which this cookie will be sent (RFC 6265, 4.1.2.3)
-     * 
+     *
      * @var string
      */
     protected $domain;
@@ -142,7 +142,7 @@ class HttpCookie implements CookieInterface
      */
     public function __construct($name, $value = null, $expires = 0, $maximumAge = null, $domain = null, $path = '/', $secure = false, $httpOnly = true)
     {
-        
+
         // check if valid data is passed
         if (preg_match(self::PATTERN_TOKEN, $name) !== 1) {
             throw new \InvalidArgumentException('The parameter "name" passed to the Cookie constructor must be a valid token as per RFC 2616, Section 2.2.', 1345101977);
@@ -162,16 +162,16 @@ class HttpCookie implements CookieInterface
         if ($path !== null && preg_match(self::PATTERN_PATH, $path) !== 1) {
             throw new \InvalidArgumentException('The parameter "path" passed to the Cookie constructor must be a valid path as per RFC 6265, Section 4.1.1.', 1345123078);
         }
-        
+
         /*
          * If the domain is 'localhost' do NOT set it
-         * 
+         *
          * Fix for Chrome issue https://code.google.com/p/chromium/issues/detail?id=56211
          */
         if ($domain !== HttpCookie::LOCALHOST) {
             $this->domain = $domain;
         }
-        
+
         // set the other cookie values
         $this->name = $name;
         $this->value = $value;
@@ -200,7 +200,7 @@ class HttpCookie implements CookieInterface
         $nameValueAndUnparsedAttributes = explode(';', $header, 2);
         $expectedNameValuePair = $nameValueAndUnparsedAttributes[0];
         $unparsedAttributes = isset($nameValueAndUnparsedAttributes[1]) ? $nameValueAndUnparsedAttributes[1] : '';
-        
+
         if (strpos($expectedNameValuePair, '=') === false) {
             return null;
         }
@@ -210,14 +210,14 @@ class HttpCookie implements CookieInterface
         if ($cookieName === '') {
             return null;
         }
-        
+
         $expiresAttribute = 0;
         $maxAgeAttribute = null;
         $domainAttribute = null;
         $pathAttribute = null;
         $secureAttribute = false;
         $httpOnlyAttribute = true;
-        
+
         if ($unparsedAttributes !== '') {
             foreach (explode(';', $unparsedAttributes) as $cookieAttributeValueString) {
                 $attributeNameAndValue = explode('=', $cookieAttributeValueString, 2);
@@ -260,9 +260,9 @@ class HttpCookie implements CookieInterface
                 }
             }
         }
-        
+
         $cookie = new HttpCookie($cookieName, $cookieValue, $expiresAttribute, $maxAgeAttribute, $domainAttribute, $pathAttribute, $secureAttribute, $httpOnlyAttribute);
-        
+
         return $cookie;
     }
 
@@ -280,7 +280,7 @@ class HttpCookie implements CookieInterface
     /**
      * Returns the value of this cookie
      *
-     * @return mixed 
+     * @return mixed
      * @api
      */
     public function getValue()
@@ -293,7 +293,7 @@ class HttpCookie implements CookieInterface
      *
      * @param mixed $value The new value
      *
-     * @return void 
+     * @return void
      * @api
      */
     public function setValue($value)
@@ -414,14 +414,14 @@ class HttpCookie implements CookieInterface
         } else {
             $value = $this->value;
         }
-        
+
         $cookiePair = sprintf('%s=%s', $this->name, urlencode($value));
         $attributes = '';
-        
+
         if ($this->expiresTimestamp !== 0) {
             $attributes .= '; Expires=' . gmdate('D, d-M-Y H:i:s T', $this->expiresTimestamp);
         }
-        
+
         if ($this->domain !== null) {
             $attributes .= '; Domain=' . $this->domain;
         }
@@ -431,11 +431,11 @@ class HttpCookie implements CookieInterface
         if ($this->secure) {
             $attributes .= '; Secure';
         }
-        
+
         if ($this->httpOnly) {
             $attributes .= '; HttpOnly';
         }
-        
+
         return $cookiePair . $attributes;
     }
 }
