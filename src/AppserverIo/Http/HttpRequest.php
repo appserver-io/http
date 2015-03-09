@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Http\HttpRequest
+ * \AppserverIo\Http\HttpRequest
  *
  * NOTICE OF LICENSE
  *

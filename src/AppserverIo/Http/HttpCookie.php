@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Http\HttpCookie
+ * \AppserverIo\Http\HttpCookie
  *
  * NOTICE OF LICENSE
  *

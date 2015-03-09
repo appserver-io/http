@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Http\HttpQueryParserInterface
+ * \AppserverIo\Http\HttpQueryParserInterface
  *
  * NOTICE OF LICENSE
  *

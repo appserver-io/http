@@ -1,3 +1,14 @@
+# Version 1.1.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Added implementations for different basic HTTP authentication mechanisms
+* Updated build process
+
 # Version 1.0.0
 
 ## Bugfixes
