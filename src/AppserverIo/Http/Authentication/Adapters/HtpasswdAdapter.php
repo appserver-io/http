@@ -105,7 +105,7 @@ class HtpasswdAdapter extends AbstractAdapter
     public function authenticate(array $authData)
     {
         // if user is valid, we will check using possible hashing algorithms
-        if (isset($authData['username']) && $this->htpasswd[$authData['username']]) {
+        if (isset($authData['username']) && isset($this->htpasswd[$authData['username']])) {
             $user = $authData['username'];
             $pwd = $authData['password'];
 

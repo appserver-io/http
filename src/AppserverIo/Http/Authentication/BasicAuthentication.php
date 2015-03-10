@@ -81,7 +81,7 @@ class BasicAuthentication extends AbstractAuthentication
      */
     public function getAuthenticateHeader()
     {
-        return $this->getType() . ' realm="' . $this->configData["realm"] . "'";
+        return $this->getType() . ' realm="' . $this->configData["realm"] . '"';
     }
 
     /**

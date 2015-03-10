@@ -100,7 +100,7 @@ class HtdigestAdapter extends AbstractAdapter
         // if user is valid
         $credentials = $this->getCredentials();
         $user = $authData['username'];
-        if ($credentials[$user] && $credentials[$user]['realm'] == $authData['realm']) {
+        if (isset($credentials[$user]) && $credentials[$user]['realm'] == $authData['realm']) {
             $HA1 = $credentials[$user]['hash'];
             $HA2 = md5($authData['method'].":".$authData['uri']);
             $middle = ':'.$authData['nonce'].':'.$authData['nc'].':'.$authData['cnonce'].':'.$authData['qop'].':';
