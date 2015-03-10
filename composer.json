@@ -37,7 +37,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "appserver-io-psr/http-message": "~1.0"
+        "appserver-io-psr/http-message": "~1.0",
+        "ircmaxell/password-compat": "~1.0"
     },
     "require-dev": {
         "appserver-io/build": "~1.0"
