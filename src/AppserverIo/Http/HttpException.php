@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Http\HttpException
+ * \AppserverIo\Http\HttpException
  *
  * NOTICE OF LICENSE
  *
