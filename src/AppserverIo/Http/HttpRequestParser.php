@@ -68,7 +68,7 @@ class HttpRequestParser implements HttpRequestParserInterface
      * @static
      * @see http://tools.ietf.org/html/rfc3986
      */
-    static public function normalizeUri($uri)
+    public static function normalizeUri($uri)
     {
         // init vars
         $normalizedPathElements = array(0 => '');
@@ -115,7 +115,7 @@ class HttpRequestParser implements HttpRequestParserInterface
             if ($directoryIndicator < 0) {
                 throw new HttpException('Bad request.', 400);
             }
-        } while(++$i < $pathElementCount);
+        } while (++$i < $pathElementCount);
         // return full normalized uri
         return implode('/', $normalizedPathElements) . $queryString;
     }
