@@ -58,6 +58,69 @@ class HttpRequestParser implements HttpRequestParserInterface
     protected $queryParser;
 
     /**
+     * Normalizes uri in a very simple way.
+     *
+     * @param string $uri The uri to normalize
+     *
+     * @return string The normalized uri string
+     * @throws \AppserverIo\Http\HttpException
+     *
+     * @static
+     * @see http://tools.ietf.org/html/rfc3986
+     */
+    static public function normalizeUri($uri)
+    {
+        // init vars
+        $normalizedPathElements = array(0 => '');
+        $queryString = '';
+        $uriWithoutQueryString = $uri;
+        $directoryIndicator = 0;
+        // split possible query string from uri
+        if (($queryStringPos = strpos($uri, "?")) !== false) {
+            $queryString = substr($uri, $queryStringPos);
+            $uriWithoutQueryString = substr($uri, 0, $queryStringPos);
+        }
+        // get all path elements from uri
+        $pathElements = explode('/', urldecode($uriWithoutQueryString));
+        // count path elements
+        $pathElementCount = count($pathElements);
+        // init count variable
+        $i = 1;
+        // proceed path elements
+        do {
+            $pathElement = $pathElements[$i];
+            // do not cover current dir indicators
+            if ($pathElement === '.' || $pathElement === '') {
+                // if last item was . or empty string add empty entry to new path element to keep trailing slash
+                if ($i === $pathElementCount -1) {
+                    $normalizedPathElements[$directoryIndicator + 1] = '';
+                }
+                continue;
+            }
+            // inc current dir indicator if no forwarding dir is given.
+            if ($pathElement !== '..') {
+                ++$directoryIndicator;
+                // set new path elements array for normalized uri
+                $normalizedPathElements[$directoryIndicator] = $pathElement;
+                // otherwise dec dir indicator
+            } else {
+                // if last item was . or empty string add empty entry to new path element to keep trailing slash
+                if ($i === $pathElementCount -1) {
+                    $normalizedPathElements[$directoryIndicator + 1] = '';
+                }
+                unset($normalizedPathElements[$directoryIndicator]);
+                --$directoryIndicator;
+            }
+            // check if indicator got invalid
+            if ($directoryIndicator < 0) {
+                throw new HttpException('Bad request.', 400);
+            }
+        } while(++$i < $pathElementCount);
+        // return full normalized uri
+        return implode('/', $normalizedPathElements) . $queryString;
+    }
+    
+    /**
      * Set's the given request and response class names
      *
      * @param \AppserverIo\Psr\HttpMessage\RequestInterface  $request  The request instance
@@ -149,6 +212,7 @@ class HttpRequestParser implements HttpRequestParserInterface
     {
         return $this->response;
     }
+    
 
     /**
      * Parses the start line
@@ -163,19 +227,20 @@ class HttpRequestParser implements HttpRequestParserInterface
     public function parseStartLine($line)
     {
         $request = $this->getRequest();
+        // validate start line
         if (!preg_match(
-            "/(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT)\s(.*)\s(HTTP\/1\.0|HTTP\/1\.1)/",
+            "/(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT)\s(\/.*)\s(HTTP\/1\.0|HTTP\/1\.1)/",
             $line,
             $matches
         )
         ) {
-            throw new HttpException('Bad request.');
+            throw new HttpException('Bad request.', 400);
         }
         // grab http version and request method from first request line.
         list($reqStartLine, $reqMethod, $reqUri, $reqVersion) = $matches;
         // fill up request object
         $request->setMethod($reqMethod);
-        $request->setUri($reqUri);
+        $request->setUri(self::normalizeUri($reqUri));
         $request->setVersion($reqVersion);
 
         // parse query string
