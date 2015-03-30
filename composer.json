@@ -1,45 +1,64 @@
 {
-	"name" : "appserver-io/http",
-	"description" : "HTTP protocol implementation for usage in server context",
-	"homepage" : "https://github.com/appserver-io/http",
-	"keywords" : [
-		"php",
-		"http",
-		"server",
-		"protocol"
-	],
-	"license" : "OSL-3.0",
-	"authors" : [{
-			"name" : "Johann Zelger",
-			"email" : "jz@appserver.io",
-			"homepage" : "http://www.appserver.io",
-			"role" : "Developer"
-		}
-	],
-	"require" : {
-		"php" : ">=5.4.0",
-		"appserver-io-psr/http-message" : "~1.0",
+    "name": "appserver-io/http",
+    "description": "HTTP protocol implementation for usage in server context",
+    "homepage": "https://github.com/appserver-io/http",
+    "keywords": [
+        "php",
+        "http",
+        "server",
+        "protocol"
+    ],
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Johann Zelger",
+            "email": "jz@appserver.io",
+            "homepage": "https://github.com/wick-ed/zelgerj",
+            "role": "Developer"
+        },
+        {
+            "name": "Bernhard Wick",
+            "email": "bw@appserver.io",
+            "homepage": "https://github.com/wick-ed",
+            "role": "Developer"
+        },
+        {
+            "name": "Tim Wagner",
+            "email": "tw@appserver.io",
+            "homepage": "https://github.com/wagnert",
+            "role": "Developer"
+        },
+        {
+            "name": "Philipp Dittert",
+            "email": "p.dittert@techdivision.com",
+            "homepage": "http://www.appserver.io",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "appserver-io-psr/http-message": "~1.0",
         "ircmaxell/password-compat": "~1.0"
-	},
-	"require-dev" : {
-		"appserver-io/build" : "~1.0"
-	},
-	"autoload" : {
-		"psr-0" : {
-			"AppserverIo\\Http" : [
-				"src/",
-				"tests/"
-			]
-		}
-	},
-	"config" : {
-		"github-oauth" : {
+    },
+    "require-dev": {
+        "appserver-io/build": "~1.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "AppserverIo\\Http": [
+                "src/",
+                "tests/"
+            ]
+        }
+    },
+    "config": {
+        "github-oauth": {
             "github.com": "bb0ca6adf013e65b1e630197308621791517b5d8"
-		}
-	},
-	"support" : {
-		"email" : "jz@appserver.io",
-		"issues" : "https://github.com/appserver-io/http/issues",
-		"source" : "https://github.com/appserver-io/http"
-	}
+        }
+    },
+    "support": {
+        "email": "jz@appserver.io",
+        "issues": "https://github.com/appserver-io/appserver/issues",
+        "source": "https://github.com/appserver-io/http"
+    }
 }
