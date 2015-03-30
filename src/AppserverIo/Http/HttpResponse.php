@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Http\HttpResponse
+ * \AppserverIo\Http\HttpResponse
  *
  * NOTICE OF LICENSE
  *
@@ -11,12 +11,11 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 
 namespace AppserverIo\Http;
@@ -28,12 +27,11 @@ use AppserverIo\Psr\HttpMessage\ResponseInterface;
 /**
  * Class HttpResponse
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 class HttpResponse implements ResponseInterface
 {
@@ -150,7 +148,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Set's the default response headers to response
+     * Sets the default response headers to response
      *
      * @param array $headers The default headers array
      *
@@ -162,7 +160,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Return's default headers array
+     * Returns default headers array
      *
      * @return array
      */
@@ -172,7 +170,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Return's current content length
+     * Returns current content length
      *
      * @return int
      */
@@ -203,7 +201,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Return's all headers as string
+     * Returns all headers as string
      *
      * @return string
      */
@@ -244,7 +242,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Reset's the stream resource pointing to body content
+     * ReSets the stream resource pointing to body content
      *
      * @param resource $bodyStream The body content stream resource
      *
@@ -261,7 +259,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Return's the stream resource pointing to body content
+     * Returns the stream resource pointing to body content
      *
      * @return resource The body content stream resource
      */
@@ -287,7 +285,7 @@ class HttpResponse implements ResponseInterface
 
 
     /**
-     * Return's the body content stored in body stream
+     * Returns the body content stored in body stream
      *
      * @return string
      */
@@ -431,7 +429,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Return's all headers as array
+     * Returns all headers as array
      *
      * @return array
      */
@@ -457,7 +455,7 @@ class HttpResponse implements ResponseInterface
      * multiple times. To support this create an array that keeps the multiple exist cookie
      * values.
      *
-     * @param \AppserverIo\Http\CookieInterface $cookie The cookie object
+     * @param \AppserverIo\Psr\HttpMessage\CookieInterface $cookie The cookie object
      *
      * @return void
      */
@@ -564,7 +562,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Set's the http response status code
+     * Sets the http response status code
      *
      * @param int $code The status code to set
      *
@@ -580,7 +578,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Set's the status reason phrase
+     * Sets the status reason phrase
      *
      * @param string $statusReasonPhrase The reason phrase
      *
@@ -592,7 +590,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Return's the response status code
+     * Returns the response status code
      *
      * @return int
      */
@@ -602,7 +600,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Set's state of response
+     * Sets state of response
      *
      * @param int $state The state value
      *
@@ -614,7 +612,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Return's the current state
+     * Returns the current state
      *
      * @return int
      */
@@ -636,7 +634,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Return's the status phrase based on the status code
+     * Returns the status phrase based on the status code
      *
      * @return string
      */
@@ -646,7 +644,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Return's the http version of the response
+     * Returns the http version of the response
      *
      * @return string
      */
@@ -656,7 +654,7 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Set's the http response version
+     * Sets the http response version
      *
      * @param string $version The version to set (e.g. HTTP/1.1)
      *

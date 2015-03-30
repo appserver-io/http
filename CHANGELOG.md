@@ -1,3 +1,25 @@
+# Version 1.1.1
+
+## Bugfixes
+
+* Added request uri normalization
+
+## Features
+
+* None
+
+# Version 1.1.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Added implementations for different basic HTTP authentication mechanisms
+* Updated build process
+* Added ircmaxell/password-compat as a fallback for PHP 5.4
+
 # Version 1.0.0
 
 ## Bugfixes
@@ -7,6 +29,17 @@
 ## Features
 
 * Switched to stable dependencies due to version 1.0.0 release
+
+# Version 0.2.3
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Applied new coding conventions
+* Updated dependencies
 
 # Version 0.2.2
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Http\HttpCookie
+ * \AppserverIo\Http\HttpCookie
  *
  * NOTICE OF LICENSE
  *
@@ -11,12 +11,11 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Http
  * @author    Tim Wagner <tw@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 
 namespace AppserverIo\Http;
@@ -36,12 +35,11 @@ use AppserverIo\Psr\HttpMessage\CookieInterface;
 /**
  * Represents a HTTP Cookie as of RFC 6265
  *
- * @category  Library
- * @package   Http
  * @author    Tim Wagner <tw@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  * @see       http://tools.ietf.org/html/rfc6265
  */
 class HttpCookie implements CookieInterface
@@ -129,16 +127,14 @@ class HttpCookie implements CookieInterface
     /**
      * Constructs a new HttpCookie object
      *
-     * @param string           $name       The cookie name as a valid token (RFC 2616)
-     * @param mixed            $value      The value to store in the cookie. Must be possible to cast into a string.
-     * @param integer|DateTime $expires    Date and time after which this cookie expires.
-     * @param integer|null     $maximumAge Number of seconds until the cookie expires.
-     * @param string|null      $domain     The host to which the user agent will send this cookie
-     * @param string           $path       The path describing the scope of this cookie
-     * @param boolean          $secure     If this cookie should only be sent through a "secure" channel by the user agent
-     * @param boolean          $httpOnly   If this cookie should only be used through the HTTP protocol
-     *
-     * @api
+     * @param string            $name       The cookie name as a valid token (RFC 2616)
+     * @param mixed             $value      The value to store in the cookie. Must be possible to cast into a string.
+     * @param integer|\DateTime $expires    Date and time after which this cookie expires.
+     * @param integer|null      $maximumAge Number of seconds until the cookie expires.
+     * @param string|null       $domain     The host to which the user agent will send this cookie
+     * @param string            $path       The path describing the scope of this cookie
+     * @param boolean           $secure     If this cookie should only be sent through a "secure" channel by the user agent
+     * @param boolean           $httpOnly   If this cookie should only be used through the HTTP protocol
      */
     public function __construct($name, $value = null, $expires = 0, $maximumAge = null, $domain = null, $path = '/', $secure = false, $httpOnly = true)
     {
@@ -185,7 +181,7 @@ class HttpCookie implements CookieInterface
     /**
      * Creates a cookie (an instance of this class) by a provided
      * raw header string like "foo=507d9f20317a5; path=/; domain=.example.org"
-     * This is is an implementatin of the algorithm explained in RFC 6265, Section 5.2
+     * This is is an implementation of the algorithm explained in RFC 6265, Section 5.2
      * A basic statement of this algorithm is to "ignore the set-cookie-string entirely"
      * in case a required condition is not met. In these cases this function will return NULL
      * rather than the created cookie.
@@ -270,7 +266,6 @@ class HttpCookie implements CookieInterface
      * Returns the name of this cookie
      *
      * @return string The cookie name
-     * @api
      */
     public function getName()
     {
@@ -281,7 +276,6 @@ class HttpCookie implements CookieInterface
      * Returns the value of this cookie
      *
      * @return mixed
-     * @api
      */
     public function getValue()
     {
@@ -294,7 +288,6 @@ class HttpCookie implements CookieInterface
      * @param mixed $value The new value
      *
      * @return void
-     * @api
      */
     public function setValue($value)
     {
@@ -310,7 +303,6 @@ class HttpCookie implements CookieInterface
      * The special case "no expiration time" is returned in form of a zero value.
      *
      * @return integer A unix timestamp or 0
-     * @api
      */
     public function getExpires()
     {
@@ -324,7 +316,6 @@ class HttpCookie implements CookieInterface
      * Note that not all browsers support this attribute.
      *
      * @return integer The maximum age in seconds, or NULL if none has been defined.
-     * @api
      */
     public function getMaximumAge()
     {
@@ -335,7 +326,6 @@ class HttpCookie implements CookieInterface
      * Returns the domain this cookie is valid for.
      *
      * @return string The domain name
-     * @api
      */
     public function getDomain()
     {
@@ -346,7 +336,6 @@ class HttpCookie implements CookieInterface
      * Returns the path this cookie is valid for.
      *
      * @return string The path
-     * @api
      */
     public function getPath()
     {
@@ -360,7 +349,6 @@ class HttpCookie implements CookieInterface
      * for more details.
      *
      * @return boolean State of the "Secure" attribute
-     * @api
      */
     public function isSecure()
     {
@@ -371,7 +359,6 @@ class HttpCookie implements CookieInterface
      * Tells if this cookie should only be used through the HTTP protocol.
      *
      * @return boolean State of the "HttpOnly" attribute
-     * @api
      */
     public function isHttpOnly()
     {

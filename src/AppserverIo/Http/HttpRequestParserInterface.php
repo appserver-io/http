@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Http\HttpRequestParserInterface
+ * \AppserverIo\Http\HttpRequestParserInterface
  *
  * NOTICE OF LICENSE
  *
@@ -11,12 +11,11 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 
 namespace AppserverIo\Http;
@@ -24,12 +23,11 @@ namespace AppserverIo\Http;
 /**
  * Interface HttpRequestParserInterface
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 interface HttpRequestParserInterface
 {
@@ -69,13 +67,13 @@ interface HttpRequestParserInterface
     /**
      * Return's the request instance to pass parsed content to
      *
-     * @return \AppserverIo\Http\HttpRequestInterface
+     * @return \AppserverIo\Psr\HttpMessage\RequestInterface
      */
     public function getRequest();
     /**
      * Return's the response instance
      *
-     * @return \AppserverIo\Http\HttpResponseInterface
+     * @return \AppserverIo\Psr\HttpMessage\ResponseInterface
      */
     public function getResponse();
 }

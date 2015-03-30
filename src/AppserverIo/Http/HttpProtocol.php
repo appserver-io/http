@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AppserverIo\Http\HttpProtocol
+ * \AppserverIo\Http\HttpProtocol
  *
  * NOTICE OF LICENSE
  *
@@ -11,12 +11,11 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
+ * @link      https://www.appserver.io
  */
 
 namespace AppserverIo\Http;
@@ -24,13 +23,12 @@ namespace AppserverIo\Http;
 /**
  * Class HttpProtocol
  *
- * @category  Library
- * @package   Http
  * @author    Johann Zelger <jz@appserver.io>
- * @copyright 2014 TechDivision GmbH <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/http
- * @link      http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+ * @link      https://www.appserver.io
+ * @see      http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
  */
 class HttpProtocol
 {
