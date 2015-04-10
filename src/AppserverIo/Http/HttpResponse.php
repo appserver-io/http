@@ -170,34 +170,33 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
-     * Returns current content length
-     *
-     * @return int
-     */
-    public function getContentLength()
-    {
-        // check if status code is content-length relevant
-        if ((int)$this->getStatusCode() < 300 || (int)$this->getStatusCode() > 399) {
-            // checkout for content length
-            rewind($this->getBodyStream());
-            fseek($this->getBodyStream(), 0, SEEK_END);
-            return ftell($this->getBodyStream());
-        }
-        return 0;
-    }
-
-    /**
      * Prepare's the headers for dispatch
      *
      * @return void
      */
     public function prepareHeaders()
     {
-        // set current date before render it
-        $this->addHeader(HttpProtocol::HEADER_DATE, gmdate(DATE_RFC822));
-
-        // render content length to header
-        $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, $this->getContentLength());
+        // set current date before render it if no headers is set for yet
+        if (!$this->hasHeader(HttpProtocol::HEADER_DATE)) {
+            $this->addHeader(HttpProtocol::HEADER_DATE, gmdate(DATE_RFC822));
+        }
+        
+        // check if no content length was set before
+        if (!$this->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
+            $inputStream = $this->getBodyStream();
+            // try to get content length from stream resource if its seekable
+            if (@fseek($inputStream, 0, SEEK_END) === 0) {
+                $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, @ftell($inputStream));
+                @rewind($inputStream);
+            }
+        }
+        
+        // check if status code is content-length relevant and set it to be zero on existing one
+        if ($this->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
+            if ((int)$this->getStatusCode() >= 300 && (int)$this->getStatusCode() < 400) {
+                $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, 0);
+            }
+        }
     }
 
     /**
@@ -212,6 +211,13 @@ class HttpResponse implements ResponseInterface
 
         // concatenate the headers to a string
         foreach ($this->getHeaders() as $headerName => $headerValue) {
+            // check content length relevats
+            if ($headerName === HttpProtocol::HEADER_CONTENT_LENGTH) {
+                // check if status code is content-length relevant
+                if ((int)$this->getStatusCode() >= 300 && (int)$this->getStatusCode() < 400) {
+                    $headerValue = 0;
+                }
+            }
             // take care for manuel added headers with appending
             if (is_array($headerValue)) {
                 foreach ($headerValue as $value) {
@@ -276,13 +282,12 @@ class HttpResponse implements ResponseInterface
     public function resetBodyStream()
     {
         if (is_resource($this->bodyStream)) {
-            // close it before
+            // destroy it
             fclose($this->bodyStream);
         }
-
+        // if nothing exists create a memory stream
         $this->bodyStream = fopen('php://memory', 'w+b');
     }
-
 
     /**
      * Returns the body content stored in body stream
