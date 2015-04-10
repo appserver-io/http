@@ -1,3 +1,14 @@
+# Version 1.1.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Refactored Content-Length handling in response
+* Added Http Headernames to HttpProtocol dictionary
+
 # Version 1.1.1
 
 ## Bugfixes
