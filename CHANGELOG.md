@@ -1,3 +1,13 @@
+# Version 1.1.1
+
+## Bugfixes
+
+* Added request uri normalization
+
+## Features
+
+* None
+
 # Version 1.1.0
 
 ## Bugfixes

@@ -45,7 +45,7 @@ class HttpQueryParser implements HttpQueryParserInterface
      * @var array
      */
     protected $indexCounter = array();
-    
+
     /**
      * The array with content types where the content has to be parsed.
      *
