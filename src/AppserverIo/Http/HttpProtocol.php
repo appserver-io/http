@@ -138,6 +138,20 @@ class HttpProtocol
     const HEADER_X_FORWARD = 'X-Forward';
 
     /**
+     * X-Forward-For header name
+     *
+     * @var string
+     */
+    const HEADER_X_FORWARD_FOR = 'X-Forwarded-For';
+    
+    /**
+     * X-Forwarded-Proto header name
+     *
+     * @var string
+     */
+    const HEADER_X_FORWARDED_PROTO = 'X-Forwarded-Proto';
+
+    /**
      * Status header name.
      *
      * @var string

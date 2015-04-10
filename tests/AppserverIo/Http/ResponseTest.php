@@ -169,7 +169,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
     public function testGetContentLengthWithEmptyBodyStream()
     {
         $response = $this->response;
-        $this->assertSame(0, $response->getContentLength());
+        $response->prepareHeaders();
+        $this->assertSame(0, $response->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH));
     }
 
     /**
@@ -181,7 +182,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
         // generate random string
         for ($s = '', $cl = strlen($c = 'abcdefghijklmnopqrstuvwxyz1234567890')-1, $i = 0; $i < mt_rand(500,2000); $s .= $c[mt_rand(0, $cl)], ++$i);
         $response->appendBodyStream($s);
-        $this->assertSame(strlen($s), $response->getContentLength());
+        $response->prepareHeaders();
+        $this->assertSame(strlen($s), $response->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH));
     }
 
     /**
@@ -194,7 +196,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
         for ($s = '', $cl = strlen($c = 'abcdefghijklmnopqrstuvwxyz1234567890')-1, $i = 0; $i < mt_rand(500,2000); $s .= $c[mt_rand(0, $cl)], ++$i);
         $response->appendBodyStream($s);
         $response->setStatusCode(302);
-        $this->assertSame(0, $response->getContentLength());
+        $response->prepareHeaders();
+        $this->assertSame(0, $response->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH));
     }
 
     /**

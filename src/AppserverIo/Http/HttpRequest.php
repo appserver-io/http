@@ -382,7 +382,7 @@ class HttpRequest implements RequestInterface
             // rewind pointer
             rewind($bodyStream);
             // returns whole body content by given content length
-            $bodyContent =  fread($bodyStream, $contentLength);
+            $bodyContent = fread($bodyStream, $contentLength);
         }
         return $bodyContent;
     }
