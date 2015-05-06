@@ -13,20 +13,11 @@ HTTP protocol implementation for usage in a web server context.
 
 Have a look at [our webserver project](<https://github.com/appserver-io/webserver>) for a reference implementation of a webserver using this HTTP implementation.
 
-## Installation
+## Issues
+In order to bundle our efforts we would like to collect all issues regarding this package in [the main project repository's issue tracker](https://github.com/appserver-io/appserver/issues).
+Please reference the originating repository as the first element of the issue title e.g.:
+`[appserver-io/<ORIGINATING_REPO>] A issue I am having`
 
-If you want to use the library in your own application you can add ...
-
-```sh
-{
-    "require": {
-        "appserver-io/http": "dev-master"
-    },
-}
-```
-
-to your ```composer.json``` and invoke ```composer update``` in your project.
-
-# External Links
+## External Links
 
 * Documentation at [appserver.io](http://docs.appserver.io)
