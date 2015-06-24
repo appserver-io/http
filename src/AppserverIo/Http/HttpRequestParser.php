@@ -119,7 +119,7 @@ class HttpRequestParser implements HttpRequestParserInterface
         // return full normalized uri
         return implode('/', $normalizedPathElements) . $queryString;
     }
-    
+
     /**
      * Set's the given request and response class names
      *
@@ -212,7 +212,7 @@ class HttpRequestParser implements HttpRequestParserInterface
     {
         return $this->response;
     }
-    
+
 
     /**
      * Parses the start line
@@ -321,8 +321,10 @@ class HttpRequestParser implements HttpRequestParserInterface
         foreach (explode(';', $headerValue) as $cookieStr) {
             // check if cookieStr is no just a empty str
             if (strlen($cookieStr) > 0) {
-                // add cookie object to request
-                $request->addCookie(HttpCookie::createFromRawSetCookieHeader($cookieStr));
+                // add cookie object to request if the cookie string can be parsed properly
+                if ($cookie = HttpCookie::createFromRawSetCookieHeader($cookieStr)) {
+                    $request->addCookie($cookie);
+                }
             }
         }
     }

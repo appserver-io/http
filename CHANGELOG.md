@@ -1,3 +1,13 @@
+# Version 1.1.3
+
+## Bugfixes
+
+* Fixed invalid cookie initialization for invalid cookie strings
+
+## Features
+
+* None
+
 # Version 1.1.2
 
 ## Bugfixes
