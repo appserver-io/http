@@ -113,7 +113,6 @@ class HttpPart implements PartInterface
      * @param string $content The content as string
      *
      * @return void
-     * 
      * @throws \Exception
      */
     public function putContent($content)
@@ -291,12 +290,13 @@ class HttpPart implements PartInterface
      *
      * @return int|string
      */
-    public function getUploadMaxFileSize($asBytes = true) {
+    public function getUploadMaxFileSize($asBytes = true)
+    {
         $uploadMaxFilesizeIniValue = ini_get('upload_max_filesize');
         if ($asBytes === true) {
             $ini_v = trim($uploadMaxFilesizeIniValue);
             $s = array('g'=> 1<<30, 'm' => 1<<20, 'k' => 1<<10);
-            return intval($ini_v) * ($s[strtolower(substr($ini_v,-1))] ?: 1);
+            return intval($ini_v) * ($s[strtolower(substr($ini_v, -1))] ?: 1);
         }
         return $uploadMaxFilesizeIniValue;
     }
