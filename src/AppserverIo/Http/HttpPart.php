@@ -113,9 +113,15 @@ class HttpPart implements PartInterface
      * @param string $content The content as string
      *
      * @return void
+     * @throws \Exception
      */
     public function putContent($content)
     {
+        // check if size do not exceed upload max filesize
+        if ($this->getUploadMaxFileSize() < strlen($content)) {
+            // throw 500 server error
+            throw new \Exception(sprintf("Upload max filesize '%s' exceeded", $this->getUploadMaxFileSize(false)), 500);
+        }
         // write to io stream
         $this->size = fwrite($this->inputStream, $content);
         // rewind file pointer
@@ -275,5 +281,23 @@ class HttpPart implements PartInterface
     public function getHeaderNames()
     {
         return array_keys($this->headers);
+    }
+    
+    /**
+     * Returns upload_max_filesize in bytes if flag is not false
+     *
+     * @param boolean $asBytes If the return value should be bytes or string formated unit as given in ini
+     *
+     * @return int|string
+     */
+    public function getUploadMaxFileSize($asBytes = true)
+    {
+        $uploadMaxFilesizeIniValue = ini_get('upload_max_filesize');
+        if ($asBytes === true) {
+            $ini_v = trim($uploadMaxFilesizeIniValue);
+            $s = array('g'=> 1<<30, 'm' => 1<<20, 'k' => 1<<10);
+            return intval($ini_v) * ($s[strtolower(substr($ini_v, -1))] ?: 1);
+        }
+        return $uploadMaxFilesizeIniValue;
     }
 }
