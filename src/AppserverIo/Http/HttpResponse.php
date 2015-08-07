@@ -180,7 +180,7 @@ class HttpResponse implements ResponseInterface
         if (!$this->hasHeader(HttpProtocol::HEADER_DATE)) {
             $this->addHeader(HttpProtocol::HEADER_DATE, gmdate(DATE_RFC822));
         }
-        
+
         // check if no content length was set before
         if (!$this->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
             $inputStream = $this->getBodyStream();
@@ -190,10 +190,16 @@ class HttpResponse implements ResponseInterface
                 @rewind($inputStream);
             }
         }
-        
-        // check if status code is content-length relevant and set it to be zero on existing one
+
+        /**
+         * Check if status code is content-length relevant and set it to be zero on existing one.
+         * No content allowed for 1xx, 204 and 304.
+         * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.3
+         * @see https://tools.ietf.org/html/rfc2068#section-14.14
+         */
         if ($this->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
-            if ((int)$this->getStatusCode() >= 300 && (int)$this->getStatusCode() < 400) {
+            $statusCode = (int)$this->getStatusCode();
+            if ($statusCode === 304 || $statusCode === 204 || ($statusCode >= 100 && $statusCode < 200)) {
                 $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, 0);
             }
         }
@@ -211,11 +217,16 @@ class HttpResponse implements ResponseInterface
 
         // concatenate the headers to a string
         foreach ($this->getHeaders() as $headerName => $headerValue) {
-            // check content length relevats
+            /**
+             * Check if status code is content-length relevant and set it to be zero on existing one.
+             * No content allowed for 1xx, 204 and 304.
+             * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.3
+             * @see https://tools.ietf.org/html/rfc2068#section-14.14
+             */
             if ($headerName === HttpProtocol::HEADER_CONTENT_LENGTH) {
-                // check if status code is content-length relevant
-                if ((int)$this->getStatusCode() >= 300 && (int)$this->getStatusCode() < 400) {
-                    $headerValue = 0;
+                $statusCode = (int)$this->getStatusCode();
+                if ($statusCode === 304 || $statusCode === 204 || ($statusCode >= 100 && $statusCode < 200)) {
+                    $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, 0);
                 }
             }
             // take care for manuel added headers with appending
@@ -577,6 +588,15 @@ class HttpResponse implements ResponseInterface
     {
         // set status code
         $this->statusCode = $code;
+
+        // we have to react on certain status codes in a certain way, do that here
+        // We have to discard the body on status codes 1xx, 204 and 304.
+        // @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.3
+        // @see https://tools.ietf.org/html/rfc2068#section-14.14
+        $statusCode = (int)$this->getStatusCode();
+        if ($statusCode === 304 || $statusCode === 204 || ($statusCode >= 100 && $statusCode < 200)) {
+            $this->resetBodyStream();
+        }
 
         // lookup reason phrase by code and set
         $this->setStatusReasonPhrase(HttpProtocol::getStatusReasonPhraseByCode($code));

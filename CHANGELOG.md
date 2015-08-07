@@ -1,3 +1,13 @@
+# Version 1.1.5
+
+## Bugfixes
+
+* Fixed bug with fixed zero HTTP content length for status codes 3xx
+
+## Features
+
+* None
+
 # Version 1.1.4
 
 ## Bugfixes
