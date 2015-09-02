@@ -194,10 +194,21 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
         $response = $this->response;
         // generate random string
         for ($s = '', $cl = strlen($c = 'abcdefghijklmnopqrstuvwxyz1234567890')-1, $i = 0; $i < mt_rand(500,2000); $s .= $c[mt_rand(0, $cl)], ++$i);
+        $stringLength = strlen($s);
+        // status 304 will have no content-length
+        $response->appendBodyStream($s);
+        $response->setStatusCode(304);
+        $response->prepareHeaders();
+        $this->assertSame(0, $response->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH));
+        // all others should have the correct length, testing two examples
         $response->appendBodyStream($s);
         $response->setStatusCode(302);
         $response->prepareHeaders();
-        $this->assertSame(0, $response->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH));
+        $this->assertSame($stringLength, $response->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH));
+        $response->appendBodyStream($s);
+        $response->setStatusCode(308);
+        $response->prepareHeaders();
+        $this->assertSame($stringLength, $response->getHeader(HttpProtocol::HEADER_CONTENT_LENGTH));
     }
 
     /**
