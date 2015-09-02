@@ -181,14 +181,11 @@ class HttpResponse implements ResponseInterface
             $this->addHeader(HttpProtocol::HEADER_DATE, gmdate(DATE_RFC822));
         }
 
-        // check if no content length was set before
-        if (!$this->hasHeader(HttpProtocol::HEADER_CONTENT_LENGTH)) {
-            $inputStream = $this->getBodyStream();
-            // try to get content length from stream resource if its seekable
-            if (@fseek($inputStream, 0, SEEK_END) === 0) {
-                $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, @ftell($inputStream));
-                @rewind($inputStream);
-            }
+        $inputStream = $this->getBodyStream();
+        // try to get content length from stream resource if its seekable
+        if (@fseek($inputStream, 0, SEEK_END) === 0) {
+            $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, @ftell($inputStream));
+            @rewind($inputStream);
         }
 
         /**
@@ -571,6 +568,7 @@ class HttpResponse implements ResponseInterface
     public function setStatus($status)
     {
         // check if correct status line format is given
+        $matches = array();
         if (preg_match('/(\d+)\s+(.*)/', $status, $matches) > 0) {
             $this->setStatusCode(trim($matches[1]));
             $this->setStatusReasonPhrase($matches[2]);
@@ -596,6 +594,8 @@ class HttpResponse implements ResponseInterface
         $statusCode = (int)$this->getStatusCode();
         if ($statusCode === 304 || $statusCode === 204 || ($statusCode >= 100 && $statusCode < 200)) {
             $this->resetBodyStream();
+            // set the content length accordingly
+            $this->addHeader(HttpProtocol::HEADER_CONTENT_LENGTH, 0);
         }
 
         // lookup reason phrase by code and set
