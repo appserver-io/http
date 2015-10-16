@@ -1,3 +1,13 @@
+# Version 1.1.6
+
+## Bugfixes
+
+* Fixed invalid index if no user credentials are passed for basic authentication
+
+## Features
+
+* None
+
 # Version 1.1.5
 
 ## Bugfixes
