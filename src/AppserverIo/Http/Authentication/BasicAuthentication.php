@@ -61,8 +61,15 @@ class BasicAuthentication extends AbstractAuthentication
     {
         // set auth hash got from auth data request header
         $authHash = trim(strstr($rawAuthData, " "));
+
+        // check if username and password has been passed
+        if (strstr($credentials = base64_decode($authHash), ':') === false) {
+            return false;
+        }
+
         // get out username and password
-        list ($username, $password) = explode(':', base64_decode($authHash));
+        list ($username, $password) = explode(':', $credentials);
+
         // check if either username or password was not found and return false
         if (($password === null) || ($username === null)) {
             return false;
