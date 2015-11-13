@@ -1,3 +1,13 @@
+# Version 1.1.7
+
+## Bugfixes
+
+* Add missing filter for URI path elements, resulting in multiple XSS vulnerabilities
+
+## Features
+
+* None
+
 # Version 1.1.6
 
 ## Bugfixes

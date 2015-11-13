@@ -20,7 +20,6 @@
 
 namespace AppserverIo\Http;
 
-use AppserverIo\Psr\HttpMessage\Protocol;
 use AppserverIo\Psr\HttpMessage\CookieInterface;
 use AppserverIo\Psr\HttpMessage\ResponseInterface;
 
@@ -237,7 +236,7 @@ class HttpResponse implements ResponseInterface
         }
 
         // add set-cookie headers by cookie collection
-        foreach ($this->getCookies() as $cookieName => $cookieValue) {
+        foreach ($this->getCookies() as $cookieValue) {
             // take care for multiple cookies
             if (is_array($cookieValue)) {
                 // iterate of the cookies

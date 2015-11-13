@@ -180,6 +180,8 @@ class HttpQueryParser implements HttpQueryParserInterface
      */
     public function parseKeyValue($param, $value)
     {
+        // initialize the array with the array keys
+        $arrayKeys = array();
         // decode param and value
         $param = urldecode($param);
         $value = urldecode($value);
@@ -200,9 +202,8 @@ class HttpQueryParser implements HttpQueryParserInterface
             $buildValue = $value;
             // init index counter hash var
             $arrayIndexCounterHash = $param;
-            $parentArrayKey = '';
             // iterate all found array keys
-            foreach ($arrayKeys[1] as $arrayIndex => $arrayKey) {
+            foreach ($arrayKeys[1] as $arrayKey) {
                 // init a tmp array
                 $tmpArray = array();
                 // check if dynamic index should be generated
