@@ -59,8 +59,9 @@ class DigestAuthentication extends AbstractAuthentication
      */
     protected function parse($rawAuthData)
     {
-        // init data var
+        // init data and matches arrays
         $data = array();
+        $matches = array();
 
         // define required data
         $requiredData = array(
