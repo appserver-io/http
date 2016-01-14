@@ -84,7 +84,7 @@ class HttpRequestParser implements HttpRequestParserInterface
             $uriWithoutQueryString = substr($uri, 0, $queryStringPos);
         }
         // get all path elements from uri
-        $pathElements = explode('/', urldecode($uriWithoutQueryString));
+        $pathElements = explode('/', rawurldecode($uriWithoutQueryString));
         // count path elements
         $pathElementCount = count($pathElements);
         // init count variable
