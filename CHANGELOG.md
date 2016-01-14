@@ -1,3 +1,13 @@
+# Version 1.1.8
+
+## Bugfixes
+
+* Fixed [#944](https://github.com/appserver-io/appserver/issues/944) - 404 when filename contains a + char
+
+## Features
+
+* None
+
 # Version 1.1.7
 
 ## Bugfixes

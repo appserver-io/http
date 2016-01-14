@@ -404,9 +404,9 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($cleanRequest, $parser->getRequest());
         $this->assertEquals($cleanResponse, $parser->getResponse());
     }
-    
+
     /**
-     * Test the normalizing functionality with path info and encoding parts in uri 
+     * Test the normalizing functionality with path info and encoding parts in uri
      */
     public function testUriNormalizingWithPathInfoAndEncoding()
     {
@@ -414,10 +414,10 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         $uri = '/test1/test2/..%2F/%2F/%2F/%2F%2F%2Ftest3/test33/../..%2F../test4/./.%2Ftest5%2F../test9/../index.php/test/../test/./test/..?test=test../%2F%20../../';
         $this->assertSame("/test4/index.php/test/?test=test../%2F%20../../", $parser::normalizeUri($uri));
     }
-    
+
     /**
      * Test uri normalizing on unsecure uri with possible directory traversal attack
-     * 
+     *
      * @expectedException \AppserverIo\Http\HttpException
      */
     public function testUriNormalizingOnUnsecureUri()
@@ -426,10 +426,10 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         $uri = '/%2F..%2F..%2F..%2F';
         $parser::normalizeUri($uri);
     }
-    
+
     /**
      * Test start line parsing when relative uri path was given
-     * 
+     *
      * @expectedException \AppserverIo\Http\HttpException
      */
     public function testInvalidStartLineParsingWithRelativeUri()
@@ -438,7 +438,7 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         $uri = 'test/%2F..%2F..%2F..%2F';
         $parser->parseStartLine('GET ' . $uri . ' HTTP/1.1' . "\r\n");
     }
-    
+
     /**
      * Test uri normalizer resturns original uri if nothing should be normalized
      */
@@ -448,7 +448,7 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         $uri = '/test/test.html';
         $this->assertSame($uri, $parser::normalizeUri($uri));
     }
-    
+
     /**
      * Test uri normalizer resturns original uri with query string if nothing should be normalized
      */
@@ -456,6 +456,17 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = $this->parser;
         $uri = '/test/test.html?testVar=../../&anotherTestVar=http://test.de';
+        $this->assertSame($uri, $parser::normalizeUri($uri));
+    }
+
+    /**
+     * Test uri normalizer doesn't replace the + char with an empty string
+     * @link https://github.com/appserver-io/appserver/issues/944
+     */
+    public function testUriNormalizerWithPlusChar()
+    {
+        $parser = $this->parser;
+        $uri = '/mac/appserver-dist_1.1.0-95+beta7_x86_64.pkg';
         $this->assertSame($uri, $parser::normalizeUri($uri));
     }
 }
