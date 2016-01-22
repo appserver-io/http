@@ -1,3 +1,13 @@
+# Version 2.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Refatoring authentication module to work with latest HTTP library
+
 # Version 1.1.8
 
 ## Bugfixes

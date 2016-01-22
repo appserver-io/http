@@ -21,6 +21,9 @@
 
 namespace AppserverIo\Http\Authentication;
 
+use AppserverIo\Psr\HttpMessage\RequestInterface;
+use AppserverIo\Psr\HttpMessage\ResponseInterface;
+
 /**
  * Class AbstractAuthentication
  *
@@ -35,32 +38,39 @@ abstract class AbstractAuthentication implements AuthenticationInterface
 {
 
     /**
-     * Holds the auth data got from http authentication header
+     * Holds the auth data got from http authentication header.
      *
      * @var \AppserverIo\Http\Authentication\Adapters\AdapterInterface $authAdapter
      */
     protected $authAdapter;
 
     /**
-     * Holds the auth data got from http authentication header
+     * Holds the auth data got from http authentication header.
      *
      * @var string $authData
      */
     protected $authData;
 
     /**
-     * Holds the requests method
+     * Holds the requests method.
      *
      * @var string $reqMethod
      */
     protected $reqMethod;
 
     /**
-     * Holds the configuration data given for authentication type
+     * Holds the configuration data given for authentication type.
      *
      * @var array $configData
      */
     protected $configData;
+
+    /**
+     * Array with the supported adapter types.
+     *
+     * @var array
+     */
+    protected $supportedAdapters = array();
 
     /**
      * Constructs the authentication type
@@ -80,26 +90,17 @@ abstract class AbstractAuthentication implements AuthenticationInterface
     }
 
     /**
-     * Try to authenticate
+     * Return's the auth data got from http authentication header.
      *
-     * @return boolean If auth was successful return TRUE if not, FALSE will be returned
-     *
-     * @throws \AppserverIo\Http\Authentication\AuthenticationException
+     * @return \AppserverIo\Http\Authentication\Adapters\AdapterInterface The authentication adapter to use
      */
-    public function authenticate()
+    public function getAuthAdapter()
     {
-
-        // verify everything to be ready for auth if not return false
-        if (! $this->verify()) {
-            return false;
-        }
-
-        // do actual authentication check
-        return $this->authAdapter->authenticate($this->getAuthData());
+        return $this->authAdapter;
     }
 
     /**
-     * Returns the authentication data content
+     * Returns the authentication data content.
      *
      * @return string The authentication data content
      */
@@ -109,7 +110,17 @@ abstract class AbstractAuthentication implements AuthenticationInterface
     }
 
     /**
-     * Returns the request method
+     * Returns the configuration data given for authentication type.
+     *
+     * @return array The configuration data
+     */
+    public function getConfigData()
+    {
+        return $this->configData;
+    }
+
+    /**
+     * Returns the request method.
      *
      * @return string The request method
      */
@@ -119,7 +130,7 @@ abstract class AbstractAuthentication implements AuthenticationInterface
     }
 
     /**
-     * Returns the authentication type token
+     * Returns the authentication type token.
      *
      * @return string
      */
@@ -129,7 +140,7 @@ abstract class AbstractAuthentication implements AuthenticationInterface
     }
 
     /**
-     * Returns the parsed username
+     * Returns the parsed username.
      *
      * @return string|null
      */
@@ -140,24 +151,34 @@ abstract class AbstractAuthentication implements AuthenticationInterface
     }
 
     /**
-     * Initialise by the auth content got from client
+     * Initialize by the authentication type with the data from the request.
      *
-     * @param string $rawAuthData The content of authentication data sent by client
-     * @param string $reqMethod   The https request method as string
+     * @param \AppserverIo\Psr\HttpMessage\RequestInterface  $request  The request with the content of authentication data sent by client
+     * @param \AppserverIo\Psr\HttpMessage\ResponseInterface $response The response sent back to the client
      *
      * @return void
+     * @throws \AppserverIo\Http\Authentication\AuthenticationException If the authentication type can't be initialized
      */
-    public function init($rawAuthData, $reqMethod)
+    public function init(RequestInterface $request, ResponseInterface $response)
     {
         // set vars internally
-        $this->reqMethod = $reqMethod;
+        $this->reqMethod = $request->getMethod();
 
         // parse auth data
-        $this->parse($rawAuthData);
+        $this->parse($request, $response);
     }
 
     /**
-     * Will prepare the authentication class's authentication adapter based on its configuration
+     * Parses the request for the necessary, authentication adapter specific, login credentials.
+     *
+     * @param \AppserverIo\Psr\HttpMessage\RequestInterface $request The request with the content of authentication data sent by client
+     *
+     * @return void
+     */
+    abstract protected function parse(RequestInterface $request);
+
+    /**
+     * Will prepare the authentication class's authentication adapter based on its configuration.
      *
      * @return void
      *
@@ -165,6 +186,7 @@ abstract class AbstractAuthentication implements AuthenticationInterface
      */
     protected function prepareAdapter()
     {
+
         // get config data to local var
         $configData = $this->configData;
 
@@ -178,17 +200,16 @@ abstract class AbstractAuthentication implements AuthenticationInterface
         $authAdapterClass = '\AppserverIo\Http\Authentication\Adapters\\' . ucfirst($adapterType) . 'Adapter';
 
         // instantiate configured authentication adapter
-        if (class_exists($authAdapterClass) && $authAdapterClass::isUsable($this->getType())) {
+        if (class_exists($authAdapterClass) && $this->isAdapterSupported($authAdapterClass::getType())) {
             $this->authAdapter = new $authAdapterClass($configData);
             $this->authAdapter->init();
-
         } else {
             throw new AuthenticationException(sprintf('Unknown adapter type "%s" for authentication method "%s"', $adapterType, $this->getType()));
         }
     }
 
     /**
-     * Verifies everything to be ready for authenticate for specific type
+     * Verifies everything to be ready for authenticate for specific type.
      *
      * @return boolean
      *
@@ -208,7 +229,7 @@ abstract class AbstractAuthentication implements AuthenticationInterface
     }
 
     /**
-     * Verifies configuration setting and throws exception
+     * Verifies configuration setting and throws exception.
      *
      * @return void
      *
@@ -223,5 +244,29 @@ abstract class AbstractAuthentication implements AuthenticationInterface
         if (empty($configData) || ! isset($configData['realm'])) {
             throw new AuthenticationException(sprintf(AuthenticationException::MESSAGE_MIN_CONFIG_MISSING, $this->getType()));
         }
+    }
+
+    /**
+     * Add's a new adapter type to this authentication type.
+     *
+     * @param string $adapterType The supported adapter type
+     *
+     * @return void
+     */
+    public function addSupportedAdapter($adapterType)
+    {
+        $this->supportedAdapters[] = $adapterType;
+    }
+
+    /**
+     * Whether or not the adapter is supported with a this authentication type.
+     *
+     * @param string $adapterType The adapter type
+     *
+     * @return boolean
+     */
+    public function isAdapterSupported($adapterType)
+    {
+        return in_array($adapterType, $this->supportedAdapters);
     }
 }

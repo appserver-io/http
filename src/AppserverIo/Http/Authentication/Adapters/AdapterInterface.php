@@ -49,15 +49,6 @@ interface AdapterInterface
     public function init();
 
     /**
-     * Whether or not an adapter is usable with a certain authentication type
-     *
-     * @param string $authType The type of the authentication implementation
-     *
-     * @return boolean
-     */
-    public static function isUsable($authType);
-
-    /**
      * Will return the credentials found in the local configuration
      *
      * @return array
@@ -69,5 +60,5 @@ interface AdapterInterface
      *
      * @return string
      */
-    public function getType();
+    public static function getType();
 }
