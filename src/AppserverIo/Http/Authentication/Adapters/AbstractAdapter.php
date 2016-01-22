@@ -51,13 +51,6 @@ abstract class AbstractAdapter implements AdapterInterface
     protected $config = array();
 
     /**
-     * Authentication methods this adapter is compatible to
-     *
-     * @var array $usableFor
-     */
-    protected static $usableFor = array();
-
-    /**
      * Instantiates an authentication adapter.
      *
      * @param array $config The security configuration matching this adapter
@@ -72,19 +65,6 @@ abstract class AbstractAdapter implements AdapterInterface
     }
 
     /**
-     * Whether or not an adapter is usable with a certain authentication type
-     *
-     * @param string $authType The type of the authentication implementation
-     *
-     * @return boolean
-     */
-    public static function isUsable($authType)
-    {
-        $usableFor = array_flip(static::$usableFor);
-        return isset($usableFor[$authType]);
-    }
-
-    /**
      * Will return the credentials found in the local configuration
      *
      * @return array
@@ -95,16 +75,6 @@ abstract class AbstractAdapter implements AdapterInterface
     }
 
     /**
-     * Returns the authentication adapter type token
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return static::ADAPTER_TYPE;
-    }
-
-    /**
      * Returns authentication configuration
      *
      * @return array The authentication options
@@ -112,5 +82,15 @@ abstract class AbstractAdapter implements AdapterInterface
     protected function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * Returns the authentication adapter type token
+     *
+     * @return string
+     */
+    public static function getType()
+    {
+        return static::ADAPTER_TYPE;
     }
 }
