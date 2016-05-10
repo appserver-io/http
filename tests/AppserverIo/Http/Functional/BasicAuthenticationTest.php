@@ -21,6 +21,7 @@
 namespace AppserverIo\Http\Functional;
 
 use AppserverIo\Http\Authentication\BasicAuthentication;
+use AppserverIo\Psr\HttpMessage\Protocol;
 
 /**
  * Class for testing the basic authentication feature
@@ -115,39 +116,83 @@ class BasicAuthenticationTest extends \PHPUnit_Framework_TestCase
      * Tests if we are deflected using an invalid auth string and the default adapter with a crypt hashed password
      *
      * @return void
+     * @expectedException AppserverIo\Http\Authentication\AuthenticationException
      */
     public function testInvalidAuthDefaultAdapterCryptAlgorithm()
     {
-        $this->testClass->init($this->getInvalidAuthString(), 'POST');
-        $this->assertFalse($this->testClass->authenticate());
+
+        // prepare the mock request instance
+        $mockRequest = $this->getMock('AppserverIo\Psr\HttpMessage\RequestInterface');
+        $mockRequest->expects($this->once())
+                    ->method('getMethod')
+                    ->willReturn(Protocol::METHOD_POST);
+        $mockRequest->expects($this->once())
+                    ->method('getHeader')
+                    ->with(Protocol::HEADER_AUTHORIZATION)
+                    ->willReturn($this->getInvalidAuthString());
+
+        // prepare the mock response instance
+        $mockResponse = $this->getMock('AppserverIo\Psr\HttpMessage\ResponseInterface');
+
+        $this->testClass->init($mockRequest, $mockResponse);
+        $this->testClass->authenticate($mockResponse);
     }
 
     /**
      * Tests if we are deflected using an invalid auth string and the default adapter with a Apr1Md5 hashed password
      *
      * @return void
+     * @expectedException AppserverIo\Http\Authentication\AuthenticationException
      */
     public function testInvalidAuthDefaultAdapterApr1md5Algorithm()
     {
+
         // create ourselves a new test instance
         $this->initTestEnvironment('htpasswd_apr1md5');
 
-        $this->testClass->init($this->getInvalidAuthString(), 'POST');
-        $this->assertFalse($this->testClass->authenticate());
+        // prepare the mock request instance
+        $mockRequest = $this->getMock('AppserverIo\Psr\HttpMessage\RequestInterface');
+        $mockRequest->expects($this->once())
+                    ->method('getMethod')
+                    ->willReturn(Protocol::METHOD_POST);
+        $mockRequest->expects($this->once())
+                    ->method('getHeader')
+                    ->with(Protocol::HEADER_AUTHORIZATION)
+                    ->willReturn($this->getInvalidAuthString());
+
+        // prepare the mock response instance
+        $mockResponse = $this->getMock('AppserverIo\Psr\HttpMessage\ResponseInterface');
+
+        $this->testClass->init($mockRequest, $mockResponse);
+        $this->testClass->authenticate($mockResponse);
     }
 
     /**
      * Tests if we are deflected using an invalid auth string and the default adapter with a Sha1 hashed password
      *
      * @return void
+     * @expectedException AppserverIo\Http\Authentication\AuthenticationException
      */
     public function testInvalidAuthDefaultAdapterSha1Algorithm()
     {
         // create ourselves a new test instance
         $this->initTestEnvironment('htpasswd_sha1');
 
-        $this->testClass->init($this->getInvalidAuthString(), 'POST');
-        $this->assertFalse($this->testClass->authenticate());
+        // prepare the mock request instance
+        $mockRequest = $this->getMock('AppserverIo\Psr\HttpMessage\RequestInterface');
+        $mockRequest->expects($this->once())
+                    ->method('getMethod')
+                    ->willReturn(Protocol::METHOD_POST);
+        $mockRequest->expects($this->once())
+                    ->method('getHeader')
+                    ->with(Protocol::HEADER_AUTHORIZATION)
+                    ->willReturn($this->getInvalidAuthString());
+
+        // prepare the mock response instance
+        $mockResponse = $this->getMock('AppserverIo\Psr\HttpMessage\ResponseInterface');
+
+        $this->testClass->init($mockRequest, $mockResponse);
+        $this->testClass->authenticate($mockResponse);
     }
 
     /**
@@ -157,8 +202,22 @@ class BasicAuthenticationTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidAuthDefaultAdapterCryptAlgorithm()
     {
-        $this->testClass->init($this->getValidAuthString(), 'POST');
-        $this->assertTrue($this->testClass->authenticate());
+
+        // prepare the mock request instance
+        $mockRequest = $this->getMock('AppserverIo\Psr\HttpMessage\RequestInterface');
+        $mockRequest->expects($this->once())
+                    ->method('getMethod')
+                    ->willReturn(Protocol::METHOD_POST);
+        $mockRequest->expects($this->once())
+                    ->method('getHeader')
+                    ->with(Protocol::HEADER_AUTHORIZATION)
+                    ->willReturn($this->getValidAuthString());
+
+        // prepare the mock response instance
+        $mockResponse = $this->getMock('AppserverIo\Psr\HttpMessage\ResponseInterface');
+
+        $this->testClass->init($mockRequest, $mockResponse);
+        $this->assertNull($this->testClass->authenticate($mockResponse));
     }
 
     /**
@@ -171,8 +230,21 @@ class BasicAuthenticationTest extends \PHPUnit_Framework_TestCase
         // create ourselves a new test instance
         $this->initTestEnvironment('htpasswd_apr1md5');
 
-        $this->testClass->init($this->getValidAuthString(), 'POST');
-        $this->assertTrue($this->testClass->authenticate());
+        // prepare the mock request instance
+        $mockRequest = $this->getMock('AppserverIo\Psr\HttpMessage\RequestInterface');
+        $mockRequest->expects($this->once())
+                    ->method('getMethod')
+                    ->willReturn(Protocol::METHOD_POST);
+        $mockRequest->expects($this->once())
+                    ->method('getHeader')
+                    ->with(Protocol::HEADER_AUTHORIZATION)
+                    ->willReturn($this->getValidAuthString());
+
+        // prepare the mock response instance
+        $mockResponse = $this->getMock('AppserverIo\Psr\HttpMessage\ResponseInterface');
+
+        $this->testClass->init($mockRequest, $mockResponse);
+        $this->assertNull($this->testClass->authenticate($mockResponse));
     }
 
     /**
@@ -185,8 +257,21 @@ class BasicAuthenticationTest extends \PHPUnit_Framework_TestCase
         // create ourselves a new test instance
         $this->initTestEnvironment('htpasswd_sha1');
 
-        $this->testClass->init($this->getValidAuthString(), 'POST');
-        $this->assertTrue($this->testClass->authenticate());
+        // prepare the mock request instance
+        $mockRequest = $this->getMock('AppserverIo\Psr\HttpMessage\RequestInterface');
+        $mockRequest->expects($this->once())
+                    ->method('getMethod')
+                    ->willReturn(Protocol::METHOD_POST);
+        $mockRequest->expects($this->once())
+                    ->method('getHeader')
+                    ->with(Protocol::HEADER_AUTHORIZATION)
+                    ->willReturn($this->getValidAuthString());
+
+        // prepare the mock response instance
+        $mockResponse = $this->getMock('AppserverIo\Psr\HttpMessage\ResponseInterface');
+
+        $this->testClass->init($mockRequest, $mockResponse);
+        $this->assertNull($this->testClass->authenticate($mockResponse));
     }
 
     /**
@@ -196,7 +281,21 @@ class BasicAuthenticationTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseCorrectCredentials()
     {
-        $this->testClass->init($this->getValidAuthString(), 'POST');
+
+        // prepare the mock request instance
+        $mockRequest = $this->getMock('AppserverIo\Psr\HttpMessage\RequestInterface');
+        $mockRequest->expects($this->once())
+                    ->method('getMethod')
+                    ->willReturn(Protocol::METHOD_POST);
+        $mockRequest->expects($this->once())
+                    ->method('getHeader')
+                    ->with(Protocol::HEADER_AUTHORIZATION)
+                    ->willReturn($this->getValidAuthString());
+
+        // prepare the mock response instance
+        $mockResponse = $this->getMock('AppserverIo\Psr\HttpMessage\ResponseInterface');
+
+        $this->testClass->init($mockRequest, $mockResponse);
         $this->assertEquals('appserver', $this->testClass->getUsername());
         $this->assertEquals('appserver.i0', $this->testClass->getPassword());
     }

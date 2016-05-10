@@ -60,6 +60,9 @@ class HttpRequestParser implements HttpRequestParserInterface
     /**
      * Normalizes uri in a very simple way.
      *
+     * To avoide multiple XSS scripting vulnerabilities, each directory part of the URI has
+     * to be filtered  for script embedding from links displayed on a server's web site.
+     *
      * @param string $uri The uri to normalize
      *
      * @return string The normalized uri string
@@ -81,7 +84,7 @@ class HttpRequestParser implements HttpRequestParserInterface
             $uriWithoutQueryString = substr($uri, 0, $queryStringPos);
         }
         // get all path elements from uri
-        $pathElements = explode('/', urldecode($uriWithoutQueryString));
+        $pathElements = explode('/', rawurldecode($uriWithoutQueryString));
         // count path elements
         $pathElementCount = count($pathElements);
         // init count variable
@@ -100,8 +103,8 @@ class HttpRequestParser implements HttpRequestParserInterface
             // inc current dir indicator if no forwarding dir is given.
             if ($pathElement !== '..') {
                 ++$directoryIndicator;
-                // set new path elements array for normalized uri
-                $normalizedPathElements[$directoryIndicator] = $pathElement;
+                // set new path elements array for normalized uri and escape HTML special chars
+                $normalizedPathElements[$directoryIndicator] = filter_var($pathElement, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                 // otherwise dec dir indicator
             } else {
                 // if last item was . or empty string add empty entry to new path element to keep trailing slash
@@ -226,6 +229,8 @@ class HttpRequestParser implements HttpRequestParserInterface
      */
     public function parseStartLine($line)
     {
+        // initialize the array with the matches
+        $matches = array();
         $request = $this->getRequest();
         // validate start line
         if (!preg_match(
@@ -237,7 +242,7 @@ class HttpRequestParser implements HttpRequestParserInterface
             throw new HttpException('Bad request.', 400);
         }
         // grab http version and request method from first request line.
-        list($reqStartLine, $reqMethod, $reqUri, $reqVersion) = $matches;
+        list(, $reqMethod, $reqUri, $reqVersion) = $matches;
         // fill up request object
         $request->setMethod($reqMethod);
         $request->setUri(self::normalizeUri($reqUri));
@@ -338,6 +343,8 @@ class HttpRequestParser implements HttpRequestParserInterface
      */
     public function parseMultipartFormData($content)
     {
+        // initialize the array with the matches
+        $matches = array();
         // get request ref to local function context
         $request = $this->getRequest();
         // grab multipart boundary from content type header
@@ -353,7 +360,7 @@ class HttpRequestParser implements HttpRequestParserInterface
         // get rid of last -- element
         array_pop($blocks);
         // loop data blocks
-        foreach ($blocks as $id => $block) {
+        foreach ($blocks as $block) {
             // of block is empty continue with next one
             if (empty($block)) {
                 continue;
@@ -368,7 +375,7 @@ class HttpRequestParser implements HttpRequestParserInterface
                 $partHeaders = strstr($block, "\n\r\n", true);
                 $partBody = ltrim(strstr($block, "\n\r\n"));
                 // parse part headers
-                foreach (explode("\n", $partHeaders) as $i => $h) {
+                foreach (explode("\n", $partHeaders) as $h) {
                     $h = explode(':', $h, 2);
                     if (isset($h[1])) {
                         $part->addHeader($h[0], trim($h[1]));

@@ -21,6 +21,8 @@
 
 namespace AppserverIo\Http\Authentication;
 
+use AppserverIo\Psr\HttpMessage\Protocol;
+use AppserverIo\Psr\HttpMessage\RequestInterface;
 use AppserverIo\Http\Authentication\Adapters\HtdigestAdapter;
 
 /**
@@ -33,7 +35,7 @@ use AppserverIo\Http\Authentication\Adapters\HtdigestAdapter;
  * @link      https://github.com/appserver-io/http
  * @link      http://www.appserver.io
  */
-class DigestAuthentication extends AbstractAuthentication
+class DigestAuthentication extends BasicAuthentication
 {
 
     /**
@@ -51,16 +53,36 @@ class DigestAuthentication extends AbstractAuthentication
     const AUTH_TYPE = 'Digest';
 
     /**
-     * Parses the header content set in init before
+     * Constructs the authentication type
      *
-     * @param string $rawAuthData The raw authentication data coming from the client
-     *
-     * @return boolean If parsing was successful
+     * @param array $configData The configuration data for auth type instance
      */
-    protected function parse($rawAuthData)
+    public function __construct(array $configData = array())
     {
-        // init data var
+
+        // initialize the supported adapter types
+        $this->addSupportedAdapter(HtdigestAdapter::getType());
+
+        // initialize the instance
+        parent::__construct($configData);
+    }
+
+    /**
+     * Parses the request for the necessary, authentication adapter specific, login credentials.
+     *
+     * @param \AppserverIo\Psr\HttpMessage\RequestInterface $request The request with the content of authentication data sent by client
+     *
+     * @return void
+     */
+    protected function parse(RequestInterface $request)
+    {
+
+        // load the raw login credentials
+        $rawAuthData = $request->getHeader(Protocol::HEADER_AUTHORIZATION);
+
+        // init data and matches arrays
         $data = array();
+        $matches = array();
 
         // define required data
         $requiredData = array(

@@ -21,6 +21,9 @@
 
 namespace AppserverIo\Http\Authentication;
 
+use AppserverIo\Psr\HttpMessage\Protocol;
+use AppserverIo\Psr\HttpMessage\RequestInterface;
+use AppserverIo\Psr\HttpMessage\ResponseInterface;
 use AppserverIo\Http\Authentication\Adapters\HtpasswdAdapter;
 
 /**
@@ -51,18 +54,92 @@ class BasicAuthentication extends AbstractAuthentication
     const DEFAULT_ADAPTER = HtpasswdAdapter::ADAPTER_TYPE;
 
     /**
-     * Parses the given header content
+     * Constructs the authentication type
      *
-     * @param string $rawAuthData The raw authentication data coming from the client
-     *
-     * @return boolean If parsing was successful
+     * @param array $configData The configuration data for auth type instance
      */
-    protected function parse($rawAuthData)
+    public function __construct(array $configData = array())
     {
+
+        // initialize the supported adapter types
+        $this->addSupportedAdapter(HtpasswdAdapter::getType());
+
+        // initialize the instance
+        parent::__construct($configData);
+    }
+
+    /**
+     * Initialize by the authentication type with the data from the request.
+     *
+     * @param \AppserverIo\Psr\HttpMessage\RequestInterface  $request  The request with the content of authentication data sent by client
+     * @param \AppserverIo\Psr\HttpMessage\ResponseInterface $response The response sent back to the client
+     *
+     * @return void
+     * @throws \AppserverIo\Http\Authentication\AuthenticationException If the authentication type can't be initialized
+     */
+    public function init(RequestInterface $request, ResponseInterface $response)
+    {
+
+        // check if auth header is not set in coming request headers
+        if ($request->hasHeader(Protocol::HEADER_AUTHORIZATION) === false) {
+            // send header for challenge authentication against client
+            $response->addHeader(Protocol::HEADER_WWW_AUTHENTICATE, $this->getAuthenticateHeader());
+            // throw exception for auth required
+            throw new AuthenticationException('Request is not authorized', 401);
+        }
+
+        // initialize the authentication adapter
+        parent::init($request, $response);
+    }
+
+    /**
+     * Try to authenticate against the configured adapter.
+     *
+     * @param \AppserverIo\Psr\HttpMessage\ResponseInterface $response The response sent back to the client
+     *
+     * @return void
+     * @throws \AppserverIo\Http\Authentication\AuthenticationException Is thrown if the request can't be authenticated
+     */
+    public function authenticate(ResponseInterface $response)
+    {
+
+        // verify everything to be ready for auth if not return false
+        if ($this->verify() === false) {
+            $response->addHeader(Protocol::HEADER_WWW_AUTHENTICATE, $this->getAuthenticateHeader());
+            throw new AuthenticationException('Invalid or missing username and/or password', 401);
+        }
+
+        // do actual authentication check
+        if ($this->getAuthAdapter()->authenticate($this->getAuthData()) === false) {
+            $response->addHeader(Protocol::HEADER_WWW_AUTHENTICATE, $this->getAuthenticateHeader());
+            throw new AuthenticationException('Password doesn\'t match username', 401);
+        }
+    }
+
+    /**
+     * Parses the request for the necessary, authentication adapter specific, login credentials.
+     *
+     * @param \AppserverIo\Psr\HttpMessage\RequestInterface $request The request with the content of authentication data sent by client
+     *
+     * @return void
+     */
+    protected function parse(RequestInterface $request)
+    {
+
+        // load the raw login credentials
+        $rawAuthData = $request->getHeader(Protocol::HEADER_AUTHORIZATION);
+
         // set auth hash got from auth data request header
         $authHash = trim(strstr($rawAuthData, " "));
+
+        // check if username and password has been passed
+        if (strstr($credentials = base64_decode($authHash), ':') === false) {
+            return false;
+        }
+
         // get out username and password
-        list ($username, $password) = explode(':', base64_decode($authHash));
+        list ($username, $password) = explode(':', $credentials);
+
         // check if either username or password was not found and return false
         if (($password === null) || ($username === null)) {
             return false;

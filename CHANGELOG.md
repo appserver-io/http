@@ -1,3 +1,53 @@
+# Version 2.0.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Refatoring authentication module to work with latest HTTP library
+
+# Version 1.1.8
+
+## Bugfixes
+
+* Fixed [#944](https://github.com/appserver-io/appserver/issues/944) - 404 when filename contains a + char
+
+## Features
+
+* None
+
+# Version 1.1.7
+
+## Bugfixes
+
+* Add missing filter for URI path elements, resulting in multiple XSS vulnerabilities
+
+## Features
+
+* None
+
+# Version 1.1.6
+
+## Bugfixes
+
+* Fixed invalid index if no user credentials are passed for basic authentication
+
+## Features
+
+* None
+
+# Version 1.1.5
+
+## Bugfixes
+
+* Fixed bug with fixed zero HTTP content length for status codes 3xx
+
+## Features
+
+* None
+
 # Version 1.1.4
 
 ## Bugfixes
