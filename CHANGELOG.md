@@ -1,3 +1,13 @@
+# Version 2.0.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* PHP 7 is fully supported by this Release
+
 # Version 2.0.0
 
 ## Bugfixes
