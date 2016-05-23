@@ -104,7 +104,7 @@ class HttpRequestParser implements HttpRequestParserInterface
             if ($pathElement !== '..') {
                 ++$directoryIndicator;
                 // set new path elements array for normalized uri and escape HTML special chars
-                $normalizedPathElements[$directoryIndicator] = filter_var($pathElement, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $normalizedPathElements[$directoryIndicator] = htmlspecialchars($pathElement);
                 // otherwise dec dir indicator
             } else {
                 // if last item was . or empty string add empty entry to new path element to keep trailing slash

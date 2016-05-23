@@ -469,4 +469,26 @@ class RequestParserTest extends \PHPUnit_Framework_TestCase
         $uri = '/mac/appserver-dist_1.1.0-95+beta7_x86_64.pkg';
         $this->assertSame($uri, $parser::normalizeUri($uri));
     }
+
+    /**
+     * Test uri normalizer does replace script tags with an escaped version of them
+     * @link https://github.com/appserver-io/appserver/issues/944
+     */
+    public function testUriNormalizerEscapesScriptTagsInUri()
+    {
+        $parser = $this->parser;
+        $uri = '/test/<script>alert("TEST");</script>';
+        $this->assertSame('/test/&lt;script&gt;alert(&quot;TEST&quot;);&lt;/script&gt;', $parser::normalizeUri($uri));
+    }
+
+    /**
+     * Test uri normalizer doesn't replace umlaut characters with their HTML escaped version
+     * @link https://github.com/appserver-io/appserver/issues/1016
+     */
+    public function testUriNormalizerWithUmlautCharacters()
+    {
+        $parser = $this->parser;
+        $uri = '/test/müllmänner.jpg';
+        $this->assertSame($uri, $parser::normalizeUri($uri));
+    }
 }
