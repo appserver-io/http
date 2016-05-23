@@ -1,3 +1,13 @@
+# Version 2.0.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Fixes [#1016](https://github.com/appserver-io/appserver/issues/1016) - HTTP request parsing doesn't work for URIs containing Umlauts
+
 # Version 2.0.1
 
 ## Bugfixes
