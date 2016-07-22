@@ -234,7 +234,7 @@ class HttpRequestParser implements HttpRequestParserInterface
         $request = $this->getRequest();
         // validate start line
         if (!preg_match(
-            "/(OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT)\s(\/.*)\s(HTTP\/1\.0|HTTP\/1\.1)/",
+            "/(OPTIONS|GET|HEAD|PATCH|POST|PUT|DELETE|TRACE|CONNECT)\s(\/.*)\s(HTTP\/1\.0|HTTP\/1\.1)/",
             $line,
             $matches
         )
