@@ -1,3 +1,13 @@
+# Version 2.1.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Allow PATCH as http request method ((RFC 5789)[https://tools.ietf.org/html/rfc5789])
+
 # Version 2.0.2
 
 ## Bugfixes

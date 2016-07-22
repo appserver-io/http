@@ -323,6 +323,13 @@ class HttpProtocol
     const HEADER_CONTENT_TYPE_VALUE_TEXT_HTML = 'text/html';
 
     /**
+     * PATCH request method string.
+     *
+     * @var string
+     */
+    const METHOD_PATCH = 'PATCH';
+
+    /**
      * POST request method string.
      *
      * @var string
