@@ -1,3 +1,13 @@
+# Version 2.2.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Normalize header names in all header functions to avoid double headers
+
 # Version 2.1.0
 
 ## Bugfixes

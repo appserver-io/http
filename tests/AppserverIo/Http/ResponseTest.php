@@ -230,14 +230,14 @@ class ResponseTest extends \PHPUnit_Framework_TestCase {
     public function testGetHeaderStringWithManuallyAddedAppendingHeaders()
     {
         $response = $this->response;
-        $response->addHeader('TestHeaderNotAppending', 'TestValue0001');
-        $response->addHeader('TestHeaderNotAppending', 'TestValue0002');
-        $response->addHeader('TestHeaderAppending', 'TestValue0001', true);
-        $response->addHeader('TestHeaderAppending', 'TestValue0001', true);
-        $response->addHeader('TestHeaderAppending', 'TestValue0001', true);
-        $response->addHeader('TestHeaderAppending', 'TestValue0001', true);
+        $response->addHeader('Test-Header-Not-Appending', 'TestValue0001');
+        $response->addHeader('Test-Header-Not-Appending', 'TestValue0002');
+        $response->addHeader('Test-Header-Appending', 'TestValue0001', true);
+        $response->addHeader('Test-Header-Appending', 'TestValue0001', true);
+        $response->addHeader('Test-Header-Appending', 'TestValue0001', true);
+        $response->addHeader('Test-Header-Appending', 'TestValue0001', true);
         $this->assertSame(
-            "TestHeaderNotAppending: TestValue0002\r\nTestHeaderAppending: TestValue0001\r\nTestHeaderAppending: TestValue0001\r\nTestHeaderAppending: TestValue0001\r\nTestHeaderAppending: TestValue0001\r\n\r\n",
+            "Test-Header-Not-Appending: TestValue0002\r\nTest-Header-Appending: TestValue0001\r\nTest-Header-Appending: TestValue0001\r\nTest-Header-Appending: TestValue0001\r\nTest-Header-Appending: TestValue0001\r\n\r\n",
             $response->getHeaderString()
         );
     }
