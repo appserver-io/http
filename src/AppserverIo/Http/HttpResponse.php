@@ -147,6 +147,18 @@ class HttpResponse implements ResponseInterface
     }
 
     /**
+     * Normalize header names, e. g. in case of 'Content-type' into 'Content-Type'.
+     *
+     * @param string $name The header name to normalize
+     *
+     * @return The normalize header name
+     */
+    protected function normalizeHeaderNames($name)
+    {
+        return str_replace(' ', '-', ucwords(strtolower(str_replace('-', ' ', $name))));
+    }
+
+    /**
      * Sets the default response headers to response
      *
      * @param array $headers The default headers array
@@ -155,7 +167,9 @@ class HttpResponse implements ResponseInterface
      */
     public function setDefaultHeaders(array $headers)
     {
-        $this->defaultHeaders = $headers;
+        foreach ($headers as $name => $value) {
+            $this->defaultHeaders[$this->normalizeHeaderNames($name)] = $value;
+        }
     }
 
     /**
@@ -377,8 +391,9 @@ class HttpResponse implements ResponseInterface
      */
     public function addHeader($name, $value, $append = false)
     {
+
         // normalize header names in case of 'Content-type' into 'Content-Type'
-        $name = str_replace(' ', '-', ucwords(str_replace('-', ' ', $name)));
+        $name = $this->normalizeHeaderNames($name);
 
         // check if we've a Set-Cookie header to process
         if ($this->hasHeader($name) && $append === true) {
@@ -407,7 +422,7 @@ class HttpResponse implements ResponseInterface
      */
     public function hasHeader($name)
     {
-        return isset($this->headers[$name]);
+        return isset($this->headers[$this->normalizeHeaderNames($name)]);
     }
 
     /**
@@ -420,7 +435,7 @@ class HttpResponse implements ResponseInterface
      */
     public function getHeader($name)
     {
-        if (isset($this->headers[$name]) === false) {
+        if (isset($this->headers[$name = $this->normalizeHeaderNames($name)]) === false) {
             throw new HttpException("Response header '$name' not found");
         }
         return $this->headers[$name];
@@ -435,7 +450,7 @@ class HttpResponse implements ResponseInterface
      */
     public function removeHeader($name)
     {
-        if (isset($this->headers[$name])) {
+        if (isset($this->headers[$name = $this->normalizeHeaderNames($name)])) {
             unset($this->headers[$name]);
         }
     }
