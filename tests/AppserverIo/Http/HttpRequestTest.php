@@ -95,6 +95,23 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(true, is_resource($request->getBodyStream()));
     }
 
+    public function testHttpHeaderCaseInsensitivity()
+    {
+        $request = $this->request;
+        $request->addHeader('Content-Length', 123);
+        $request->addHeader('accept-encoding', 'gzip, deflate');
+        $request->addHeader('cache_control', 'max-age=0');
+        $request->addHeader('upGraDe_inSecurE-RequEsts', 1);
+        $request->addHeader('CLIENT_IP', '0.0.0.0');
+        $request->addHeader('HOST', 'localhost');
+        $this->assertTrue($request->hasHeader('Content-Length'));
+        $this->assertTrue($request->hasHeader('Accept-Encoding'));
+        $this->assertTrue($request->hasHeader('Cache-Control'));
+        $this->assertTrue($request->hasHeader('Upgrade-Insecure-Requests'));
+        $this->assertTrue($request->hasHeader('Client-Ip'));
+        $this->assertTrue($request->hasHeader('Host'));
+    }
+
     /**
      * Test's the copy body stream method without arguments
      */
