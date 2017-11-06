@@ -177,7 +177,7 @@ class HttpRequest implements RequestInterface
      */
     public function hasHeader($name)
     {
-        return isset($this->headers[$name]);
+        return isset($this->headers[$this->normalizeHeaderName($name)]);
     }
 
     /**
@@ -189,8 +189,8 @@ class HttpRequest implements RequestInterface
      */
     public function getHeader($name)
     {
-        if (isset($this->headers[$name])) {
-            return $this->headers[$name];
+        if ($this->hasHeader($name)) {
+            return $this->headers[$this->normalizeHeaderName($name)];
         }
     }
 
