@@ -113,7 +113,7 @@ class HttpRequest implements RequestInterface
 
     /**
      * Normalizes header field name
-     * 
+     *
      * @param  string $name header field name
      * @return string
      */
