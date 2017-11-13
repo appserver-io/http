@@ -112,6 +112,17 @@ class HttpRequest implements RequestInterface
     }
 
     /**
+     * Normalizes header field name
+     *
+     * @param  string $name header field name
+     * @return string
+     */
+    protected function normalizeHeaderName($name)
+    {
+        return ucwords(str_replace('_', '-', strtolower($name)), '-');
+    }
+
+    /**
      * Constructs the request object
      */
     public function __construct()
@@ -154,10 +165,7 @@ class HttpRequest implements RequestInterface
      */
     public function addHeader($name, $value)
     {
-        // normalize header names in case of 'Content-type' into 'Content-Type'
-        $name = str_replace(' ', '-', ucwords(str_replace('-', ' ', $name)));
-
-        $this->headers[$name] = $value;
+        $this->headers[$this->normalizeHeaderName($name)] = $value;
     }
 
     /**
@@ -169,7 +177,7 @@ class HttpRequest implements RequestInterface
      */
     public function hasHeader($name)
     {
-        return isset($this->headers[$name]);
+        return isset($this->headers[$this->normalizeHeaderName($name)]);
     }
 
     /**
@@ -181,8 +189,8 @@ class HttpRequest implements RequestInterface
      */
     public function getHeader($name)
     {
-        if (isset($this->headers[$name])) {
-            return $this->headers[$name];
+        if ($this->hasHeader($name)) {
+            return $this->headers[$this->normalizeHeaderName($name)];
         }
     }
 

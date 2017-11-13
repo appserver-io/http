@@ -96,6 +96,68 @@ class HttpRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests if case insensitive header names are being normalized properly
+     */
+    public function testAddHttpHeaderCaseInsensitivity()
+    {
+        $request = $this->request;
+        $request->addHeader('Content-Length', 123);
+        $request->addHeader('accept-encoding', 'gzip, deflate');
+        $request->addHeader('cache_control', 'max-age=0');
+        $request->addHeader('upGraDe_inSecurE-RequEsts', 1);
+        $request->addHeader('CLIENT_IP', '0.0.0.0');
+        $request->addHeader('HOST', 'localhost');
+        $this->assertTrue($request->hasHeader('Content-Length'));
+        $this->assertTrue($request->hasHeader('Accept-Encoding'));
+        $this->assertTrue($request->hasHeader('Cache-Control'));
+        $this->assertTrue($request->hasHeader('Upgrade-Insecure-Requests'));
+        $this->assertTrue($request->hasHeader('Client-Ip'));
+        $this->assertTrue($request->hasHeader('Host'));
+    }
+
+    /**
+     * Tests if normalized header names can be checked for existence
+     * by using case insensitive header names as the $name argument
+     */
+    public function testHasHttpHeaderCaseInsensitivity()
+    {
+        $request = $this->request;
+        $request->addHeader('Content-Length', 123);
+        $request->addHeader('Accept-Encoding', 'gzip, deflate');
+        $request->addHeader('Cache-Control', 'max-age=0');
+        $request->addHeader('Upgrade-Insecure-Requests', 1);
+        $request->addHeader('Client-Ip', '0.0.0.0');
+        $request->addHeader('Host', 'localhost');
+        $this->assertTrue($request->hasHeader('Content-Length'));
+        $this->assertTrue($request->hasHeader('accept-encoding'));
+        $this->assertTrue($request->hasHeader('cache_control'));
+        $this->assertTrue($request->hasHeader('upGraDe_inSecurE-RequEsts'));
+        $this->assertTrue($request->hasHeader('CLIENT_IP'));
+        $this->assertTrue($request->hasHeader('HOST'));
+    }
+
+    /**
+     * Tests if normalized header names can be retrieved by
+     * using case insensitive header names as $name argument
+     */
+    public function testGetHttpHeaderCaseInsensitivity()
+    {
+        $request = $this->request;
+        $request->addHeader('Content-Length', 123);
+        $request->addHeader('Accept-Encoding', 'gzip, deflate');
+        $request->addHeader('Cache-Control', 'max-age=0');
+        $request->addHeader('Upgrade-Insecure-Requests', 1);
+        $request->addHeader('Client-Ip', '0.0.0.0');
+        $request->addHeader('Host', 'localhost');
+        $this->assertNotNull($request->getHeader('Content-Length'));
+        $this->assertNotNull($request->getHeader('accept-encoding'));
+        $this->assertNotNull($request->getHeader('cache_control'));
+        $this->assertNotNull($request->getHeader('upGraDe_inSecurE-RequEsts'));
+        $this->assertNotNull($request->getHeader('CLIENT_IP'));
+        $this->assertNotNull($request->getHeader('HOST'));
+    }
+
+    /**
      * Test's the copy body stream method without arguments
      */
     public function testHttpRequestCopyBodyStreamWithoutArguments()
