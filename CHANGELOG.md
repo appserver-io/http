@@ -1,3 +1,13 @@
+# Version 2.2.1
+
+## Bugfixes
+
+* Fix multipart request issues for files which begin with null bytes
+
+## Features
+
+* None
+
 # Version 2.2.0
 
 ## Bugfixes
