@@ -373,7 +373,7 @@ class HttpRequestParser implements HttpRequestParserInterface
                 $part = $this->getHttpPartInstance();
                 // seperate headers from body
                 $partHeaders = strstr($block, "\n\r\n", true);
-                $partBody = ltrim(strstr($block, "\n\r\n"));
+                $partBody = preg_replace("/\n\r\n/", '', strstr($block, "\n\r\n"), 1);
                 // parse part headers
                 foreach (explode("\n", $partHeaders) as $h) {
                     $h = explode(':', $h, 2);
